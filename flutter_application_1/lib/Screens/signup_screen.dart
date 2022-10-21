@@ -7,10 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Colors/colors.dart';
 
 import 'package:flutter_application_1/Screens/home_screen.dart';
+
 import 'package:flutter_application_1/Screens/signin_screen.dart';
+
 import 'package:flutter_application_1/Screens/verify_email_screen.dart';
 
 import '../Util/utils.dart';
+
 import '../main.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -127,6 +130,7 @@ class _SignUpCreateState extends State<SignUpScreen> {
                             height: 20,
                           ),
                           TextField(
+                            obscureText: true,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(
