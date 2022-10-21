@@ -232,15 +232,9 @@ class _SignInCreateState extends State<SignInScreen> {
         child: CircularProgressIndicator(),
       ),
     );
-
     try {
-      await FirebaseAuth.instance
-          .signInWithEmailAndPassword(
-              email: emailController.text, password: passwordController.text)
-          .then((value) {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => HomeScreen()));
-      });
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: emailController.text, password: passwordController.text);
     } on FirebaseAuthException catch (e) {
       print(e);
       Utils.showSnackBar(e.message);
