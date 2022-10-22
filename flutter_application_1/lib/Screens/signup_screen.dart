@@ -1,16 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:firebase_core/firebase_core.dart';
-
 import 'package:flutter/material.dart';
 
 import 'package:flutter_application_1/Colors/colors.dart';
-
-import 'package:flutter_application_1/Screens/home_screen.dart';
-
-import 'package:flutter_application_1/Screens/signin_screen.dart';
-
-import 'package:flutter_application_1/Screens/verify_email_screen.dart';
 
 import '../Util/utils.dart';
 
@@ -26,7 +18,6 @@ class _SignUpCreateState extends State<SignUpScreen> {
   TextEditingController emailController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
   TextEditingController passwordConfirmController = new TextEditingController();
-
   final formKey = GlobalKey<FormState>();
 
   @override
@@ -229,7 +220,6 @@ class _SignUpCreateState extends State<SignUpScreen> {
   Future signUp() async {
     final isValid = formKey.currentState!.validate();
     if (!isValid) return;
-
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -237,7 +227,6 @@ class _SignUpCreateState extends State<SignUpScreen> {
         child: CircularProgressIndicator(),
       ),
     );
-
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController.text, password: passwordController.text);

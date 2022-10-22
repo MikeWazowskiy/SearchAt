@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_application_1/Screens/signin_screen.dart';
 
-import 'Screens/home_screen.dart';
-
 import 'Screens/verify_email_screen.dart';
 
 import 'Util/utils.dart';

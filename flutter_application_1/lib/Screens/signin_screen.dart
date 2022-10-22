@@ -1,17 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:firebase_core/firebase_core.dart';
-
 import 'package:flutter/material.dart';
 
 import 'package:flutter_application_1/Colors/colors.dart';
 
-import 'package:flutter_application_1/Screens/home_screen.dart';
-
 import 'package:flutter_application_1/Screens/signup_screen.dart';
 
 import '../Util/utils.dart';
+
 import '../main.dart';
+
 import 'forgot_password.dart';
 
 class SignInScreen extends StatefulWidget {
