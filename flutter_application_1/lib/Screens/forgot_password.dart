@@ -33,8 +33,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                hexStringToColor('0C7BB3'),
-                hexStringToColor('FF0061'),
+                hexStringToColor('4facfe'),
+                hexStringToColor('00f2fe'),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -138,33 +138,42 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             padding: EdgeInsets.only(top: 35),
                             child: new Align(
                               alignment: Alignment.center,
-                              child: new Container(
-                                width: 260,
-                                height: 60,
+                              child: Container(
+                                width: 250,
+                                height: 50,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
                                   gradient: LinearGradient(
                                     colors: [
-                                      hexStringToColor('0C7BB3'),
-                                      hexStringToColor('FF0061'),
+                                      hexStringToColor('4facfe'),
+                                      hexStringToColor('00f2fe'),
                                     ],
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
                                   ),
+                                  borderRadius: BorderRadius.circular(20.0),
                                 ),
-                                child: MaterialButton(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20)),
-                                  onPressed: () {
-                                    resetPassword();
-                                  },
-                                  child: new Text(
-                                    "Reset Password",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 23,
-                                      fontWeight: FontWeight.bold,
+                                child: ElevatedButton.icon(
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Color.fromARGB(255, 61, 210, 255),
+                                    onSurface: Colors.white,
+                                    shadowColor: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
                                     ),
+                                  ),
+                                  onPressed: (() {
+                                    resetPassword();
+                                  }),
+                                  icon: Icon(
+                                    Icons.lock,
+                                    size: 32,
+                                  ),
+                                  label: Text(
+                                    "Reset",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 26,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ),

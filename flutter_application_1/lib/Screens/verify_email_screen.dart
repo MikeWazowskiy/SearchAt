@@ -10,6 +10,8 @@ import 'package:flutter_application_1/Screens/signin_screen.dart';
 
 import 'package:flutter_application_1/Util/utils.dart';
 
+import '../Colors/colors.dart';
+
 class VerifyEmailScreen extends StatefulWidget {
   @override
   _VerifyEmailCreateState createState() => _VerifyEmailCreateState();
@@ -17,6 +19,7 @@ class VerifyEmailScreen extends StatefulWidget {
 
 class _VerifyEmailCreateState extends State<VerifyEmailScreen> {
   bool isEmaleVerified = false;
+  bool canResendEmail = false;
   Timer? timer;
 
   @override
@@ -47,12 +50,10 @@ class _VerifyEmailCreateState extends State<VerifyEmailScreen> {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => SignInScreen()));
     }
-    await FirebaseAuth.instance.currentUser!.reload();
     setState(() {
       try {
         isEmaleVerified = FirebaseAuth.instance.currentUser!.emailVerified;
       } catch (e) {
-        Utils.showSnackBar(e.toString(), false);
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => SignInScreen()));
       }
@@ -64,6 +65,14 @@ class _VerifyEmailCreateState extends State<VerifyEmailScreen> {
     try {
       final user = FirebaseAuth.instance.currentUser!;
       await user.sendEmailVerification();
+      setState(
+        () => canResendEmail = false,
+      );
+      await Future.delayed(Duration(seconds: 5));
+      setState(
+        () => canResendEmail = true,
+      );
+      Utils.showSnackBar('A mail has been sent to your email', true);
     } catch (e) {
       Utils.showSnackBar(e.toString(), false);
     }
@@ -73,7 +82,82 @@ class _VerifyEmailCreateState extends State<VerifyEmailScreen> {
   Widget build(BuildContext context) => isEmaleVerified
       ? HomeScreen()
       : Scaffold(
+          body: Column(children: [
+            Padding(
+              padding: EdgeInsets.only(top: 220),
+            ),
+            Center(
+              child: Text(
+                'A verification email\nhas been sent to your email.',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w400,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Center(
+              child: Container(
+                width: 250,
+                height: 50,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      hexStringToColor('4facfe'),
+                      hexStringToColor('00f2fe'),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    primary: Color.fromARGB(255, 61, 210, 255),
+                    onSurface: Colors.white,
+                    shadowColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                  ),
+                  onPressed: canResendEmail ? sendVerificatedEmail : null,
+                  icon: Icon(
+                    Icons.email,
+                    size: 32,
+                  ),
+                  label: Text(
+                    "Resent Email",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              child: TextButton(
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                      fontSize: 24,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400),
+                ),
+                onPressed: () {
+                  FirebaseAuth.instance.signOut();
+                },
+                style: ElevatedButton.styleFrom(
+                  minimumSize: Size.fromHeight(50),
+                ),
+              ),
+            ),
+          ]),
           appBar: AppBar(
+            backgroundColor: Color.fromARGB(255, 61, 210, 255),
             title: Text('Verify Email'),
           ),
         );

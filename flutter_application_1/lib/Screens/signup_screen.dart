@@ -35,8 +35,8 @@ class _SignUpCreateState extends State<SignUpScreen> {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  hexStringToColor('0C7BB3'),
-                  hexStringToColor('FF0061'),
+                  hexStringToColor('4facfe'),
+                  hexStringToColor('00f2fe'),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -133,7 +133,7 @@ class _SignUpCreateState extends State<SignUpScreen> {
                               fillColor: Color(0xFFe7edeb),
                               hintText: "Password",
                               prefixIcon: Icon(
-                                Icons.lock_outline,
+                                Icons.lock,
                                 color: Color.fromARGB(255, 119, 119, 119),
                               ),
                             ),
@@ -155,7 +155,7 @@ class _SignUpCreateState extends State<SignUpScreen> {
                               fillColor: Color(0xFFe7edeb),
                               hintText: "Password Confirm",
                               prefixIcon: Icon(
-                                Icons.lock_outline,
+                                Icons.lock,
                                 color: Color.fromARGB(255, 119, 119, 119),
                               ),
                             ),
@@ -165,40 +165,42 @@ class _SignUpCreateState extends State<SignUpScreen> {
                             padding: EdgeInsets.only(top: 40),
                             child: new Align(
                               alignment: Alignment.center,
-                              child: new Container(
+                              child: Container(
                                 width: 250,
                                 height: 55,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
                                   gradient: LinearGradient(
                                     colors: [
-                                      hexStringToColor('0C7BB3'),
-                                      hexStringToColor('FF0061'),
+                                      hexStringToColor('4facfe'),
+                                      hexStringToColor('00f2fe'),
                                     ],
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
                                   ),
+                                  borderRadius: BorderRadius.circular(20.0),
                                 ),
-                                child: MaterialButton(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20)),
-                                  onPressed: () {
-                                    if (passwordController.text ==
-                                        passwordConfirmController.text) {
-                                      signUp();
-                                    } else {
-                                      Utils.showSnackBar(
-                                          'Incorect password or e-mail', false);
-                                    }
+                                child: ElevatedButton.icon(
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Color.fromARGB(255, 61, 210, 255),
+                                    onSurface: Colors.white,
+                                    shadowColor: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                  ),
+                                  onPressed: (() {
                                     signUp();
-                                  },
-                                  child: new Text(
+                                  }),
+                                  icon: Icon(
+                                    Icons.app_registration,
+                                    size: 32,
+                                  ),
+                                  label: Text(
                                     "Register",
                                     style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                        color: Colors.white,
+                                        fontSize: 26,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ),

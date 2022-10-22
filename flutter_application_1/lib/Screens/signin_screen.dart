@@ -38,8 +38,8 @@ class _SignInCreateState extends State<SignInScreen> {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  hexStringToColor('0C7BB3'),
-                  hexStringToColor('FF0061'),
+                  hexStringToColor('4facfe'),
+                  hexStringToColor('00f2fe'),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -146,33 +146,42 @@ class _SignInCreateState extends State<SignInScreen> {
                             padding: EdgeInsets.only(top: 40),
                             child: new Align(
                               alignment: Alignment.center,
-                              child: new Container(
+                              child: Container(
                                 width: 250,
-                                height: 55,
+                                height: 50,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
                                   gradient: LinearGradient(
                                     colors: [
-                                      hexStringToColor('0C7BB3'),
-                                      hexStringToColor('FF0061'),
+                                      hexStringToColor('4facfe'),
+                                      hexStringToColor('00f2fe'),
                                     ],
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
                                   ),
+                                  borderRadius: BorderRadius.circular(20.0),
                                 ),
-                                child: MaterialButton(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20)),
-                                  onPressed: () {
+                                child: ElevatedButton.icon(
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Color.fromARGB(255, 61, 210, 255),
+                                    onSurface: Colors.white,
+                                    shadowColor: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                  ),
+                                  onPressed: (() {
                                     signIn();
-                                  },
-                                  child: new Text(
+                                  }),
+                                  icon: Icon(
+                                    Icons.lock_open,
+                                    size: 32,
+                                  ),
+                                  label: Text(
                                     "Login",
                                     style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                        color: Colors.white,
+                                        fontSize: 26,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ),
