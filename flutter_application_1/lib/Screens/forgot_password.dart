@@ -37,7 +37,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 hexStringToColor('00f2fe'),
               ],
               begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+              end: Alignment.topRight,
             ),
           ),
           child: Column(
@@ -99,19 +99,35 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         children: [
                           Center(
                             child: Container(
-                              child: Text(
-                                'Receive an email to\nreset your password',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 95, 95, 95),
+                              width: 370,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                gradient: LinearGradient(
+                                  colors: [
+                                    hexStringToColor('4facfe'),
+                                    hexStringToColor('00f2fe'),
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.topRight,
+                                ),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.all(12),
+                                child: Text(
+                                  'Receive an email to\nreset your password',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                           SizedBox(
-                            height: 35,
+                            height: 30,
                           ),
                           TextFormField(
                             controller: emailControler,
@@ -139,7 +155,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             child: new Align(
                               alignment: Alignment.center,
                               child: Container(
-                                width: 250,
+                                width: 340,
                                 height: 50,
                                 child: ElevatedButton.icon(
                                   style: ElevatedButton.styleFrom(

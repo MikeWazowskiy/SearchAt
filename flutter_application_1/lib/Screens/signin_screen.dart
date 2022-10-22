@@ -42,7 +42,7 @@ class _SignInCreateState extends State<SignInScreen> {
                   hexStringToColor('00f2fe'),
                 ],
                 begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+                end: Alignment.topRight,
               ),
             ),
             child: Column(
@@ -147,7 +147,7 @@ class _SignInCreateState extends State<SignInScreen> {
                             child: new Align(
                               alignment: Alignment.center,
                               child: Container(
-                                width: 250,
+                                width: 335,
                                 height: 50,
                                 child: ElevatedButton.icon(
                                   style: ElevatedButton.styleFrom(
@@ -194,7 +194,7 @@ class _SignInCreateState extends State<SignInScreen> {
                                 child: new Text(
                                   "Forgot Password?",
                                   style: TextStyle(
-                                    color: Colors.blue,
+                                    color: Color.fromARGB(255, 61, 210, 255),
                                   ),
                                 ),
                               ),
@@ -248,7 +248,7 @@ class _SignInCreateState extends State<SignInScreen> {
         const Text(
           "Don't have account?",
           style: TextStyle(
-            color: Colors.blue,
+            color: Color.fromARGB(255, 61, 210, 255),
           ),
         ),
         GestureDetector(
@@ -261,8 +261,9 @@ class _SignInCreateState extends State<SignInScreen> {
           child: const Text(
             " Sign Up",
             style: TextStyle(
-              color: Colors.blue,
+              color: Color.fromARGB(255, 61, 210, 255),
               fontWeight: FontWeight.bold,
+              decoration: TextDecoration.underline,
             ),
           ),
         )

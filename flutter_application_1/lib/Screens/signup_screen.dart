@@ -39,7 +39,7 @@ class _SignUpCreateState extends State<SignUpScreen> {
                   hexStringToColor('00f2fe'),
                 ],
                 begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+                end: Alignment.topRight,
               ),
             ),
             child: Column(
@@ -91,7 +91,7 @@ class _SignUpCreateState extends State<SignUpScreen> {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                        vertical: 55,
+                        vertical: 65,
                         horizontal: 35,
                       ),
                       child: Column(
@@ -162,11 +162,11 @@ class _SignUpCreateState extends State<SignUpScreen> {
                             controller: passwordConfirmController,
                           ),
                           Padding(
-                            padding: EdgeInsets.only(top: 40),
+                            padding: EdgeInsets.only(top: 35),
                             child: new Align(
                               alignment: Alignment.center,
                               child: Container(
-                                width: 250,
+                                width: 335,
                                 height: 55,
                                 child: ElevatedButton.icon(
                                   style: ElevatedButton.styleFrom(

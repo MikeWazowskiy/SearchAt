@@ -10,8 +10,6 @@ import 'package:flutter_application_1/Screens/signin_screen.dart';
 
 import 'package:flutter_application_1/Util/utils.dart';
 
-import '../Colors/colors.dart';
-
 class VerifyEmailScreen extends StatefulWidget {
   @override
   _VerifyEmailCreateState createState() => _VerifyEmailCreateState();
