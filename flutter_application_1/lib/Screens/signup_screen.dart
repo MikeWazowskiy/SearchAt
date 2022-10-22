@@ -197,7 +197,7 @@ class _SignUpCreateState extends State<SignUpScreen> {
                                       signUp();
                                     } else {
                                       Utils.showSnackBar(
-                                          'Incorect password or e-mail');
+                                          'Incorect password or e-mail', false);
                                     }
                                   },
                                   child: new Text(
@@ -242,7 +242,7 @@ class _SignUpCreateState extends State<SignUpScreen> {
           email: emailController.text, password: passwordController.text);
     } on FirebaseAuthException catch (e) {
       print(e);
-      Utils.showSnackBar(e.message);
+      Utils.showSnackBar(e.message, false);
     }
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
     return;

@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_application_1/Screens/home_screen.dart';
+import 'package:flutter_application_1/Screens/signin_screen.dart';
 
 import 'package:flutter_application_1/Util/utils.dart';
 
@@ -43,10 +44,18 @@ class _VerifyEmailCreateState extends State<VerifyEmailScreen> {
     try {
       await FirebaseAuth.instance.currentUser!.reload();
     } catch (e) {
-      Utils.showSnackBar(e.toString());
+      Utils.showSnackBar(e.toString(), false);
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => SignInScreen()));
     }
     setState(() {
-      isEmaleVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+      try {
+        isEmaleVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+      } catch (e) {
+        Utils.showSnackBar(e.toString(), false);
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => SignInScreen()));
+      }
     });
     if (isEmaleVerified) timer?.cancel();
   }
@@ -56,7 +65,7 @@ class _VerifyEmailCreateState extends State<VerifyEmailScreen> {
       final user = FirebaseAuth.instance.currentUser!;
       await user.sendEmailVerification();
     } catch (e) {
-      Utils.showSnackBar(e.toString());
+      Utils.showSnackBar(e.toString(), false);
     }
   }
 

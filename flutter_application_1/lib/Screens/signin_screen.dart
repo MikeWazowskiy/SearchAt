@@ -237,7 +237,7 @@ class _SignInCreateState extends State<SignInScreen> {
           email: emailController.text, password: passwordController.text);
     } on FirebaseAuthException catch (e) {
       print(e);
-      Utils.showSnackBar(e.message);
+      Utils.showSnackBar(e.message, false);
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => SignInScreen()));
     }
