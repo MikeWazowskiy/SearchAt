@@ -192,7 +192,13 @@ class _SignUpCreateState extends State<SignUpScreen> {
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20)),
                                   onPressed: () {
-                                    signUp();
+                                    if (passwordController.text ==
+                                        passwordConfirmController.text) {
+                                      signUp();
+                                    } else {
+                                      Utils.showSnackBar(
+                                          'Incorect password or e-mail');
+                                    }
                                   },
                                   child: new Text(
                                     "Register",

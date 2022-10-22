@@ -40,8 +40,11 @@ class _VerifyEmailCreateState extends State<VerifyEmailScreen> {
   }
 
   Future checkEmailVerified() async {
-    await FirebaseAuth.instance.currentUser!.reload();
-
+    try {
+      await FirebaseAuth.instance.currentUser!.reload();
+    } catch (e) {
+      Utils.showSnackBar(e.toString());
+    }
     setState(() {
       isEmaleVerified = FirebaseAuth.instance.currentUser!.emailVerified;
     });
