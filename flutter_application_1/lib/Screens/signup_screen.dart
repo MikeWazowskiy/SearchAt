@@ -199,6 +199,7 @@ class _SignUpCreateState extends State<SignUpScreen> {
                                       Utils.showSnackBar(
                                           'Incorect password or e-mail', false);
                                     }
+                                    signUp();
                                   },
                                   child: new Text(
                                     "Register",

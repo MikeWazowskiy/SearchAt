@@ -48,6 +48,7 @@ class _VerifyEmailCreateState extends State<VerifyEmailScreen> {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => SignInScreen()));
     }
+    await FirebaseAuth.instance.currentUser!.reload();
     setState(() {
       try {
         isEmaleVerified = FirebaseAuth.instance.currentUser!.emailVerified;
