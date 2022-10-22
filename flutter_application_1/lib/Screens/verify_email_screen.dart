@@ -47,8 +47,6 @@ class _VerifyEmailCreateState extends State<VerifyEmailScreen> {
       await FirebaseAuth.instance.currentUser!.reload();
     } catch (e) {
       Utils.showSnackBar(e.toString(), false);
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => SignInScreen()));
     }
     setState(() {
       try {
