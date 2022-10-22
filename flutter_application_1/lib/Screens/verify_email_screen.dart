@@ -82,7 +82,7 @@ class _VerifyEmailCreateState extends State<VerifyEmailScreen> {
       : Scaffold(
           body: Column(children: [
             Padding(
-              padding: EdgeInsets.only(top: 220),
+              padding: EdgeInsets.only(top: 200),
             ),
             Center(
               child: Text(
@@ -101,17 +101,6 @@ class _VerifyEmailCreateState extends State<VerifyEmailScreen> {
               child: Container(
                 width: 250,
                 height: 50,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      hexStringToColor('4facfe'),
-                      hexStringToColor('00f2fe'),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
                 child: ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
                     primary: Color.fromARGB(255, 61, 210, 255),
