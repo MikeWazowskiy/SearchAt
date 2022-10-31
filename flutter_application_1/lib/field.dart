@@ -27,7 +27,7 @@ class _FieldState extends State<Field> {
     return AnimatedSwitcher(
       switchOutCurve: Curves.ease,
       switchInCurve: Curves.ease,
-      reverseDuration: Duration(seconds: 1),
+      reverseDuration: Duration(milliseconds: 40),
       duration: const Duration(seconds: 1),
       child: _animatedWidget,
     );
@@ -36,136 +36,140 @@ class _FieldState extends State<Field> {
   Widget login() {
     return Container(
       key: Key('first'),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              InkWell(
-                child: Text(
-                  'Login',
-                  style: TextStyle(fontSize: 25),
-                ),
-                onTap: () => setState(
-                  () => _animatedWidget = login(),
-                ),
-              ),
-              InkWell(
-                child: Text(
-                  'Sign Up',
-                  style: TextStyle(fontSize: 25),
-                ),
-                onTap: () => setState(() {
-                  _animatedWidget = registration();
-                }),
-              )
-            ],
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-          ),
-          Divider(
-            color: Colors.black,
-            height: 30,
-            indent: 10,
-            endIndent: 10,
-            thickness: 1,
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 10, top: 20),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Email',
-                style: TextStyle(
-                  fontSize: 18,
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            child: TextFormField(
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                hintText: 'Enter your email address',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                ),
-              ),
-              controller: emailController,
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 10),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Password',
-                style: TextStyle(
-                  fontSize: 18,
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            child: TextFormField(
-              controller: passwordController,
-              obscureText: !_passwordVisible,
-              enableSuggestions: false,
-              autocorrect: false,
-              decoration: InputDecoration(
-                hintText: 'Enter your password',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                ),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _passwordVisible ? Icons.visibility : Icons.visibility_off,
-                    color: Theme.of(context).primaryColorDark,
+      child: Center(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                InkWell(
+                  child: Text(
+                    'Login',
+                    style: TextStyle(fontSize: 25),
                   ),
-                  onPressed: () {
-                    setState(() {
-                      _passwordVisible = !_passwordVisible;
-                    });
-                  },
+                  onTap: () => setState(
+                    () => _animatedWidget = login(),
+                  ),
                 ),
-              ),
+                InkWell(
+                  child: Text(
+                    'Sign Up',
+                    style: TextStyle(fontSize: 25),
+                  ),
+                  onTap: () => setState(() {
+                    _animatedWidget = registration();
+                  }),
+                )
+              ],
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(right: 10),
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: InkWell(
+            Divider(
+              color: Colors.black,
+              height: 30,
+              indent: 10,
+              endIndent: 10,
+              thickness: 1,
+            ),
+            Container(
+              padding: EdgeInsets.only(left: 10, top: 20),
+              child: Align(
+                alignment: Alignment.centerLeft,
                 child: Text(
-                  'Forgot your password?',
+                  'Email',
                   style: TextStyle(
-                    color: Colors.blue,
+                    fontSize: 18,
                   ),
                 ),
-                onTap: () => setState(() {
-                  _animatedWidget = forgorPassword();
-                }),
               ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 30),
-            child: ElevatedButton(
-              onPressed: () => signIn(),
-              child: const Text(
-                'Submit',
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.w300,
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              child: TextFormField(
+                keyboardType: TextInputType.emailAddress,
+                decoration: InputDecoration(
+                  hintText: 'Enter your email address',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                ),
+                controller: emailController,
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.only(left: 10),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Password',
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
                 ),
               ),
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                backgroundColor: Colors.green,
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              child: TextFormField(
+                controller: passwordController,
+                obscureText: !_passwordVisible,
+                enableSuggestions: false,
+                autocorrect: false,
+                decoration: InputDecoration(
+                  hintText: 'Enter your password',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _passwordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      color: Theme.of(context).primaryColorDark,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _passwordVisible = !_passwordVisible;
+                      });
+                    },
+                  ),
+                ),
               ),
             ),
-          ),
-        ],
+            Container(
+              padding: EdgeInsets.only(right: 10),
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: InkWell(
+                  child: Text(
+                    'Forgot your password?',
+                    style: TextStyle(
+                      color: Colors.blue,
+                    ),
+                  ),
+                  onTap: () => setState(() {
+                    _animatedWidget = forgorPassword();
+                  }),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 30),
+              child: ElevatedButton(
+                onPressed: () => signIn(),
+                child: const Text(
+                  'Submit',
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  backgroundColor: Colors.green,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
       padding: EdgeInsets.all(15),
       width: double.infinity,
