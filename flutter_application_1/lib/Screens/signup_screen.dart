@@ -220,7 +220,7 @@ class _SignUpCreateState extends State<SignUpScreen> {
     );
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: emailController.text, password: passwordController.text);
+          email: emailController.text, password: passwordController.text,);
     } on FirebaseAuthException catch (e) {
       print(e);
       Utils.showSnackBar(e.message, false);
