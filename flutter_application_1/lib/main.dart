@@ -10,6 +10,8 @@ import 'Screens/verify_email_screen.dart';
 
 import 'Util/utils.dart';
 
+import 'Screens/login_screen.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -38,7 +40,7 @@ class MainPage extends StatelessWidget {
             if (snapshot.hasData) {
               return VerifyEmailScreen();
             } else {
-              return SignInScreen();
+              return Login();
             }
           }),
         ),
