@@ -559,7 +559,6 @@ class _FieldState extends State<Field> {
           email: emailControllerForForgotPassword.text.trim());
       Utils.showSnackBar('Password Reset Email Sent', true);
       Navigator.of(context).popUntil((route) => route.isFirst);
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Field()));
     } on FirebaseAuthException catch (e) {
       print(e);
 
