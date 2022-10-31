@@ -4,8 +4,6 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'package:flutter/material.dart';
 
-import 'package:flutter_application_1/Screens/signin_screen.dart';
-
 import 'Screens/verify_email_screen.dart';
 
 import 'Util/utils.dart';
@@ -37,7 +35,15 @@ class MainPage extends StatelessWidget {
         body: StreamBuilder<User?>(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: ((context, snapshot) {
-            if (snapshot.hasData) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text('Something went wrong!'),
+              );
+            } else if (snapshot.hasData) {
               return VerifyEmailScreen();
             } else {
               return Login();
