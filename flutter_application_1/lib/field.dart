@@ -554,6 +554,7 @@ class _FieldState extends State<Field> {
         child: CircularProgressIndicator(),
       ),
     );
+
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(
           email: emailControllerForForgotPassword.text.trim());

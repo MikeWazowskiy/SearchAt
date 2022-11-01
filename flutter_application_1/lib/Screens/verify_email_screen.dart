@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_application_1/Screens/home_screen.dart';
 
-import 'package:flutter_application_1/Screens/signin_screen.dart';
-
 import 'package:flutter_application_1/Util/utils.dart';
+
+import 'package:flutter_application_1/field.dart';
 
 class VerifyEmailScreen extends StatefulWidget {
   @override
@@ -51,7 +51,7 @@ class _VerifyEmailCreateState extends State<VerifyEmailScreen> {
         isEmaleVerified = FirebaseAuth.instance.currentUser!.emailVerified;
       } catch (e) {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => SignInScreen()));
+            context, MaterialPageRoute(builder: (context) => Field()));
       }
     });
     if (isEmaleVerified) timer?.cancel();
