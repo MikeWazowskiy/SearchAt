@@ -24,7 +24,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
         child: Column(
           children: <Widget>[
             SizedBox(
-              height: 40,
+              height: 25,
             ),
             Container(
               height: 300,
