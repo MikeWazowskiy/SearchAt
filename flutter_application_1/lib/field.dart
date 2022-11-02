@@ -36,11 +36,9 @@ class _FieldState extends State<Field> {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedSwitcher(
-      switchOutCurve: Curves.ease,
-      switchInCurve: Curves.ease,
-      reverseDuration: Duration(milliseconds: 40),
+    return AnimatedContainer(
       duration: const Duration(seconds: 1),
+      curve: Curves.bounceIn,
       child: _animatedWidget,
     );
   }

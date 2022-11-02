@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Screens/create_edit_idea.dart';
 
 import 'package:flutter_application_1/Screens/ideas_screen.dart';
 
@@ -21,7 +22,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CreateEditIdeaPage(),
+          ),
+        ),
         backgroundColor: Colors.white,
         tooltip: 'Increment',
         child: Icon(
