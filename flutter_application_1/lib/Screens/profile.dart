@@ -20,96 +20,98 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
         ),
         backgroundColor: Colors.white,
       ),
-      body: Column(
-        children: <Widget>[
-          SizedBox(
-            height: 40,
-          ),
-          Container(
-            height: 300,
-            width: 400,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: [
-                    hexStringToColor('#EAD6EE'),
-                    hexStringToColor('#A0F1EA'),
-                  ],
-                )),
-            child: Column(
-              children: <Widget>[
-                SizedBox(
-                  height: 20,
-                ),
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 90,
-                    child: Text(
-                      'NG',
-                      style: TextStyle(fontSize: 25, color: Colors.white),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            SizedBox(
+              height: 40,
+            ),
+            Container(
+              height: 300,
+              width: 400,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [
+                      hexStringToColor('#EAD6EE'),
+                      hexStringToColor('#A0F1EA'),
+                    ],
+                  )),
+              child: Column(
+                children: <Widget>[
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      radius: 90,
+                      child: Text(
+                        'NG',
+                        style: TextStyle(fontSize: 25, color: Colors.white),
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  'Nikita Coolest',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
+                  SizedBox(
+                    height: 20,
                   ),
-                ),
-                SizedBox(
-                  height: 14,
-                ),
-                Text(
-                  'SearchAt user',
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 16,
+                  Text(
+                    'Nikita Coolest',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                    ),
                   ),
-                ),
-              ],
+                  SizedBox(
+                    height: 14,
+                  ),
+                  Text(
+                    'SearchAt user',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Container(
-            height: 200,
-            width: 400,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: [
-                    hexStringToColor('#EAD6EE'),
-                    hexStringToColor('#A0F1EA'),
-                  ],
-                )),
-            child: Align(
-              alignment: Alignment.bottomLeft,
-              child: Padding(
-                padding: EdgeInsets.only(left: 20),
-                child: Text(
-                  'About',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
+            SizedBox(
+              height: 20,
+            ),
+            Container(
+              height: 200,
+              width: 400,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [
+                      hexStringToColor('#EAD6EE'),
+                      hexStringToColor('#A0F1EA'),
+                    ],
+                  )),
+              child: Align(
+                alignment: Alignment.bottomLeft,
+                child: Padding(
+                  padding: EdgeInsets.only(left: 20),
+                  child: Text(
+                    'About',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
