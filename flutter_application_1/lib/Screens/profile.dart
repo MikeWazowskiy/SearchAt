@@ -25,13 +25,13 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
           children: <Widget>[
             Padding(
               padding:
-                  EdgeInsets.only(top: 30, left: 15, right: 15, bottom: 20),
+                  EdgeInsets.only(top: 17, left: 15, right: 15, bottom: 20),
               child: Container(
                 height: 300,
                 width: 380,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
-                  color: Color.fromARGB(255, 230, 230, 230),
+                  color: Color.fromARGB(255, 240, 240, 240),
                 ),
                 child: Column(
                   children: <Widget>[
@@ -81,7 +81,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
               width: 380,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
-                color: Color.fromARGB(255, 230, 230, 230),
+                color: Color.fromARGB(255, 240, 240, 240),
               ),
               child: Column(
                 children: [
@@ -116,12 +116,12 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15.0),
                           borderSide: BorderSide(
-                            color: Color.fromARGB(255, 230, 230, 230),
+                            color: Color.fromARGB(255, 240, 240, 240),
                           ),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                            color: Color.fromARGB(255, 230, 230, 230),
+                            color: Color.fromARGB(255, 240, 240, 240),
                           ),
                           borderRadius: BorderRadius.circular(15.0),
                         ),
