@@ -132,12 +132,12 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15.0),
                           borderSide: BorderSide(
-                            color: Color.fromARGB(255, 240, 240, 240),
+                            color: Colors.white,
                           ),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                            color: Color.fromARGB(255, 240, 240, 240),
+                            color: Colors.white,
                           ),
                           borderRadius: BorderRadius.circular(15.0),
                         ),
