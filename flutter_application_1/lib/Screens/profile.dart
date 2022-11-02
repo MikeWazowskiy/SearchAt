@@ -30,15 +30,9 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
               height: 300,
               width: 400,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  gradient: LinearGradient(
-                    begin: Alignment.topRight,
-                    end: Alignment.bottomLeft,
-                    colors: [
-                      hexStringToColor('#EAD6EE'),
-                      hexStringToColor('#A0F1EA'),
-                    ],
-                  )),
+                borderRadius: BorderRadius.circular(30),
+                color: Color.fromARGB(255, 230, 230, 230),
+              ),
               child: Column(
                 children: <Widget>[
                   SizedBox(
@@ -86,15 +80,9 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
               height: 200,
               width: 400,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  gradient: LinearGradient(
-                    begin: Alignment.topRight,
-                    end: Alignment.bottomLeft,
-                    colors: [
-                      hexStringToColor('#EAD6EE'),
-                      hexStringToColor('#A0F1EA'),
-                    ],
-                  )),
+                borderRadius: BorderRadius.circular(30),
+                color: Color.fromARGB(255, 230, 230, 230),
+              ),
               child: Align(
                 alignment: Alignment.bottomLeft,
                 child: Padding(
