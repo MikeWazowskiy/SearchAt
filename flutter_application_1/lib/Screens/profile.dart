@@ -30,8 +30,16 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                 height: 300,
                 width: 380,
                 decoration: BoxDecoration(
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(30),
-                  color: Color.fromARGB(255, 240, 240, 240),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: Offset(0, 3), // changes position of shadow
+                    ),
+                  ],
                 ),
                 child: Column(
                   children: <Widget>[
@@ -41,7 +49,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                     Align(
                       alignment: Alignment.topCenter,
                       child: CircleAvatar(
-                        backgroundColor: Colors.white,
+                        backgroundColor: Color.fromARGB(255, 207, 207, 207),
                         radius: 90,
                         child: Text(
                           'NG',
@@ -80,8 +88,16 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
               height: 235,
               width: 380,
               decoration: BoxDecoration(
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(30),
-                color: Color.fromARGB(255, 240, 240, 240),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: Offset(0, 3), // changes position of shadow
+                  ),
+                ],
               ),
               child: Column(
                 children: [
