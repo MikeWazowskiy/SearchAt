@@ -40,6 +40,7 @@ class IdeaCard extends StatelessWidget {
             ),
             Text(
               '${data.docs[index]['description']}',
+              style: TextStyle(fontSize: 16),
             ),
             SizedBox(
               height: 20,

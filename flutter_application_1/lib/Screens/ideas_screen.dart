@@ -20,10 +20,10 @@ class _IdeasScreenCreateState extends State<IdeasScreen> {
         stream: ideas,
         builder: ((context, snapshot) {
           if (snapshot.hasError) {
-            return Text('Something went wrong.');
+            return Center(child: Text('Something went wrong.'));
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Text('Loading');
+            return Center(child: CircularProgressIndicator());
           }
 
           final data = snapshot.requireData;

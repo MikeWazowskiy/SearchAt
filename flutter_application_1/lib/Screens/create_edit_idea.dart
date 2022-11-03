@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/tags.dart';
 import 'package:intl/intl.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 
 class CreateEditIdeaPage extends StatefulWidget {
   @override
@@ -26,68 +28,78 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.all(15),
-          child: Column(
-            children: [
-              Text(
-                'Title',
-                style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 30,
+        padding: EdgeInsets.all(15),
+        child: Column(
+          children: [
+            Text(
+              'Idea',
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 25,
+              ),
+            ),
+            SizedBox(height: 15),
+            TextFormField(
+              maxLength: 50,
+              decoration: InputDecoration(
+                labelText: 'Idea title',
+              ),
+              onChanged: (value) => title = value,
+            ),
+            Text(
+              'About',
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 25,
+              ),
+            ),
+            SizedBox(height: 35),
+            InkWell(
+              child: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    description.isEmpty
+                        ? Text(
+                            'Idea description',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey[600],
+                            ),
+                          )
+                        : Text(description),
+                    Divider(
+                      height: 45,
+                      thickness: 0.9,
+                      color: Colors.grey[500],
+                    ),
+                  ],
                 ),
               ),
-              SizedBox(height: 10),
-              TextFormField(
-                maxLength: 50,
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                  hintText: 'Enter your idea title...',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                ),
-                onChanged: (value) => title = value,
+              onTap: () {},
+            ),
+            SizedBox(height: 15),
+            Text(
+              'Tags',
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 25,
               ),
-              Text(
-                'Description',
-                style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 30,
-                ),
+            ),
+            SizedBox(height: 35),
+            TagsField(),
+            SizedBox(height: 10),
+            Text(
+              'Contacts',
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 25,
               ),
-              SizedBox(height: 10),
-              TextFormField(
-                maxLength: 400,
-                maxLines: 10,
-                decoration: InputDecoration(
-                  hintText: 'Enter your idea description...',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                ),
-                onChanged: (value) => description = value,
-              ),
-              Text(
-                'Tags',
-                style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 30,
-                ),
-              ),
-              SizedBox(height: 10),
-              TagsField(),
-              SizedBox(height: 10),
-              Text(
-                'Contacts',
-                style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 30,
-                ),
-              ),
-              SizedBox(height: 60),
-              ElevatedButton(
-                onPressed: () => ideas
+            ),
+            SizedBox(height: 60),
+            ElevatedButton(
+              onPressed: () {
+                ideas
                     .add(
                       {
                         'title': title.trim(),
@@ -100,19 +112,28 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
                     .then(
                       (value) => print('Idea added!'),
                     )
-                    .catchError((error) => 'Failded to add the idea: $error'),
-                child: Text(
-                  'Publish',
-                  style: TextStyle(fontSize: 25),
-                ),
-                style: ElevatedButton.styleFrom(
-                  minimumSize: Size(double.infinity, 0),
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  backgroundColor: Color.fromARGB(255, 102, 192, 105),
-                ),
+                    .catchError((error) => 'Failded to add the idea: $error');
+                Navigator.pop(context);
+                showTopSnackBar(
+                  context,
+                  CustomSnackBar.success(
+                    message:
+                        "The idea has been successfully published!",
+                  ),
+                );
+              },
+              child: Text(
+                'Publish',
+                style: TextStyle(fontSize: 25),
               ),
-            ],
-          ),
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(double.infinity, 0),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                backgroundColor: Color.fromARGB(255, 102, 192, 105),
+              ),
+            ),
+          ],
+          crossAxisAlignment: CrossAxisAlignment.start,
         ),
       ),
     );
