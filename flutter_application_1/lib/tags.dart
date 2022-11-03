@@ -65,14 +65,14 @@ class _TagsFieldState extends State<TagsField> {
                           },
                           child: Align(
                             alignment: Alignment.centerLeft,
-                              child: Text(
-                                '$option',
-                                textAlign: TextAlign.left,
-                                style: const TextStyle(
-                                  color: Color.fromARGB(255, 102, 192, 105),
-                                ),
+                            child: Text(
+                              '$option',
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(
+                                color: Color.fromARGB(255, 102, 192, 105),
                               ),
                             ),
+                          ),
                         );
                       },
                     ),

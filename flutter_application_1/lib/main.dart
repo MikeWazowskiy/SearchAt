@@ -1,13 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:firebase_core/firebase_core.dart';
-
 import 'package:flutter/material.dart';
-
 import 'Screens/verify_email_screen.dart';
-
 import 'Util/utils.dart';
-
 import 'Screens/login_screen.dart';
 
 void main() async {
