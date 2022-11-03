@@ -46,15 +46,19 @@ class _VerifyEmailCreateState extends State<VerifyEmailScreen> {
     } catch (e) {
       Utils.showSnackBar(e.toString(), false);
     }
-    setState(() {
-      try {
-        isEmaleVerified = FirebaseAuth.instance.currentUser!.emailVerified;
-      } catch (e) {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Field()));
-      }
-    });
-    if (isEmaleVerified) timer?.cancel();
+    try {
+      setState(() {
+        try {
+          isEmaleVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+        } catch (e) {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Field()));
+        }
+      });
+      if (isEmaleVerified) timer?.cancel();
+    } catch (ex) {
+      Utils.showSnackBar(ex.toString(), false);
+    }
   }
 
   Future sendVerificatedEmail() async {

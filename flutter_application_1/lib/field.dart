@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
@@ -390,6 +391,18 @@ class _FieldState extends State<Field> {
     );
   }
 
+  Future createUser() async {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    users.add(
+      {
+        'name': emailControllerForSignUp.text,
+        'password': passwordControllerForSignUp.text,
+        'image_profile': null,
+        'about_yourself': null,
+      },
+    );
+  }
+
   Widget forgorPassword() {
     @override
     void dispose() {
@@ -541,6 +554,7 @@ class _FieldState extends State<Field> {
       Utils.showSnackBar(e.message, false);
     }
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
+    createUser();
     return;
   }
 
