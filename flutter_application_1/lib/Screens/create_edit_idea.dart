@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/tags.dart';
+import 'package:intl/intl.dart';
 
 class CreateEditIdeaPage extends StatefulWidget {
   @override
@@ -12,6 +13,7 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
   var description = '';
   var tags = [];
   var contacts = [];
+  final now = new DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +40,7 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
               SizedBox(height: 10),
               TextFormField(
                 maxLength: 50,
+                textAlign: TextAlign.center,
                 decoration: InputDecoration(
                   hintText: 'Enter your idea title...',
                   border: OutlineInputBorder(
@@ -84,16 +87,20 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
               ),
               SizedBox(height: 60),
               ElevatedButton(
-                onPressed: () => ideas.add(
-                  {
-                    'title': title,
-                    'description': description,
-                    'tags': tags,
-                    'contacts': contacts,
-                  },
-                ).then(
-                  (value) => print('Idea added!'),
-                ).catchError((error) => 'Failded to add the idea: $error'),
+                onPressed: () => ideas
+                    .add(
+                      {
+                        'title': title.trim(),
+                        'description': description.trim(),
+                        'tags': tags,
+                        'contacts': contacts,
+                        'date': DateFormat('dd.MM.yyyy').format(now),
+                      },
+                    )
+                    .then(
+                      (value) => print('Idea added!'),
+                    )
+                    .catchError((error) => 'Failded to add the idea: $error'),
                 child: Text(
                   'Publish',
                   style: TextStyle(fontSize: 25),
