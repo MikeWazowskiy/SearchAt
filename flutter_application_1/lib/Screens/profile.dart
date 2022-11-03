@@ -1,8 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
-
-import '../Colors/colors.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -10,6 +10,8 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenCreateState extends State<ProfileScreen> {
+  final Stream<QuerySnapshot> users =
+      FirebaseFirestore.instance.collection('users').snapshots();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +39,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                       color: Colors.grey.withOpacity(0.5),
                       spreadRadius: 5,
                       blurRadius: 7,
-                      offset: Offset(0, 3), // changes position of shadow
+                      offset: Offset(0, 3),
                     ),
                   ],
                 ),
@@ -63,7 +65,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                       height: 20,
                     ),
                     Text(
-                      'Mike Coolest',
+                      'Collest',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w500,

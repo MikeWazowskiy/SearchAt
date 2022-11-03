@@ -385,16 +385,22 @@ class _FieldState extends State<Field> {
     );
   }
 
-  Future createUser() async {
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
-    users.add(
-      {
-        'name': emailControllerForSignUp.text,
-        'password': passwordControllerForSignUp.text,
-        'image_profile': null,
-        'about_yourself': null,
-      },
-    );
+  Future createUser(
+      {required String email,
+      required String name,
+      required String password,
+      required String urlPhoto,
+      required String aboutYourself}) async {
+    final usersDoc = FirebaseFirestore.instance.collection('users');
+    final json = {
+      'email': email,
+      'name': name,
+      'password': password,
+      'image_profile': urlPhoto,
+      'about_yourself': aboutYourself,
+    };
+
+    await usersDoc.add(json);
   }
 
   Widget forgorPassword() {
@@ -548,7 +554,12 @@ class _FieldState extends State<Field> {
       Utils.showSnackBar(e.message, false);
     }
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
-    createUser();
+    createUser(
+        email: emailControllerForSignUp.text,
+        name: emailControllerForSignUp.text,
+        password: passwordControllerForSignUp.text,
+        urlPhoto: '',
+        aboutYourself: 'Type anything about yourself (If u want)');
     return;
   }
 
