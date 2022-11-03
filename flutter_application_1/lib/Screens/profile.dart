@@ -279,22 +279,6 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
             SizedBox(
               height: 20,
             ),
-            ElevatedButton(
-              onPressed: () {
-                savePhoto(_imageFile?.path);
-              },
-              child: const Text(
-                'Save',
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.w300,
-                ),
-              ),
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                backgroundColor: Colors.green,
-              ),
-            ),
           ],
         ),
       ),
@@ -306,13 +290,18 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
       var image = await _picker.pickImage(source: source);
       setState(() {
         _imageFile = image;
-        Navigator.pop(context);
-        showTopSnackBar(
-          context,
-          CustomSnackBar.success(
-            message: "Photo was published",
-          ),
-        );
+        if (_imageFile == null)
+          return;
+        else {
+          savePhoto(_imageFile?.path);
+          Navigator.pop(context);
+          showTopSnackBar(
+            context,
+            CustomSnackBar.success(
+              message: "Photo was published",
+            ),
+          );
+        }
       });
     } on PlatformException catch (e) {
       Navigator.of(context).pop();
