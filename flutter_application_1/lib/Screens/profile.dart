@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -12,10 +13,15 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenCreateState extends State<ProfileScreen> {
   PickedFile? _imageFile;
+  String? _imagepath;
   final _picker = ImagePicker();
-  TextEditingController aboutYourselfController = new TextEditingController();
-  final Stream<QuerySnapshot> users =
-      FirebaseFirestore.instance.collection('users').snapshots();
+
+  @override
+  void initState() {
+    super.initState();
+    LoadImage();
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget bottomSheet() {
@@ -119,45 +125,71 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                     Center(
                       child: Stack(
                         children: <Widget>[
-                          Align(
-                            alignment: Alignment.topCenter,
-                            child: CircleAvatar(
-                              backgroundColor:
-                                  Color.fromARGB(255, 228, 228, 228),
-                              child: _imageFile == null
-                                  ? Text(
-                                      'No User Photo',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 20,
-                                      ),
-                                    )
-                                  : CircleAvatar(
-                                      backgroundImage:
-                                          FileImage(File(_imageFile!.path))
-                                              as ImageProvider,
-                                      radius: 90,
+                          _imagepath != null
+                              ? CircleAvatar(
+                                  backgroundImage: FileImage(
+                                    File(_imagepath!),
+                                  ),
+                                  radius: 90,
+                                )
+                              : Align(
+                                  alignment: Alignment.topCenter,
+                                  child: CircleAvatar(
+                                    backgroundColor:
+                                        Color.fromARGB(255, 228, 228, 228),
+                                    child: _imageFile == null
+                                        ? Text(
+                                            'No User Photo',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 20,
+                                            ),
+                                          )
+                                        : CircleAvatar(
+                                            backgroundImage: FileImage(
+                                                    File(_imageFile!.path))
+                                                as ImageProvider,
+                                            radius: 90,
+                                          ),
+                                    radius: 90,
+                                  ),
+                                ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 145, right: 115),
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.5),
+                                      spreadRadius: 5,
+                                      blurRadius: 7,
+                                      offset: Offset(0, 3),
                                     ),
-                              radius: 90,
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: IconButton(
-                              icon: Icon(Icons.camera_alt),
-                              onPressed: () {
-                                showBottomSheet(
-                                  context: context,
-                                  builder: ((builder) => bottomSheet()),
-                                );
-                              },
+                                  ],
+                                  color: Color.fromARGB(255, 239, 253, 255),
+                                ),
+                                child: IconButton(
+                                  icon: Icon(Icons.camera_alt),
+                                  onPressed: () {
+                                    showBottomSheet(
+                                      context: context,
+                                      builder: ((builder) => bottomSheet()),
+                                    );
+                                  },
+                                ),
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 10,
                     ),
                     Text(
                       'User2314',
@@ -188,7 +220,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                     color: Colors.grey.withOpacity(0.5),
                     spreadRadius: 5,
                     blurRadius: 7,
-                    offset: Offset(0, 3), // changes position of shadow
+                    offset: Offset(0, 3),
                   ),
                 ],
               ),
@@ -218,7 +250,6 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                     padding: EdgeInsets.only(left: 20, right: 10, top: 2),
                     child: TextFormField(
                       enabled: false,
-                      controller: aboutYourselfController,
                       maxLength: 300,
                       minLines: 3,
                       maxLines: 5,
@@ -245,6 +276,22 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
             SizedBox(
               height: 20,
             ),
+            ElevatedButton(
+              onPressed: () {
+                savePhoto(_imageFile!.path);
+              },
+              child: const Text(
+                'Submit',
+                style: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                backgroundColor: Colors.green,
+              ),
+            ),
           ],
         ),
       ),
@@ -257,6 +304,23 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
       setState(() {
         _imageFile = image;
         Navigator.of(context).pop();
+      });
+    } on PlatformException catch (e) {
+      Navigator.of(context).pop();
+    }
+  }
+
+  void savePhoto(path) async {
+    SharedPreferences saveimage = await SharedPreferences.getInstance();
+    saveimage.setString("imagepath", path);
+  }
+
+  void LoadImage() async {
+    try {
+      SharedPreferences.setMockInitialValues({});
+      SharedPreferences saveimage = await SharedPreferences.getInstance();
+      setState(() {
+        _imagepath = saveimage.getString("imagepath");
       });
     } on PlatformException catch (e) {
       Navigator.of(context).pop();

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Screens/create_edit_idea.dart';
 import 'package:flutter_application_1/idea_card.dart';
 
 class IdeasScreen extends StatefulWidget {
