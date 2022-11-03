@@ -37,9 +37,7 @@ class _FieldState extends State<Field> {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(seconds: 1),
-      curve: Curves.bounceIn,
+    return Container(
       child: _animatedWidget,
     );
   }
@@ -145,11 +143,9 @@ class _FieldState extends State<Field> {
                           : Icons.visibility_off,
                       color: Theme.of(context).primaryColorDark,
                     ),
-                    onPressed: () {
-                      setState(() {
-                        _passwordVisible = !_passwordVisible;
-                      });
-                    },
+                    onPressed: () => setState(
+                      () => _passwordVisible = !_passwordVisible,
+                    ),
                   ),
                 ),
               ),
@@ -311,11 +307,9 @@ class _FieldState extends State<Field> {
                           : Icons.visibility_off,
                       color: Theme.of(context).primaryColorDark,
                     ),
-                    onPressed: () {
-                      setState(() {
-                        _passwordVisible = !_passwordVisible;
-                      });
-                    },
+                    onPressed: () => setState(
+                      () => _passwordVisible = !_passwordVisible,
+                    ),
                   ),
                 ),
               ),

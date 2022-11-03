@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/idea_card.dart';
 
 class IdeasScreen extends StatefulWidget {
   @override
@@ -30,7 +31,7 @@ class _IdeasScreenCreateState extends State<IdeasScreen> {
           return ListView.builder(
             itemCount: data.size,
             itemBuilder: ((context, index) {
-              return Text('Title: ${data.docs[index]['title']}, description: ${data.docs[index]['description']}');
+              return IdeaCard(data: data, index: index);
             }),
           );
         }),
