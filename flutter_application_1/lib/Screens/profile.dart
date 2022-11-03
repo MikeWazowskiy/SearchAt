@@ -52,7 +52,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                         backgroundColor: Color.fromARGB(255, 207, 207, 207),
                         radius: 90,
                         child: Text(
-                          'NG',
+                          'NIGGER',
                           style: TextStyle(
                               fontSize: 25,
                               color: Color.fromARGB(255, 0, 0, 0)),
@@ -63,7 +63,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                       height: 20,
                     ),
                     Text(
-                      'Nikita Coolest',
+                      'Mike Coolest',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w500,

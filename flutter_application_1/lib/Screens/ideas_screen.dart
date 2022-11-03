@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
@@ -8,112 +9,32 @@ class IdeasScreen extends StatefulWidget {
 }
 
 class _IdeasScreenCreateState extends State<IdeasScreen> {
+  final Stream<QuerySnapshot> ideas =
+      FirebaseFirestore.instance.collection('ideas').snapshots();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Text(
-          "Search",
-          style: TextStyle(
-            color: Color.fromARGB(255, 77, 77, 77),
-          ),
-        ),
-        actions: [
-          IconButton(
-            color: Color.fromARGB(255, 77, 77, 77),
-            onPressed: () {
-              showSearch(
-                context: context,
-                delegate: CustomSearchDelegate(),
-              );
-            },
-            icon: const Icon(Icons.search),
-          ),
-        ],
-      ),
-      body: Center(
-        child: Text('Ideas'),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: ideas,
+        builder: ((context, snapshot) {
+          if (snapshot.hasError) {
+            return Text('Something went wrong.');
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Text('Loading');
+          }
+
+          final data = snapshot.requireData;
+
+          return ListView.builder(
+            itemCount: data.size,
+            itemBuilder: ((context, index) {
+              return Text('Title: ${data.docs[index]['title']}, description: ${data.docs[index]['description']}');
+            }),
+          );
+        }),
       ),
     );
-  }
-}
-
-class CustomSearchDelegate extends SearchDelegate {
-  List<String> searchTerms = [
-    'Unreal Engine',
-    'C#',
-    'Flutter',
-    'Java',
-    'JavaScript',
-    'Kotlin',
-    'Swift',
-    'Unity',
-    'Python',
-    'C++',
-  ];
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return [
-      IconButton(
-        onPressed: () {
-          query = '';
-        },
-        icon: const Icon(Icons.clear),
-      ),
-    ];
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        close(context, null);
-      },
-      icon: const Icon(Icons.arrow_back),
-    );
-  }
-
-  @override
-  Widget buildResult(BuildContext context) {
-    List<String> matchQuery = [];
-    for (var language in searchTerms) {
-      if (language.toLowerCase().contains(query.toLowerCase())) {
-        matchQuery.add(language);
-      }
-    }
-    return ListView.builder(
-      itemCount: matchQuery.length,
-      itemBuilder: (context, index) {
-        var result = matchQuery[index];
-        return ListTile(
-          title: Text(result),
-        );
-      },
-    );
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    List<String> matchQuery = [];
-    for (var language in searchTerms) {
-      if (language.toLowerCase().contains(query.toLowerCase())) {
-        matchQuery.add(language);
-      }
-    }
-    return ListView.builder(
-      itemCount: matchQuery.length,
-      itemBuilder: (context, index) {
-        var result = matchQuery[index];
-        return ListTile(
-          title: Text(result),
-        );
-      },
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    throw UnimplementedError();
   }
 }
