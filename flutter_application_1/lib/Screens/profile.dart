@@ -4,12 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:firebase_storage/firebase_storage.dart';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter/services.dart';
 
 import 'package:image_picker/image_picker.dart';
 
@@ -130,10 +127,22 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                           Align(
                             alignment: Alignment.topCenter,
                             child: CircleAvatar(
-                              backgroundImage: _imageFile == null
-                                  ? AssetImage('assets/images/idea.png')
-                                  : FileImage(File(_imageFile!.path))
-                                      as ImageProvider,
+                              backgroundColor:
+                                  Color.fromARGB(255, 228, 228, 228),
+                              child: _imageFile == null
+                                  ? Text(
+                                      'No User Photo',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 20,
+                                      ),
+                                    )
+                                  : CircleAvatar(
+                                      backgroundImage:
+                                          FileImage(File(_imageFile!.path))
+                                              as ImageProvider,
+                                      radius: 90,
+                                    ),
                               radius: 90,
                             ),
                           ),
