@@ -75,9 +75,7 @@ class _VerifyEmailCreateState extends State<VerifyEmailScreen> {
 
   @override
   Widget build(BuildContext context) => isEmaleVerified
-      ? HomeScreen(
-          emailFirst: email,
-        )
+      ? HomeScreen()
       : Scaffold(
           body: Column(children: [
             Padding(

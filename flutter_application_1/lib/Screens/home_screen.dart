@@ -9,38 +9,18 @@ import 'package:flutter_application_1/Screens/ideas_screen.dart';
 import 'package:flutter_application_1/Screens/profile.dart';
 
 class HomeScreen extends StatefulWidget {
-  String emailFirst;
-  HomeScreen({required this.emailFirst});
   @override
-  _HomeScreenState createState() => _HomeScreenState(email: emailFirst);
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String email;
-  _HomeScreenState({required this.email});
   int _currentIndex = 0;
   @override
   Widget build(BuildContext context) {
     final screens = [
       IdeasScreen(),
-      ProfileScreen(emailProfile: email),
     ];
     return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => CreateEditIdeaPage(),
-          ),
-        ),
-        backgroundColor: Colors.white,
-        tooltip: 'Increment',
-        child: Icon(
-          Icons.add,
-          color: Color.fromARGB(255, 77, 77, 77),
-        ),
-      ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
         unselectedItemColor: Color.fromARGB(255, 77, 77, 77),

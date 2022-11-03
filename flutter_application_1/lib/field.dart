@@ -2,8 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:flutter_application_1/Screens/home_screen.dart';
-import 'package:flutter_application_1/Screens/verify_email_screen.dart';
 import 'Util/utils.dart';
 import 'main.dart';
 
@@ -19,18 +17,10 @@ class _FieldState extends State<Field> {
 
   int state = 0;
   late bool _passwordVisible;
-  TextEditingController emailControllerForSignIn = new TextEditingController();
-  TextEditingController passwordControllerForSignIn =
-      new TextEditingController();
 
-  TextEditingController emailControllerForSignUp = new TextEditingController();
-  TextEditingController passwordControllerForSignUp =
-      new TextEditingController();
-  TextEditingController passwordControllerConfirmForSignUp =
-      new TextEditingController();
-
-  TextEditingController emailControllerForForgotPassword =
-      new TextEditingController();
+  TextEditingController emailController = new TextEditingController();
+  TextEditingController passwordController = new TextEditingController();
+  TextEditingController passwordControllerConfirm = new TextEditingController();
 
   @override
   void initState() {
@@ -107,7 +97,7 @@ class _FieldState extends State<Field> {
                     borderRadius: BorderRadius.circular(30.0),
                   ),
                 ),
-                controller: emailControllerForSignIn,
+                controller: emailController,
               ),
             ),
             Container(
@@ -129,7 +119,7 @@ class _FieldState extends State<Field> {
                 validator: (value) => value != null && value.length < 6
                     ? 'Enter min. 6 characters'
                     : null,
-                controller: passwordControllerForSignIn,
+                controller: passwordController,
                 obscureText: !_passwordVisible,
                 enableSuggestions: false,
                 autocorrect: false,
@@ -266,7 +256,7 @@ class _FieldState extends State<Field> {
                     borderRadius: BorderRadius.circular(30.0),
                   ),
                 ),
-                controller: emailControllerForSignUp,
+                controller: emailController,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (email) =>
                     email != null && !EmailValidator.validate(email)
@@ -293,7 +283,7 @@ class _FieldState extends State<Field> {
                 validator: (value) => value != null && value.length < 6
                     ? 'Enter min. 6 characters'
                     : null,
-                controller: passwordControllerForSignUp,
+                controller: passwordController,
                 obscureText: !_passwordVisible,
                 enableSuggestions: false,
                 autocorrect: false,
@@ -335,7 +325,7 @@ class _FieldState extends State<Field> {
                 validator: (value) => value != null && value.length < 6
                     ? 'Enter min. 6 characters'
                     : null,
-                controller: passwordControllerConfirmForSignUp,
+                controller: passwordControllerConfirm,
                 obscureText: !_passwordVisible,
                 enableSuggestions: false,
                 autocorrect: false,
@@ -387,28 +377,10 @@ class _FieldState extends State<Field> {
     );
   }
 
-  Future createUser(
-      {required String email,
-      required String name,
-      required String password,
-      required String urlPhoto,
-      required String aboutYourself}) async {
-    final usersDoc = FirebaseFirestore.instance.collection('users');
-    final json = {
-      'email': email,
-      'name': name,
-      'password': password,
-      'image_profile': urlPhoto,
-      'about_yourself': aboutYourself,
-    };
-
-    await usersDoc.add(json);
-  }
-
   Widget forgorPassword() {
     @override
     void dispose() {
-      emailControllerForForgotPassword.dispose();
+      emailController.dispose();
       super.dispose();
     }
 
@@ -468,7 +440,7 @@ class _FieldState extends State<Field> {
                   borderRadius: BorderRadius.circular(30.0),
                 ),
               ),
-              controller: emailControllerForForgotPassword,
+              controller: emailController,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: (email) =>
                   email != null && !EmailValidator.validate(email)
@@ -525,8 +497,7 @@ class _FieldState extends State<Field> {
     );
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: emailControllerForSignIn.text,
-          password: passwordControllerForSignIn.text);
+          email: emailController.text, password: passwordController.text);
     } on FirebaseAuthException catch (e) {
       print(e);
       Utils.showSnackBar(e.message, false);
@@ -537,7 +508,10 @@ class _FieldState extends State<Field> {
   }
 
   Future signUp() async {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+
     final isValid = formKey2.currentState!.validate();
+
     if (!isValid) return;
     showDialog(
       context: context,
@@ -548,21 +522,27 @@ class _FieldState extends State<Field> {
     );
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailControllerForSignUp.text.trim(),
-        password: passwordControllerForSignUp.text.trim(),
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
       );
     } on FirebaseAuthException catch (e) {
       print(e);
       Utils.showSnackBar(e.message, false);
     }
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
-    createUser(
-        email: emailControllerForSignUp.text,
-        name: emailControllerForSignUp.text,
-        password: passwordControllerForSignUp.text,
-        urlPhoto: '',
-        aboutYourself: 'Type anything about yourself (If u want)');
-    return;
+    users
+        .add(
+          {
+            'email': emailController.text,
+            'name': emailController.text,
+            'image': '',
+            'about': '',
+          },
+        )
+        .then(
+          (value) => print('User added!'),
+        )
+        .catchError((error) => 'Failded to add the user: $error');
   }
 
   Future resetPassword() async {
@@ -575,8 +555,8 @@ class _FieldState extends State<Field> {
     );
 
     try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(
-          email: emailControllerForForgotPassword.text.trim());
+      await FirebaseAuth.instance
+          .sendPasswordResetEmail(email: emailController.text.trim());
       Utils.showSnackBar('Password Reset Email Sent', true);
       Navigator.of(context).popUntil((route) => route.isFirst);
     } on FirebaseAuthException catch (e) {

@@ -15,6 +15,21 @@ class _IdeasScreenCreateState extends State<IdeasScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Color.fromARGB(255, 247, 96, 85),
+        child: Icon(
+          Icons.add,
+          size: 40,
+        ),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CreateEditIdeaPage(description: '',),
+            ),
+          );
+        },
+      ),
       body: StreamBuilder<QuerySnapshot>(
         stream: ideas,
         builder: ((context, snapshot) {

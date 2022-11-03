@@ -1,30 +1,54 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/tags.dart';
+import 'package:flutter_application_1/Screens/edit_description_page.dart';
+import 'package:flutter_application_1/Screens/ideas_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 
 class CreateEditIdeaPage extends StatefulWidget {
+  final String description;
+
+  CreateEditIdeaPage({
+    Key? key,
+    required this.description,
+  }) : super(key: key);
+
   @override
   _CreateEditIdeaPageState createState() => _CreateEditIdeaPageState();
 }
 
 class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
   var title = '';
-  var description = '';
   var tags = [];
   var contacts = [];
   final now = new DateTime.now();
 
   @override
   Widget build(BuildContext context) {
+    final ideaTitleTextField = TextEditingController();
     CollectionReference ideas = FirebaseFirestore.instance.collection('ideas');
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey[50],
         iconTheme: IconThemeData(
           color: Colors.black,
+        ),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => IdeasScreen(),
+              ),
+            );
+          },
+          icon: Icon(
+            Icons.arrow_back,
+            size: 30,
+            color: Colors.black,
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -40,10 +64,14 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
             ),
             SizedBox(height: 15),
             TextFormField(
+              controller: ideaTitleTextField,
               maxLength: 50,
               decoration: InputDecoration(
-                labelText: 'Idea title',
-              ),
+                  labelText: 'Idea title',
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.clear_rounded),
+                    onPressed: () => ideaTitleTextField.clear(),
+                  )),
               onChanged: (value) => title = value,
             ),
             Text(
@@ -59,7 +87,7 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    description.isEmpty
+                    widget.description.isEmpty
                         ? Text(
                             'Idea description',
                             style: TextStyle(
@@ -67,7 +95,12 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
                               color: Colors.grey[600],
                             ),
                           )
-                        : Text(description),
+                        : Text(
+                            widget.description,
+                            style: TextStyle(fontSize: 16),
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                     Divider(
                       height: 45,
                       thickness: 0.9,
@@ -76,7 +109,15 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
                   ],
                 ),
               ),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        DescriptionPage(description: widget.description),
+                  ),
+                );
+              },
             ),
             SizedBox(height: 15),
             Text(
@@ -87,7 +128,6 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
               ),
             ),
             SizedBox(height: 35),
-            TagsField(),
             SizedBox(height: 10),
             Text(
               'Contacts',
@@ -103,7 +143,7 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
                     .add(
                       {
                         'title': title.trim(),
-                        'description': description.trim(),
+                        'description': widget.description.trim(),
                         'tags': tags,
                         'contacts': contacts,
                         'date': DateFormat('dd.MM.yyyy').format(now),
@@ -113,12 +153,16 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
                       (value) => print('Idea added!'),
                     )
                     .catchError((error) => 'Failded to add the idea: $error');
-                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => IdeasScreen()
+                  ),
+                );
                 showTopSnackBar(
                   context,
                   CustomSnackBar.success(
-                    message:
-                        "The idea has been successfully published!",
+                    message: "The idea has been successfully published!",
                   ),
                 );
               },
