@@ -1,10 +1,11 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -12,7 +13,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenCreateState extends State<ProfileScreen> {
-  PickedFile? _imageFile;
+  XFile? _imageFile;
   String? _imagepath;
   final _picker = ImagePicker();
 
@@ -126,12 +127,14 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                       child: Stack(
                         children: <Widget>[
                           _imagepath != null
-                              ? CircleAvatar(
-                                  backgroundImage: FileImage(
-                                    File(_imagepath!),
-                                  ),
-                                  radius: 90,
-                                )
+                              ? Align(
+                                  alignment: Alignment.topCenter,
+                                  child: CircleAvatar(
+                                    backgroundImage: FileImage(
+                                      File(_imagepath!),
+                                    ),
+                                    radius: 90,
+                                  ))
                               : Align(
                                   alignment: Alignment.topCenter,
                                   child: CircleAvatar(
@@ -278,10 +281,10 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                savePhoto(_imageFile!.path);
+                savePhoto(_imageFile?.path);
               },
               child: const Text(
-                'Submit',
+                'Save',
                 style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.w300,
@@ -300,10 +303,16 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
 
   void takePhoto(ImageSource source) async {
     try {
-      final image = await _picker.getImage(source: source);
+      var image = await _picker.pickImage(source: source);
       setState(() {
         _imageFile = image;
-        Navigator.of(context).pop();
+        Navigator.pop(context);
+        showTopSnackBar(
+          context,
+          CustomSnackBar.success(
+            message: "Photo was published",
+          ),
+        );
       });
     } on PlatformException catch (e) {
       Navigator.of(context).pop();
@@ -312,12 +321,15 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
 
   void savePhoto(path) async {
     SharedPreferences saveimage = await SharedPreferences.getInstance();
-    saveimage.setString("imagepath", path);
+    if (path == null)
+      return;
+    else {
+      saveimage.setString("imagepath", path);
+    }
   }
 
   void LoadImage() async {
     try {
-      SharedPreferences.setMockInitialValues({});
       SharedPreferences saveimage = await SharedPreferences.getInstance();
       setState(() {
         _imagepath = saveimage.getString("imagepath");
