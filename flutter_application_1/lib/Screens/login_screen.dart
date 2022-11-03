@@ -9,7 +9,6 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  final users = FirebaseFirestore.instance.collection('users').doc();
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_application_1/Screens/create_edit_idea.dart';
@@ -7,19 +9,22 @@ import 'package:flutter_application_1/Screens/ideas_screen.dart';
 import 'package:flutter_application_1/Screens/profile.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  String emailFirst;
+  HomeScreen({required this.emailFirst});
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _HomeScreenState createState() => _HomeScreenState(email: emailFirst);
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String email;
+  _HomeScreenState({required this.email});
   int _currentIndex = 0;
-  final screens = [
-    IdeasScreen(),
-    ProfileScreen(),
-  ];
   @override
   Widget build(BuildContext context) {
+    final screens = [
+      IdeasScreen(),
+      ProfileScreen(emailProfile: email),
+    ];
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(

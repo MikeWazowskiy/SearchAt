@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,15 +9,19 @@ import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class ProfileScreen extends StatefulWidget {
+  String emailProfile;
+  ProfileScreen({required this.emailProfile});
   @override
-  _ProfileScreenCreateState createState() => _ProfileScreenCreateState();
+  _ProfileScreenCreateState createState() =>
+      _ProfileScreenCreateState(email: emailProfile);
 }
 
 class _ProfileScreenCreateState extends State<ProfileScreen> {
   XFile? _imageFile;
   String? _imagepath;
   final _picker = ImagePicker();
-
+  String email;
+  _ProfileScreenCreateState({required this.email});
   @override
   void initState() {
     super.initState();
@@ -135,26 +140,29 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                                     ),
                                     radius: 90,
                                   ))
-                              : Align(
-                                  alignment: Alignment.topCenter,
-                                  child: CircleAvatar(
-                                    backgroundColor:
-                                        Color.fromARGB(255, 228, 228, 228),
-                                    child: _imageFile == null
-                                        ? Text(
-                                            'No User Photo',
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 20,
+                              : Visibility(
+                                  visible: false,
+                                  child: Align(
+                                    alignment: Alignment.topCenter,
+                                    child: CircleAvatar(
+                                      backgroundColor:
+                                          Color.fromARGB(255, 228, 228, 228),
+                                      child: _imageFile == null
+                                          ? Text(
+                                              'No User Photo',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 20,
+                                              ),
+                                            )
+                                          : CircleAvatar(
+                                              backgroundImage: FileImage(
+                                                      File(_imageFile!.path))
+                                                  as ImageProvider,
+                                              radius: 90,
                                             ),
-                                          )
-                                        : CircleAvatar(
-                                            backgroundImage: FileImage(
-                                                    File(_imageFile!.path))
-                                                as ImageProvider,
-                                            radius: 90,
-                                          ),
-                                    radius: 90,
+                                      radius: 90,
+                                    ),
                                   ),
                                 ),
                           Padding(
@@ -195,7 +203,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                       height: 10,
                     ),
                     Text(
-                      'User2314',
+                      '$email',
                       style: TextStyle(fontSize: 20, color: Colors.black),
                     ),
                     SizedBox(

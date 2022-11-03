@@ -39,7 +39,9 @@ class MainPage extends StatelessWidget {
                 child: Text('Something went wrong!'),
               );
             } else if (snapshot.hasData) {
-              return VerifyEmailScreen();
+              return VerifyEmailScreen(
+                email: 'Я хз как тут передать что-то)',
+              );
             } else {
               return Login();
             }
