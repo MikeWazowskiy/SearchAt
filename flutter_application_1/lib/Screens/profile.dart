@@ -24,6 +24,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
+    LoadImage();
   }
 
   _aboutYourself() async {
@@ -49,7 +50,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
           .doc(firebaseUser.uid)
           .get()
           .then((value) {
-        photoURLPath = value.data()!['photoURL'];
+        photoURLPath = value.data()!['photoUrl'];
         print(photoURLPath);
       }).catchError((e) {
         print(e);
@@ -401,7 +402,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
           FirebaseFirestore.instance
               .collection('users')
               .doc(firebaseCurrentUser!.uid)
-              .update({'photoURL': _imageFile!.path});
+              .update({'photoUrl': _imageFile!.path});
         }
       });
     } on PlatformException catch (e) {
