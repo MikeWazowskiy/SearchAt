@@ -18,9 +18,14 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
   String? aboutYourself;
   String? photoURLPath;
   XFile? _imageFile;
+  String? _imagepath;
   String? myName;
   final _picker = ImagePicker();
   @override
+  void initState() {
+    super.initState();
+  }
+
   _aboutYourself() async {
     final firebaseUser = await FirebaseAuth.instance.currentUser;
     if (firebaseUser != null)
@@ -173,11 +178,6 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                             child: FutureBuilder(
                               future: _pickImage(),
                               builder: ((context, snapshot) {
-                                if (snapshot.connectionState !=
-                                    ConnectionState.done)
-                                  return Center(
-                                    child: CircularProgressIndicator(),
-                                  );
                                 return photoURLPath != null
                                     ? Align(
                                         alignment: Alignment.topCenter,
@@ -401,7 +401,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
           FirebaseFirestore.instance
               .collection('users')
               .doc(firebaseCurrentUser!.uid)
-              .update({'photoUrl': _imageFile!.path});
+              .update({'photoURL': _imageFile!.path});
         }
       });
     } on PlatformException catch (e) {
@@ -415,6 +415,27 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
       return;
     else {
       saveimage.setString("imagepath", path);
+    }
+  }
+
+  void LoadImage() async {
+    try {
+      final firebaseUser = await FirebaseAuth.instance.currentUser;
+      setState(() {
+        if (firebaseUser != null)
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(firebaseUser.uid)
+              .get()
+              .then((value) {
+            photoURLPath = value.data()!['photoURL'];
+            print(photoURLPath);
+          }).catchError((e) {
+            print(e);
+          });
+      });
+    } on PlatformException catch (e) {
+      Navigator.of(context).pop();
     }
   }
 }
