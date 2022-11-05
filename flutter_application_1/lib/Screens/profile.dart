@@ -14,8 +14,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenCreateState extends State<ProfileScreen> {
-  TextEditingController aboutYourselfController =
-      new TextEditingController(text: "You have nothing about youself");
+  TextEditingController aboutYourselfController = new TextEditingController();
   String? aboutYourself;
   String? photoURLPath;
   XFile? _imageFile;
@@ -25,7 +24,6 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    LoadImage();
   }
 
   _aboutYourself() async {
@@ -224,7 +222,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                                       offset: Offset(0, 3),
                                     ),
                                   ],
-                                  color: Color.fromARGB(255, 239, 253, 255),
+                                  color: Color.fromARGB(255, 255, 255, 255),
                                 ),
                                 child: IconButton(
                                   icon: Icon(Icons.camera_alt),
@@ -317,12 +315,11 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                         return Padding(
                           padding: EdgeInsets.only(left: 10, right: 10),
                           child: TextFormField(
-                            controller: aboutYourselfController,
                             maxLength: 300,
                             minLines: 3,
                             maxLines: 5,
                             decoration: InputDecoration(
-                              hintText: aboutYourself == null
+                              hintText: aboutYourself == ""
                                   ? 'You have nothing about youself :('
                                   : '',
                               focusedBorder: OutlineInputBorder(
@@ -377,10 +374,11 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
 
   void updateAboutYouselfAndName() async {
     final firebaseCurrentUser = await FirebaseAuth.instance.currentUser;
+    aboutYourself = aboutYourselfController.text;
     FirebaseFirestore.instance
         .collection('users')
         .doc(firebaseCurrentUser!.uid)
-        .update({'about_yourself': aboutYourselfController, 'name': myName});
+        .update({'about_yourself': aboutYourself});
   }
 
   void takePhoto(ImageSource source) async {
