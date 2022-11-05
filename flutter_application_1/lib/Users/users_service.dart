@@ -11,7 +11,7 @@ class UserManagement {
       'name': name,
       'uid': user.uid,
       'photoUrl': user.photoURL,
-      'about_yourself': null,
+      'about_yourself': '',
       'password': password,
     }).catchError((e) {
       print(e);

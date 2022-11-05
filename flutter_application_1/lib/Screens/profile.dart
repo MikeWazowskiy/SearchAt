@@ -14,9 +14,13 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenCreateState extends State<ProfileScreen> {
+  TextEditingController aboutYourselfController =
+      new TextEditingController(text: "You have nothing about youself");
+  String? aboutYourself;
+  String? photoURLPath;
   XFile? _imageFile;
   String? _imagepath;
-  String? myEmail;
+  String? myName;
   final _picker = ImagePicker();
   @override
   void initState() {
@@ -24,7 +28,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
     LoadImage();
   }
 
-  _fetch() async {
+  _aboutYourself() async {
     final firebaseUser = await FirebaseAuth.instance.currentUser;
     if (firebaseUser != null)
       await FirebaseFirestore.instance
@@ -32,8 +36,38 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
           .doc(firebaseUser.uid)
           .get()
           .then((value) {
-        myEmail = value.data()!['name'];
-        print(myEmail);
+        aboutYourself = value.data()!['about_yourself'];
+        print(aboutYourself);
+      }).catchError((e) {
+        print(e);
+      });
+  }
+
+  _pickImage() async {
+    final firebaseUser = await FirebaseAuth.instance.currentUser;
+    if (firebaseUser != null)
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(firebaseUser.uid)
+          .get()
+          .then((value) {
+        photoURLPath = value.data()!['photoURL'];
+        print(photoURLPath);
+      }).catchError((e) {
+        print(e);
+      });
+  }
+
+  _name() async {
+    final firebaseUser = await FirebaseAuth.instance.currentUser;
+    if (firebaseUser != null)
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(firebaseUser.uid)
+          .get()
+          .then((value) {
+        myName = value.data()!['name'];
+        print(myName);
       }).catchError((e) {
         print(e);
       });
@@ -142,40 +176,37 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                     Center(
                       child: Stack(
                         children: <Widget>[
-                          _imagepath != null
-                              ? Align(
-                                  alignment: Alignment.topCenter,
-                                  child: CircleAvatar(
-                                    backgroundImage: FileImage(
-                                      File(_imagepath!),
-                                    ),
-                                    radius: 90,
-                                  ))
-                              : Visibility(
-                                  visible: false,
-                                  child: Align(
-                                    alignment: Alignment.topCenter,
-                                    child: CircleAvatar(
-                                      backgroundColor:
-                                          Color.fromARGB(255, 228, 228, 228),
-                                      child: _imageFile == null
-                                          ? Text(
-                                              'No User Photo',
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 20,
-                                              ),
-                                            )
-                                          : CircleAvatar(
-                                              backgroundImage: FileImage(
-                                                      File(_imageFile!.path))
-                                                  as ImageProvider,
-                                              radius: 90,
+                          Container(
+                            child: FutureBuilder(
+                              future: _pickImage(),
+                              builder: ((context, snapshot) {
+                                return photoURLPath != null
+                                    ? Align(
+                                        alignment: Alignment.topCenter,
+                                        child: CircleAvatar(
+                                          backgroundImage: FileImage(
+                                            File(photoURLPath!),
+                                          ),
+                                          radius: 90,
+                                        ))
+                                    : Align(
+                                        alignment: Alignment.topCenter,
+                                        child: CircleAvatar(
+                                          backgroundColor: Color.fromARGB(
+                                              255, 228, 228, 228),
+                                          child: Text(
+                                            'No User Photo',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 20,
                                             ),
-                                      radius: 90,
-                                    ),
-                                  ),
-                                ),
+                                          ),
+                                          radius: 90,
+                                        ),
+                                      );
+                              }),
+                            ),
+                          ),
                           Padding(
                             padding: EdgeInsets.only(top: 145, right: 115),
                             child: Align(
@@ -215,12 +246,12 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                     ),
                     Container(
                       child: FutureBuilder(
-                        future: _fetch(),
+                        future: _name(),
                         builder: ((context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) return Text('');
                           return Text(
-                            '$myEmail',
+                            '$myName',
                             style: TextStyle(fontSize: 20, color: Colors.black),
                           );
                         }),
@@ -277,28 +308,39 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                       color: Color.fromARGB(255, 77, 77, 77),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 20, right: 10, top: 2),
-                    child: TextFormField(
-                      enabled: false,
-                      maxLength: 300,
-                      minLines: 3,
-                      maxLines: 5,
-                      decoration: InputDecoration(
-                        hintText: 'You have nothing about youself :(',
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                          borderSide: BorderSide(
-                            color: Colors.white,
+                  Container(
+                    child: FutureBuilder(
+                      future: _aboutYourself(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting)
+                          return Text('');
+                        return Padding(
+                          padding: EdgeInsets.only(left: 10, right: 10),
+                          child: TextFormField(
+                            controller: aboutYourselfController,
+                            maxLength: 300,
+                            minLines: 3,
+                            maxLines: 5,
+                            decoration: InputDecoration(
+                              hintText: aboutYourself == null
+                                  ? 'You have nothing about youself :('
+                                  : '',
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                                borderSide: BorderSide(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.white,
+                                ),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                            ),
                           ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.white,
-                          ),
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                      ),
+                        );
+                      },
                     ),
                   ),
                 ],
@@ -307,10 +349,38 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
             SizedBox(
               height: 20,
             ),
+            Container(
+              width: 220,
+              height: 50,
+              child: ElevatedButton(
+                onPressed: () {
+                  updateAboutYouselfAndName();
+                },
+                child: const Text(
+                  'Save Changed',
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  backgroundColor: Colors.green,
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
+  }
+
+  void updateAboutYouselfAndName() async {
+    final firebaseCurrentUser = await FirebaseAuth.instance.currentUser;
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(firebaseCurrentUser!.uid)
+        .update({'about_yourself': aboutYourselfController, 'name': myName});
   }
 
   void takePhoto(ImageSource source) async {
@@ -326,9 +396,14 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
           showTopSnackBar(
             context,
             CustomSnackBar.success(
-              message: "Photo was published",
+              message: "Photo was published, restart Page :)",
             ),
           );
+          final firebaseCurrentUser = FirebaseAuth.instance.currentUser;
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(firebaseCurrentUser!.uid)
+              .update({'photoURL': _imageFile!.path});
         }
       });
     } on PlatformException catch (e) {
@@ -347,9 +422,19 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
 
   void LoadImage() async {
     try {
-      SharedPreferences saveimage = await SharedPreferences.getInstance();
+      final firebaseUser = await FirebaseAuth.instance.currentUser;
       setState(() {
-        _imagepath = saveimage.getString("imagepath");
+        if (firebaseUser != null)
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(firebaseUser.uid)
+              .get()
+              .then((value) {
+            photoURLPath = value.data()!['photoURL'];
+            print(photoURLPath);
+          }).catchError((e) {
+            print(e);
+          });
       });
     } on PlatformException catch (e) {
       Navigator.of(context).pop();
@@ -391,7 +476,7 @@ class NavigationDrawWirdget extends StatelessWidget {
               onTap: () {},
             ),
             SizedBox(
-              height: 15,
+              height: 20,
             ),
             Divider(
               color: Color.fromARGB(255, 77, 77, 77),
