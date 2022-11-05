@@ -1,9 +1,10 @@
 import 'dart:io';
-import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
@@ -16,11 +17,27 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenCreateState extends State<ProfileScreen> {
   XFile? _imageFile;
   String? _imagepath;
+  String? myEmail;
   final _picker = ImagePicker();
   @override
   void initState() {
     super.initState();
     LoadImage();
+  }
+
+  _fetch() async {
+    final firebaseUser = await FirebaseAuth.instance.currentUser;
+    if (firebaseUser != null)
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(firebaseUser.uid)
+          .get()
+          .then((value) {
+        myEmail = value.data()!['name'];
+        print(myEmail);
+      }).catchError((e) {
+        print(e);
+      });
   }
 
   @override
@@ -197,9 +214,18 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                     SizedBox(
                       height: 10,
                     ),
-                    Text(
-                      'User2313',
-                      style: TextStyle(fontSize: 20, color: Colors.black),
+                    Container(
+                      child: FutureBuilder(
+                        future: _fetch(),
+                        builder: ((context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) return Text('');
+                          return Text(
+                            '$myEmail',
+                            style: TextStyle(fontSize: 20, color: Colors.black),
+                          );
+                        }),
+                      ),
                     ),
                     SizedBox(
                       height: 8,
@@ -351,18 +377,6 @@ class NavigationDrawWirdget extends StatelessWidget {
                 color: Color.fromARGB(255, 247, 96, 85),
               ),
               title: Text('Favourites'),
-              onTap: () {},
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            ListTile(
-              selectedColor: Colors.white,
-              leading: const Icon(
-                Icons.edit,
-                color: Color.fromARGB(255, 247, 96, 85),
-              ),
-              title: Text('Edit profile'),
               onTap: () {},
             ),
             SizedBox(

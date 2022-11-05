@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'Users/users_service.dart';
 import 'Util/utils.dart';
 import 'main.dart';
 
@@ -508,8 +509,6 @@ class _FieldState extends State<Field> {
   }
 
   Future signUp() async {
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
-
     final isValid = formKey2.currentState!.validate();
 
     if (!isValid) return;
@@ -521,28 +520,22 @@ class _FieldState extends State<Field> {
       ),
     );
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
-      );
+      )
+          .then((value) {
+        UserManagement().storeNewUser(
+            value.user, context, passwordController.text, emailController.text);
+      }).catchError((e) {
+        print(e);
+      });
     } on FirebaseAuthException catch (e) {
       print(e);
       Utils.showSnackBar(e.message, false);
     }
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
-    users
-        .add(
-          {
-            'email': emailController.text,
-            'name': emailController.text,
-            'image': '',
-            'about': '',
-          },
-        )
-        .then(
-          (value) => print('User added!'),
-        )
-        .catchError((error) => 'Failded to add the user: $error');
   }
 
   Future resetPassword() async {
