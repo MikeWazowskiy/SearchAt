@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Screens/edit_description_page.dart';
+import 'package:flutter_application_1/Screens/home_screen.dart';
 import 'package:flutter_application_1/Screens/ideas_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
@@ -40,7 +41,7 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => IdeasScreen(),
+                builder: (context) => HomeScreen(),
               ),
             );
           },
@@ -155,9 +156,7 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
                     .catchError((error) => 'Failded to add the idea: $error');
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => IdeasScreen()
-                  ),
+                  MaterialPageRoute(builder: (context) => IdeasScreen()),
                 );
                 showTopSnackBar(
                   context,

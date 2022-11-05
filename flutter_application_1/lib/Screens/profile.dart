@@ -9,19 +9,14 @@ import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class ProfileScreen extends StatefulWidget {
-  String emailProfile;
-  ProfileScreen({required this.emailProfile});
   @override
-  _ProfileScreenCreateState createState() =>
-      _ProfileScreenCreateState(email: emailProfile);
+  _ProfileScreenCreateState createState() => _ProfileScreenCreateState();
 }
 
 class _ProfileScreenCreateState extends State<ProfileScreen> {
   XFile? _imageFile;
   String? _imagepath;
   final _picker = ImagePicker();
-  String email;
-  _ProfileScreenCreateState({required this.email});
   @override
   void initState() {
     super.initState();
@@ -203,7 +198,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                       height: 10,
                     ),
                     Text(
-                      '$email',
+                      'User2313',
                       style: TextStyle(fontSize: 20, color: Colors.black),
                     ),
                     SizedBox(

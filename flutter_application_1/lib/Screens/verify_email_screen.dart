@@ -6,19 +6,14 @@ import 'package:flutter_application_1/Util/utils.dart';
 import 'package:flutter_application_1/field.dart';
 
 class VerifyEmailScreen extends StatefulWidget {
-  String email;
-  VerifyEmailScreen({required this.email});
   @override
-  _VerifyEmailCreateState createState() =>
-      _VerifyEmailCreateState(email: email);
+  _VerifyEmailCreateState createState() => _VerifyEmailCreateState();
 }
 
 class _VerifyEmailCreateState extends State<VerifyEmailScreen> {
   bool isEmaleVerified = false;
   bool canResendEmail = false;
   Timer? timer;
-  String email;
-  _VerifyEmailCreateState({required this.email});
   @override
   void initState() {
     super.initState();

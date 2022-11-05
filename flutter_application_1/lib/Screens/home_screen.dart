@@ -17,7 +17,10 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
   @override
   Widget build(BuildContext context) {
-    final screens = [IdeasScreen(), ProfileScreen(emailProfile: '')];
+    final screens = [
+      IdeasScreen(),
+      ProfileScreen(),
+    ];
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
