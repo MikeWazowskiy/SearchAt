@@ -149,6 +149,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                   onPressed: () {
                     removePhotoFromProfile();
                     Navigator.of(context).pop();
+                    LoadImage();
                   },
                 ),
               ],
