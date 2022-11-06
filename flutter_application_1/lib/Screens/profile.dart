@@ -112,7 +112,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                     takePhoto(ImageSource.camera);
                   },
                 ),
-                SizedBox(width: 35),
+                SizedBox(width: 25),
                 TextButton(
                   child: Row(
                     children: [
@@ -129,6 +129,25 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                   ),
                   onPressed: () {
                     takePhoto(ImageSource.gallery);
+                  },
+                ),
+                SizedBox(width: 25),
+                TextButton(
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.remove_circle,
+                        color: Color.fromARGB(255, 255, 0, 0),
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        "Remove",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ],
+                  ),
+                  onPressed: () {
+                    removePhotoFromProfile();
                   },
                 ),
               ],
@@ -347,28 +366,23 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
             SizedBox(
               height: 20,
             ),
-            Container(
-              width: 220,
-              height: 50,
-              child: ElevatedButton(
-                onPressed: () {
-                  updateAboutYouselfAndName();
-                },
-                child: const Text(
-                  'Save Changed',
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  backgroundColor: Colors.green,
-                ),
-              ),
-            ),
           ],
         ),
+      ),
+    );
+  }
+
+  void removePhotoFromProfile() async {
+    photoURLPath = null;
+    final firebaseCurrentUser = await FirebaseAuth.instance.currentUser;
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(firebaseCurrentUser!.uid)
+        .update({'photoUrl': photoURLPath});
+    showTopSnackBar(
+      context,
+      CustomSnackBar.success(
+        message: "photo was successfully removed!",
       ),
     );
   }
@@ -423,17 +437,22 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
     try {
       final firebaseUser = await FirebaseAuth.instance.currentUser;
       setState(() {
-        if (firebaseUser != null)
+        if (firebaseUser != null) {
           FirebaseFirestore.instance
               .collection('users')
               .doc(firebaseUser.uid)
               .get()
               .then((value) {
-            photoURLPath = value.data()!['photoURL'];
-            print(photoURLPath);
+            if (value != null) {
+              photoURLPath = value.data()!['photoUrl'];
+              print(photoURLPath);
+            } else {
+              return;
+            }
           }).catchError((e) {
             print(e);
           });
+        }
       });
     } on PlatformException catch (e) {
       Navigator.of(context).pop();
