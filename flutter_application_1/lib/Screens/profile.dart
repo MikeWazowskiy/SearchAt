@@ -36,7 +36,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
           .doc(firebaseUser.uid)
           .get()
           .then((value) {
-        aboutYourselfController = value.data()!['about_yourself'];
+        aboutYourselfController.text = value.data()!['about_yourself'];
       }).catchError((e) {
         print(e);
       });
@@ -344,6 +344,9 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                             minLines: 3,
                             maxLines: 5,
                             decoration: InputDecoration(
+                              hintText: aboutYourself == ""
+                                  ? 'You have nothing about youself :('
+                                  : '',
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15.0),
                                 borderSide: BorderSide(
