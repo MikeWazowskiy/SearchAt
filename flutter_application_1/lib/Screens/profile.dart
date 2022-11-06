@@ -148,6 +148,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                   ),
                   onPressed: () {
                     removePhotoFromProfile();
+                    Navigator.of(context).pop();
                   },
                 ),
               ],
@@ -500,7 +501,7 @@ class NavigationDrawWirdget extends StatelessWidget {
               onTap: () {},
             ),
             SizedBox(
-              height: 20,
+              height: 10,
             ),
             ListTile(
               selectedColor: Colors.white,
