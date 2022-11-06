@@ -19,7 +19,6 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
   String? aboutYourself;
   String? photoURLPath;
   XFile? _imageFile;
-  String? _imagepath;
   String? myName;
   final _picker = ImagePicker();
   @override
@@ -37,6 +36,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
           .get()
           .then((value) {
         aboutYourselfController.text = value.data()!['about_yourself'];
+        print('Sosi');
       }).catchError((e) {
         print(e);
       });
@@ -360,6 +360,9 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                                 borderRadius: BorderRadius.circular(15.0),
                               ),
                             ),
+                            onChanged: (value) {
+                              updateAboutYouselfAndName(value);
+                            },
                           ),
                         );
                       },
@@ -370,25 +373,6 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
             ),
             SizedBox(
               height: 20,
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 20),
-              child: ElevatedButton(
-                onPressed: () {
-                  updateAboutYouselfAndName();
-                },
-                child: const Text(
-                  'Submit',
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  backgroundColor: Colors.green,
-                ),
-              ),
             ),
           ],
         ),
@@ -412,13 +396,12 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
     LoadImage();
   }
 
-  void updateAboutYouselfAndName() async {
+  void updateAboutYouselfAndName(String value) async {
     final firebaseCurrentUser = await FirebaseAuth.instance.currentUser;
-    aboutYourself = aboutYourselfController.text;
     FirebaseFirestore.instance
         .collection('users')
         .doc(firebaseCurrentUser!.uid)
-        .update({'about_yourself': aboutYourself});
+        .update({'about_yourself': value.trim()});
   }
 
   void takePhoto(ImageSource source) async {
