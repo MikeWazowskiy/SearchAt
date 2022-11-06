@@ -347,7 +347,6 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                             decoration: InputDecoration(
                               hintText: aboutYourself == ""
                                   ? 'You have nothing about youself :('
-                                  : '',
                                   : null,
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15.0),
