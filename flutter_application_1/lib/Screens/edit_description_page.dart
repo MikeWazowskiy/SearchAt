@@ -15,6 +15,7 @@ class DescriptionPage extends StatefulWidget {
 }
 
 class _DescriptionPageState extends State<DescriptionPage> {
+
   final _descrtiptionController = TextEditingController();
   late Color clearBtnColor;
 
@@ -39,7 +40,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
         backgroundColor: Colors.grey[50],
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.of(context).pop(context);
           },
           icon: Icon(
             Icons.close,
@@ -117,13 +118,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CreateEditIdeaPage(
-                        description: _descrtiptionController.text),
-                  ),
-                );
+                Navigator.of(context).pop(_descrtiptionController.text);
               },
               child: Text(
                 'Save',

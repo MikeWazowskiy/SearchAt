@@ -1,29 +1,31 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Screens/edit_description_page.dart';
-import 'package:flutter_application_1/Screens/home_screen.dart';
 import 'package:flutter_application_1/Screens/ideas_screen.dart';
+import 'package:flutter_application_1/tags.dart';
 import 'package:intl/intl.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 
 class CreateEditIdeaPage extends StatefulWidget {
-  final String description;
-
-  CreateEditIdeaPage({
-    Key? key,
-    required this.description,
-  }) : super(key: key);
-
   @override
   _CreateEditIdeaPageState createState() => _CreateEditIdeaPageState();
 }
 
 class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
   var title = '';
+  var description = '';
   var tags = [];
   var contacts = [];
   final now = new DateTime.now();
+
+  var icons = [
+    Icons.email,
+    Icons.telegram,
+    Icons.whatsapp,
+    Icons.facebook,
+    Icons.smartphone
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -38,12 +40,7 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
         ),
         leading: IconButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => HomeScreen(),
-              ),
-            );
+            Navigator.pop(context);
           },
           icon: Icon(
             Icons.arrow_back,
@@ -65,15 +62,14 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
             ),
             SizedBox(height: 15),
             TextFormField(
-              controller: ideaTitleTextField,
+              autofocus: false,
               maxLength: 50,
               decoration: InputDecoration(
                   labelText: 'Idea title',
                   suffixIcon: IconButton(
                     icon: Icon(Icons.clear_rounded),
-                    onPressed: () => ideaTitleTextField.clear(),
+                    onPressed: () => null,
                   )),
-              onChanged: (value) => title = value,
             ),
             Text(
               'About',
@@ -88,7 +84,7 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    widget.description.isEmpty
+                    description.isEmpty
                         ? Text(
                             'Idea description',
                             style: TextStyle(
@@ -97,7 +93,7 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
                             ),
                           )
                         : Text(
-                            widget.description,
+                            description,
                             style: TextStyle(fontSize: 16),
                             maxLines: 3,
                             overflow: TextOverflow.ellipsis,
@@ -110,14 +106,16 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
                   ],
                 ),
               ),
-              onTap: () {
-                Navigator.push(
-                  context,
+              onTap: () async {
+                final descriptionVal = await Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) =>
-                        DescriptionPage(description: widget.description),
+                        DescriptionPage(description: description),
                   ),
                 );
+                setState(() {
+                  this.description = descriptionVal;
+                });
               },
             ),
             SizedBox(height: 15),
@@ -129,6 +127,7 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
               ),
             ),
             SizedBox(height: 35),
+            TagsField(),
             SizedBox(height: 10),
             Text(
               'Contacts',
@@ -137,14 +136,24 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
                 fontSize: 25,
               ),
             ),
-            SizedBox(height: 60),
+            SizedBox(height: 10),
+            Container(
+              child: buildContacts(),
+            ),
+            IconButton(
+                onPressed: (() => setState(() {
+                      if (contacts.length < 3) {
+                        contacts.add('');
+                      }
+                    })),
+                icon: Icon(Icons.add)),
             ElevatedButton(
               onPressed: () {
                 ideas
                     .add(
                       {
                         'title': title.trim(),
-                        'description': widget.description.trim(),
+                        'description': description.trim(),
                         'tags': tags,
                         'contacts': contacts,
                         'date': DateFormat('dd.MM.yyyy').format(now),
@@ -181,4 +190,32 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
       ),
     );
   }
+
+  Widget buildContacts() => ListView.builder(
+        shrinkWrap: true,
+        itemCount: contacts.length,
+        itemBuilder: (context, index) {
+          return Card(
+            elevation: 4,
+            child: TextFormField(
+              decoration: InputDecoration(
+                suffixIcon: IconButton(
+                  color: Colors.grey,
+                  icon: Icon(Icons.delete),
+                  onPressed: () => setState(() {
+                    contacts.removeAt(index);
+                  }),
+                ),
+                prefixIcon: IconButton(
+                  icon: Icon(icons[0]),
+                  color: Colors.grey,
+                  onPressed: () => setState(() {
+                    
+                  }),
+                ),
+              ),
+            ),
+          );
+        },
+      );
 }

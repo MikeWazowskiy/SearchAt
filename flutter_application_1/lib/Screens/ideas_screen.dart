@@ -25,7 +25,7 @@ class _IdeasScreenCreateState extends State<IdeasScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => CreateEditIdeaPage(description: '',),
+              builder: (context) => CreateEditIdeaPage(),
             ),
           );
         },

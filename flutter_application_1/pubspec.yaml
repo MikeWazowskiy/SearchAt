@@ -50,6 +50,9 @@ dependencies:
   shared_preferences: ^2.0.15
   ndialog: ^4.2.0
 
+  flutter_typeahead: any
+  get: any
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
