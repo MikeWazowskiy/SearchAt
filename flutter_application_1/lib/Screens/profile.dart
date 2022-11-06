@@ -149,7 +149,6 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                   onPressed: () {
                     removePhotoFromProfile();
                     Navigator.of(context).pop();
-                    LoadImage();
                   },
                 ),
               ],
@@ -393,6 +392,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
         message: "photo was successfully removed!",
       ),
     );
+    LoadImage();
   }
 
   void updateAboutYouselfAndName() async {
