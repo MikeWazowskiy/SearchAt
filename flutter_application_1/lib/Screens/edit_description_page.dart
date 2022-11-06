@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Screens/create_edit_idea.dart';
+import 'package:ndialog/ndialog.dart';
 
 class DescriptionPage extends StatefulWidget {
   final String description;
@@ -15,10 +16,14 @@ class DescriptionPage extends StatefulWidget {
 
 class _DescriptionPageState extends State<DescriptionPage> {
   final _descrtiptionController = TextEditingController();
+  late Color clearBtnColor;
 
   @override
   void initState() {
     _descrtiptionController.text = widget.description;
+    _descrtiptionController.text.isNotEmpty
+        ? setState(() => clearBtnColor = Colors.blue)
+        : setState(() => clearBtnColor = Colors.grey);
   }
 
   @override
@@ -51,9 +56,42 @@ class _DescriptionPageState extends State<DescriptionPage> {
                   'Clear',
                   style: TextStyle(
                     fontSize: 20,
-                    color: Colors.grey,
+                    color: clearBtnColor,
                   ),
                 ),
+                onTap: () {
+                  if (_descrtiptionController.text.isNotEmpty) {
+                    NAlertDialog(
+                      dialogStyle: DialogStyle(titleDivider: true),
+                      title: Text('Clear all'),
+                      content: Text(
+                        'Are you sure you want to delete everything you wrote?',
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: (() {
+                            _descrtiptionController.clear();
+                            setState(() {
+                              clearBtnColor = Colors.grey;
+                            });
+                            Navigator.pop(context);
+                          }),
+                          child: Text(
+                            'OK',
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: (() {
+                            Navigator.pop(context);
+                          }),
+                          child: Text(
+                            'Cancel',
+                          ),
+                        ),
+                      ],
+                    ).show(context);
+                  }
+                },
               ),
             ),
           ),
@@ -71,6 +109,11 @@ class _DescriptionPageState extends State<DescriptionPage> {
                 hintText:
                     'Describe your idea in more detail. Tell us what you use for development, and what skills are missing. It is important for other users to know what your idea is in order to understand whether it suits them. But do not forget that it is not necessary to tell something very secret.',
               ),
+              onChanged: (value) {
+                _descrtiptionController.text.isNotEmpty
+                    ? setState(() => clearBtnColor = Colors.blue)
+                    : setState(() => clearBtnColor = Colors.grey);
+              },
             ),
             ElevatedButton(
               onPressed: () {

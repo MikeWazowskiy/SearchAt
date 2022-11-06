@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,7 +19,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
   TextEditingController aboutYourselfController = new TextEditingController();
   String? aboutYourself;
   String? photoURLPath;
-  XFile? _imageFile;
+  File? _imageFile;
   String? myName;
   final _picker = ImagePicker();
   @override
@@ -36,7 +37,6 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
           .get()
           .then((value) {
         aboutYourselfController.text = value.data()!['about_yourself'];
-        print('Sosi');
       }).catchError((e) {
         print(e);
       });
@@ -206,11 +206,12 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                                     ? Align(
                                         alignment: Alignment.topCenter,
                                         child: CircleAvatar(
-                                          backgroundImage: FileImage(
-                                            File(photoURLPath!),
+                                          backgroundImage: MemoryImage(
+                                            base64Decode(photoURLPath!),
                                           ),
                                           radius: 90,
-                                        ))
+                                        ),
+                                      )
                                     : Align(
                                         alignment: Alignment.topCenter,
                                         child: CircleAvatar(
@@ -390,7 +391,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
     showTopSnackBar(
       context,
       CustomSnackBar.success(
-        message: "photo was successfully removed!",
+        message: "Photo was successfully removed!",
       ),
     );
     LoadImage();
@@ -406,9 +407,9 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
 
   void takePhoto(ImageSource source) async {
     try {
-      var image = await _picker.pickImage(source: source);
+      final XFile? image = await _picker.pickImage(source: source);
       setState(() {
-        _imageFile = image;
+        _imageFile = File(image!.path);
         if (_imageFile == null)
           return;
         else {
@@ -424,7 +425,8 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
           FirebaseFirestore.instance
               .collection('users')
               .doc(firebaseCurrentUser!.uid)
-              .update({'photoUrl': _imageFile!.path});
+              .update(
+                  {'photoUrl': base64Encode(_imageFile!.readAsBytesSync())});
         }
       });
     } on PlatformException catch (e) {
