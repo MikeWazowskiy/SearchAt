@@ -36,7 +36,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
           .doc(firebaseUser.uid)
           .get()
           .then((value) {
-        aboutYourself = value.data()!['about_yourself'];
+        aboutYourselfController = value.data()!['about_yourself'];
       }).catchError((e) {
         print(e);
       });
@@ -339,13 +339,11 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                         return Padding(
                           padding: EdgeInsets.only(left: 10, right: 10),
                           child: TextFormField(
+                            controller: aboutYourselfController,
                             maxLength: 300,
                             minLines: 3,
                             maxLines: 5,
                             decoration: InputDecoration(
-                              hintText: aboutYourself == ""
-                                  ? 'You have nothing about youself :('
-                                  : '',
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15.0),
                                 borderSide: BorderSide(
@@ -369,6 +367,25 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
             ),
             SizedBox(
               height: 20,
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 20),
+              child: ElevatedButton(
+                onPressed: () {
+                  updateAboutYouselfAndName();
+                },
+                child: const Text(
+                  'Submit',
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  backgroundColor: Colors.green,
+                ),
+              ),
             ),
           ],
         ),
@@ -449,7 +466,6 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
               .get()
               .then((value) {
             photoURLPath = value.data()!['photoUrl'];
-            print(photoURLPath);
           }).catchError((e) {
             print(e);
           });
