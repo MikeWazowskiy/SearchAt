@@ -198,30 +198,36 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                             child: FutureBuilder(
                               future: _pickImage(),
                               builder: ((context, snapshot) {
-                                return photoURLPath != null
-                                    ? Align(
-                                        alignment: Alignment.topCenter,
-                                        child: CircleAvatar(
-                                          backgroundImage: FileImage(
-                                            File(photoURLPath!),
-                                          ),
-                                          radius: 90,
-                                        ))
-                                    : Align(
-                                        alignment: Alignment.topCenter,
-                                        child: CircleAvatar(
-                                          backgroundColor: Color.fromARGB(
-                                              255, 228, 228, 228),
-                                          child: Text(
-                                            'No User Photo',
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 20,
+                                if (snapshot.connectionState !=
+                                    ConnectionState.done)
+                                  return Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                else
+                                  return photoURLPath != null
+                                      ? Align(
+                                          alignment: Alignment.topCenter,
+                                          child: CircleAvatar(
+                                            backgroundImage: FileImage(
+                                              File(photoURLPath!),
                                             ),
+                                            radius: 90,
+                                          ))
+                                      : Align(
+                                          alignment: Alignment.topCenter,
+                                          child: CircleAvatar(
+                                            backgroundColor: Color.fromARGB(
+                                                255, 228, 228, 228),
+                                            child: Text(
+                                              'No User Photo',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 20,
+                                              ),
+                                            ),
+                                            radius: 90,
                                           ),
-                                          radius: 90,
-                                        ),
-                                      );
+                                        );
                               }),
                             ),
                           ),
@@ -491,6 +497,18 @@ class NavigationDrawWirdget extends StatelessWidget {
                 color: Color.fromARGB(255, 247, 96, 85),
               ),
               title: Text('My Ideas'),
+              onTap: () {},
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            ListTile(
+              selectedColor: Colors.white,
+              leading: const Icon(
+                Icons.edit_sharp,
+                color: Color.fromARGB(255, 247, 96, 85),
+              ),
+              title: Text('Edit profile'),
               onTap: () {},
             ),
             SizedBox(
