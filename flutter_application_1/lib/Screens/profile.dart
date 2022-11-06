@@ -24,6 +24,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
+    LoadImage();
   }
 
   _aboutYourself() async {
@@ -49,7 +50,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
           .doc(firebaseUser.uid)
           .get()
           .then((value) {
-        photoURLPath = value.data()!['photoURL'];
+        photoURLPath = value.data()!['photoUrl'];
         print(photoURLPath);
       }).catchError((e) {
         print(e);
@@ -130,6 +131,26 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                     takePhoto(ImageSource.gallery);
                   },
                 ),
+                SizedBox(width: 25),
+                TextButton(
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.remove_circle,
+                        color: Color.fromARGB(255, 255, 0, 0),
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        "Remove",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ],
+                  ),
+                  onPressed: () {
+                    removePhotoFromProfile();
+                    Navigator.of(context).pop();
+                  },
+                ),
               ],
             ),
           ],
@@ -178,6 +199,11 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                             child: FutureBuilder(
                               future: _pickImage(),
                               builder: ((context, snapshot) {
+                                if (snapshot.connectionState !=
+                                    ConnectionState.done)
+                                  return Center(
+                                    child: CircularProgressIndicator(),
+                                  );
                                 return photoURLPath != null
                                     ? Align(
                                         alignment: Alignment.topCenter,
@@ -346,30 +372,26 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
             SizedBox(
               height: 20,
             ),
-            Container(
-              width: 220,
-              height: 50,
-              child: ElevatedButton(
-                onPressed: () {
-                  updateAboutYouselfAndName();
-                },
-                child: const Text(
-                  'Save Changed',
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  backgroundColor: Colors.green,
-                ),
-              ),
-            ),
           ],
         ),
       ),
     );
+  }
+
+  void removePhotoFromProfile() async {
+    photoURLPath = null;
+    final firebaseCurrentUser = await FirebaseAuth.instance.currentUser;
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(firebaseCurrentUser!.uid)
+        .update({'photoUrl': photoURLPath});
+    showTopSnackBar(
+      context,
+      CustomSnackBar.success(
+        message: "photo was successfully removed!",
+      ),
+    );
+    LoadImage();
   }
 
   void updateAboutYouselfAndName() async {
@@ -401,7 +423,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
           FirebaseFirestore.instance
               .collection('users')
               .doc(firebaseCurrentUser!.uid)
-              .update({'photoURL': _imageFile!.path});
+              .update({'photoUrl': _imageFile!.path});
         }
       });
     } on PlatformException catch (e) {
@@ -428,7 +450,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
               .doc(firebaseUser.uid)
               .get()
               .then((value) {
-            photoURLPath = value.data()!['photoURL'];
+            photoURLPath = value.data()!['photoUrl'];
             print(photoURLPath);
           }).catchError((e) {
             print(e);
@@ -471,6 +493,18 @@ class NavigationDrawWirdget extends StatelessWidget {
                 color: Color.fromARGB(255, 247, 96, 85),
               ),
               title: Text('My Ideas'),
+              onTap: () {},
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            ListTile(
+              selectedColor: Colors.white,
+              leading: const Icon(
+                Icons.edit_sharp,
+                color: Color.fromARGB(255, 247, 96, 85),
+              ),
+              title: Text('Edit profile'),
               onTap: () {},
             ),
             SizedBox(
