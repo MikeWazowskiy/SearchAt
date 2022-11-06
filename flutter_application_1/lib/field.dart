@@ -529,11 +529,10 @@ class _FieldState extends State<Field> {
         UserManagement().storeNewUser(
             value.user, context, passwordController.text, emailController.text);
       }).catchError((e) {
-        print(e);
+        Utils.showSnackBar(e.toString(), false);
       });
     } on FirebaseAuthException catch (e) {
       print(e);
-      Utils.showSnackBar(e.message, false);
     }
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }

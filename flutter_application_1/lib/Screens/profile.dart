@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_1/Screens/login_screen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
@@ -36,7 +37,6 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
           .get()
           .then((value) {
         aboutYourself = value.data()!['about_yourself'];
-        print(aboutYourself);
       }).catchError((e) {
         print(e);
       });
@@ -51,7 +51,6 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
           .get()
           .then((value) {
         photoURLPath = value.data()!['photoUrl'];
-        print(photoURLPath);
       }).catchError((e) {
         print(e);
       });
@@ -66,7 +65,6 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
           .get()
           .then((value) {
         myName = value.data()!['name'];
-        print(myName);
       }).catchError((e) {
         print(e);
       });
@@ -522,7 +520,11 @@ class NavigationDrawWirdget extends StatelessWidget {
                 color: Color.fromARGB(255, 247, 96, 85),
               ),
               title: Text('Sign Out'),
-              onTap: () => FirebaseAuth.instance.signOut(),
+              onTap: () {
+                FirebaseAuth.instance.signOut();
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => Login()));
+              },
             ),
           ],
         ),
