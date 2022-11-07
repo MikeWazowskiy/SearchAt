@@ -166,10 +166,7 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
                       (value) => print('Idea added!'),
                     )
                     .catchError((error) => 'Failded to add the idea: $error');
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => IdeasScreen()),
-                );
+                Navigator.of(context).pop(context);
                 showTopSnackBar(
                   context,
                   CustomSnackBar.success(
@@ -216,7 +213,9 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
                 prefixIcon: IconButton(
                   icon: Icon(icons[0]),
                   color: Colors.grey,
-                  onPressed: () => setState(() {}),
+                  onPressed: () => setState(() {
+                    
+                  }),
                 ),
               ),
               onChanged: (value) {
