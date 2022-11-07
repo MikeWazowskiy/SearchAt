@@ -37,6 +37,12 @@ class _TagsFieldState extends State<TagsField> {
   final textController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    controller.listTags.clear();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
@@ -44,7 +50,10 @@ class _TagsFieldState extends State<TagsField> {
           textFieldConfiguration: TextFieldConfiguration(
             controller: textController,
             onEditingComplete: () {
-              controller.listTags.add(textController.text);
+              if (!controller.listTags.contains(textController.text) &&
+                  controller.listTags.length < 5) {
+                controller.listTags.add(textController.text);
+              }
               textController.clear();
             },
             autofocus: false,
@@ -56,8 +65,13 @@ class _TagsFieldState extends State<TagsField> {
             return suggestTag.where((element) =>
                 element.toLowerCase().contains(pattern.toLowerCase()));
           },
-          onSuggestionSelected: (String suggestion) =>
-              controller.listTags.add(suggestion),
+          onSuggestionSelected: (String suggestion) {
+            if (!controller.listTags.contains(suggestion) &&
+                controller.listTags.length < 5) {
+              controller.listTags.add(suggestion);
+            }
+            textController.clear();
+          },
           itemBuilder: (context, itemData) {
             return ListTile(
               leading: Icon(Icons.tag),
@@ -66,7 +80,7 @@ class _TagsFieldState extends State<TagsField> {
           },
         ),
         SizedBox(height: 10),
-        Obx(() => controller.listTags.length == 0
+        Obx(() => controller.listTags.isEmpty
             ? Center(
                 child: Text('No Tag selected'),
               )

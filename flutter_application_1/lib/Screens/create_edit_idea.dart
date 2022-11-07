@@ -6,6 +6,7 @@ import 'package:flutter_application_1/tags.dart';
 import 'package:intl/intl.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:get/get.dart';
 
 class CreateEditIdeaPage extends StatefulWidget {
   @override
@@ -13,9 +14,11 @@ class CreateEditIdeaPage extends StatefulWidget {
 }
 
 class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
-  var title = '';
+  final controller = Get.put(TagStateController());
+  final ideaTitleTextField = TextEditingController();
+
   var description = '';
-  var tags = [];
+  late List<String> tags;
   var contacts = [];
   final now = new DateTime.now();
 
@@ -29,7 +32,6 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
 
   @override
   Widget build(BuildContext context) {
-    final ideaTitleTextField = TextEditingController();
     CollectionReference ideas = FirebaseFirestore.instance.collection('ideas');
 
     return Scaffold(
@@ -63,12 +65,13 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
             SizedBox(height: 15),
             TextFormField(
               autofocus: false,
+              controller: ideaTitleTextField,
               maxLength: 50,
               decoration: InputDecoration(
                   labelText: 'Idea title',
                   suffixIcon: IconButton(
                     icon: Icon(Icons.clear_rounded),
-                    onPressed: () => null,
+                    onPressed: () => ideaTitleTextField.clear(),
                   )),
             ),
             Text(
@@ -152,9 +155,9 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
                 ideas
                     .add(
                       {
-                        'title': title.trim(),
+                        'title': ideaTitleTextField.text.trim(),
                         'description': description.trim(),
-                        'tags': tags,
+                        'tags': controller.listTags,
                         'contacts': contacts,
                         'date': DateFormat('dd.MM.yyyy').format(now),
                       },
@@ -195,9 +198,13 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
         shrinkWrap: true,
         itemCount: contacts.length,
         itemBuilder: (context, index) {
+          final contact = contacts[index];
+
           return Card(
+            key: Key(contact),
             elevation: 4,
             child: TextFormField(
+              initialValue: contacts[index],
               decoration: InputDecoration(
                 suffixIcon: IconButton(
                   color: Colors.grey,
@@ -209,11 +216,12 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
                 prefixIcon: IconButton(
                   icon: Icon(icons[0]),
                   color: Colors.grey,
-                  onPressed: () => setState(() {
-                    
-                  }),
+                  onPressed: () => setState(() {}),
                 ),
               ),
+              onChanged: (value) {
+                contacts[index] = value;
+              },
             ),
           );
         },

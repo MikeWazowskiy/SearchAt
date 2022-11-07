@@ -12,6 +12,7 @@ class IdeaCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List tags = data.docs[index]['tags'];
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
@@ -48,7 +49,18 @@ class IdeaCard extends StatelessWidget {
                     style: TextStyle(fontSize: 16),
                   ),
                   SizedBox(
-                    height: 20,
+                    height: 10,
+                  ),
+                  Wrap(
+                    spacing: 8,
+                    children: tags
+                        .map((element) => Chip(
+                              label: Text(element),
+                            ))
+                        .toList(),
+                  ),
+                  SizedBox(
+                    height: 10,
                   ),
                   Text(
                     '${data.docs[index]['date']}',
