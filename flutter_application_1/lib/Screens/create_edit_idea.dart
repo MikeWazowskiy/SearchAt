@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Screens/edit_description_page.dart';
 import 'package:flutter_application_1/Screens/ideas_screen.dart';
@@ -14,6 +15,7 @@ class CreateEditIdeaPage extends StatefulWidget {
 }
 
 class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
+  String? email;
   final controller = Get.put(TagStateController());
   final ideaTitleTextField = TextEditingController();
 
@@ -29,6 +31,10 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
     Icons.facebook,
     Icons.smartphone
   ];
+  void initState() {
+    super.initState();
+    LoadCurrentUser();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -160,6 +166,8 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
                         'tags': controller.listTags,
                         'contacts': contacts,
                         'date': DateFormat('dd.MM.yyyy').format(now),
+                        // Новое поле для добавления имейла
+                        'user_email': email,
                       },
                     )
                     .then(
@@ -191,6 +199,24 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
     );
   }
 
+  // Эта функция в реальном времени сохраняет инфу о текущем юзере и берет его имейл
+  void LoadCurrentUser() async {
+    final currentuser = await FirebaseAuth.instance.currentUser;
+    setState(() {
+      if (currentuser != null)
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(currentuser.uid)
+            .get()
+            .then((value) {
+          email = value.data()!['email'];
+          print(email);
+        }).catchError((e) {
+          print(e);
+        });
+    });
+  }
+
   Widget buildContacts() => ListView.builder(
         shrinkWrap: true,
         itemCount: contacts.length,
@@ -213,9 +239,7 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
                 prefixIcon: IconButton(
                   icon: Icon(icons[0]),
                   color: Colors.grey,
-                  onPressed: () => setState(() {
-                    
-                  }),
+                  onPressed: () => setState(() {}),
                 ),
               ),
               onChanged: (value) {

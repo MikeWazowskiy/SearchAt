@@ -409,7 +409,11 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
     try {
       final XFile? image = await _picker.pickImage(source: source);
       setState(() {
-        _imageFile = File(image!.path);
+        try {
+          _imageFile = File(image!.path);
+        } catch (e) {
+          print(e.toString());
+        }
         if (_imageFile == null)
           return;
         else {
@@ -498,19 +502,7 @@ class NavigationDrawWirdget extends StatelessWidget {
               onTap: () {},
             ),
             SizedBox(
-              height: 10,
-            ),
-            ListTile(
-              selectedColor: Colors.white,
-              leading: const Icon(
-                Icons.edit_sharp,
-                color: Color.fromARGB(255, 247, 96, 85),
-              ),
-              title: Text('Edit profile'),
-              onTap: () {},
-            ),
-            SizedBox(
-              height: 20,
+              height: 15,
             ),
             Divider(
               color: Color.fromARGB(255, 77, 77, 77),
