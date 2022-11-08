@@ -10,6 +10,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
+import '../Util/utils.dart';
+
 class ProfileScreen extends StatefulWidget {
   @override
   _ProfileScreenCreateState createState() => _ProfileScreenCreateState();
@@ -17,10 +19,10 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenCreateState extends State<ProfileScreen> {
   TextEditingController aboutYourselfController = new TextEditingController();
-  String? aboutYourself;
+  String? email;
   String? photoURLPath;
   File? _imageFile;
-  String? myName;
+  TextEditingController myName = new TextEditingController();
   final _picker = ImagePicker();
   @override
   void initState() {
@@ -56,6 +58,20 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
       });
   }
 
+  _email() async {
+    final firebaseUser = await FirebaseAuth.instance.currentUser;
+    if (firebaseUser != null)
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(firebaseUser.uid)
+          .get()
+          .then((value) {
+        email = value.data()!['email'];
+      }).catchError((e) {
+        print(e);
+      });
+  }
+
   _name() async {
     final firebaseUser = await FirebaseAuth.instance.currentUser;
     if (firebaseUser != null)
@@ -64,7 +80,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
           .doc(firebaseUser.uid)
           .get()
           .then((value) {
-        myName = value.data()!['name'];
+        myName.text = value.data()!['name'];
       }).catchError((e) {
         print(e);
       });
@@ -171,7 +187,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
               padding:
                   EdgeInsets.only(top: 17, left: 15, right: 15, bottom: 20),
               child: Container(
-                height: 300,
+                height: 320,
                 width: 380,
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -268,26 +284,60 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                       height: 10,
                     ),
                     Container(
-                      child: FutureBuilder(
-                        future: _name(),
-                        builder: ((context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) return Text('');
-                          return Text(
-                            '$myName',
-                            style: TextStyle(fontSize: 20, color: Colors.black),
-                          );
-                        }),
+                      width: 280,
+                      height: 55,
+                      child: Stack(
+                        children: <Widget>[
+                          Center(
+                            child: FutureBuilder(
+                              future: _name(),
+                              builder: ((context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) return Text('');
+                                return TextFormField(
+                                  onChanged: (value) {
+                                    try {
+                                      updateName(value);
+                                    } catch (e) {
+                                      print(e.toString());
+                                    }
+                                  },
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.all(0),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  textAlign: TextAlign.center,
+                                  controller: myName,
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.black),
+                                );
+                              }),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     SizedBox(
-                      height: 8,
+                      height: 2,
                     ),
-                    Text(
-                      'SearchAt user',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 16,
+                    Container(
+                      child: FutureBuilder(
+                        future: _email(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) return Text('');
+                          return Text(
+                            '$email',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 16,
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ],
@@ -338,18 +388,21 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                         if (snapshot.connectionState == ConnectionState.waiting)
                           return Text('');
                         return Padding(
-                          padding: EdgeInsets.only(left: 10, right: 10),
+                          padding: EdgeInsets.only(
+                            left: 10,
+                            right: 10,
+                          ),
                           child: TextFormField(
                             controller: aboutYourselfController,
                             maxLength: 300,
                             minLines: 3,
                             maxLines: 5,
+                            textAlign: TextAlign.justify,
                             decoration: InputDecoration(
-                              hintText: aboutYourself == ""
+                              hintText: aboutYourselfController.text == ""
                                   ? 'You have nothing about youself :('
                                   : null,
                               focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15.0),
                                 borderSide: BorderSide(
                                   color: Colors.white,
                                 ),
@@ -358,7 +411,6 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                                 borderSide: BorderSide(
                                   color: Colors.white,
                                 ),
-                                borderRadius: BorderRadius.circular(15.0),
                               ),
                             ),
                             onChanged: (value) {
@@ -395,6 +447,14 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
       ),
     );
     LoadImage();
+  }
+
+  void updateName(String value) async {
+    final firebaseCurrentUser = await FirebaseAuth.instance.currentUser;
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(firebaseCurrentUser!.uid)
+        .update({'name': value.trim()});
   }
 
   void updateAboutYouselfAndName(String value) async {
@@ -502,7 +562,7 @@ class NavigationDrawWirdget extends StatelessWidget {
               onTap: () {},
             ),
             SizedBox(
-              height: 15,
+              height: 10,
             ),
             Divider(
               color: Color.fromARGB(255, 77, 77, 77),
