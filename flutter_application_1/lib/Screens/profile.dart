@@ -4,13 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_1/Screens/ideas_screen.dart';
 import 'package:flutter_application_1/Screens/login_screen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
-
-import '../Util/utils.dart';
+import 'package:flutter_application_1/Screens/my_ideas_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -528,7 +528,13 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
   }
 }
 
-class NavigationDrawWirdget extends StatelessWidget {
+class NavigationDrawWirdget extends StatefulWidget {
+  @override
+  _NavigationDrawWirdgetCreateState createState() =>
+      _NavigationDrawWirdgetCreateState();
+}
+
+class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
   final paddint = EdgeInsets.symmetric(horizontal: 20);
   @override
   Widget build(BuildContext context) {
@@ -559,7 +565,12 @@ class NavigationDrawWirdget extends StatelessWidget {
                 color: Color.fromARGB(255, 247, 96, 85),
               ),
               title: Text('My Ideas'),
-              onTap: () {},
+              onTap: () {
+                setState(() {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => MyIdeasScreen()));
+                });
+              },
             ),
             SizedBox(
               height: 10,
