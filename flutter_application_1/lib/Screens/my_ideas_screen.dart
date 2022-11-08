@@ -47,18 +47,17 @@ class _MyIdeasScreenCreateState extends State<MyIdeasScreen> {
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collectionGroup('ideas')
-            .where('email', isEqualTo: email)
+            .where('user_email', isEqualTo: currentUsser!.email)
             .snapshots(),
         builder: ((context, snapshot) {
           if (snapshot.hasError) {
-            return Center(child: Text('Something went wrong.'));
+            return Center(child: Text(snapshot.error.toString()));
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
 
           final data = snapshot.requireData;
-
           return ListView.builder(
             itemCount: data.size,
             itemBuilder: ((context, index) {
