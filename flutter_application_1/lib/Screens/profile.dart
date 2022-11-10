@@ -364,7 +364,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                   Align(
                     alignment: Alignment.topLeft,
                     child: Padding(
-                      padding: EdgeInsets.only(left: 20, top: 20, bottom: 10),
+                      padding: EdgeInsets.only(left: 20, top: 20, bottom: 15),
                       child: Text(
                         'About yourself:',
                         style: TextStyle(
@@ -378,8 +378,12 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: Divider(
+                      height: 10,
                       color: Color.fromARGB(255, 77, 77, 77),
                     ),
+                  ),
+                  SizedBox(
+                    height: 7,
                   ),
                   Container(
                     child: FutureBuilder(
@@ -389,7 +393,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                           return Text('');
                         return Padding(
                           padding: EdgeInsets.only(
-                            left: 10,
+                            left: 14,
                             right: 10,
                           ),
                           child: TextFormField(
@@ -399,7 +403,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                             maxLines: 5,
                             textAlign: TextAlign.justify,
                             decoration: InputDecoration(
-                              contentPadding: EdgeInsets.all(8),
+                              contentPadding: EdgeInsets.all(6),
                               hintText: aboutYourselfController.text == ""
                                   ? 'You have nothing about youself :('
                                   : null,
