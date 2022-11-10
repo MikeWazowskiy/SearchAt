@@ -285,7 +285,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                     ),
                     Container(
                       width: 280,
-                      height: 55,
+                      height: 50,
                       child: Stack(
                         children: <Widget>[
                           Center(
@@ -399,6 +399,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                             maxLines: 5,
                             textAlign: TextAlign.justify,
                             decoration: InputDecoration(
+                              contentPadding: EdgeInsets.all(8),
                               hintText: aboutYourselfController.text == ""
                                   ? 'You have nothing about youself :('
                                   : null,
