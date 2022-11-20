@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Screens/edit_description_page.dart';
-import 'package:flutter_application_1/Screens/ideas_screen.dart';
 import 'package:flutter_application_1/tags.dart';
 import 'package:intl/intl.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
@@ -10,6 +9,17 @@ import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:get/get.dart';
 
 class CreateEditIdeaPage extends StatefulWidget {
+  final QuerySnapshot? data;
+  final int? index;
+  final bool editing;
+
+  const CreateEditIdeaPage({
+    Key? key,
+    this.data,
+    this.index,
+    required this.editing,
+  }) : super(key: key);
+
   @override
   _CreateEditIdeaPageState createState() => _CreateEditIdeaPageState();
 }
@@ -20,7 +30,6 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
   final ideaTitleTextField = TextEditingController();
 
   var description = '';
-  late List<String> tags;
   var contacts = [];
   final now = new DateTime.now();
 
@@ -33,7 +42,8 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
   ];
   void initState() {
     super.initState();
-    LoadCurrentUser();
+    ideaTitleTextField.text = widget.data?.docs[widget.index!]['title'] ?? '';
+    description = widget.data?.docs[widget.index!]['description'] ?? '';
   }
 
   @override
@@ -69,17 +79,50 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
               ),
             ),
             SizedBox(height: 15),
-            TextFormField(
-              autofocus: false,
-              controller: ideaTitleTextField,
-              maxLength: 50,
-              decoration: InputDecoration(
-                  labelText: 'Idea title',
-                  suffixIcon: IconButton(
-                    icon: Icon(Icons.clear_rounded),
-                    onPressed: () => ideaTitleTextField.clear(),
-                  )),
-            ),
+            widget.editing == true
+                ? email == widget.data!.docs[widget.index!]['user_email']
+                    ? TextFormField(
+                        autofocus: false,
+                        controller: ideaTitleTextField,
+                        maxLength: 50,
+                        decoration: InputDecoration(
+                            labelText: 'Idea title',
+                            suffixIcon: IconButton(
+                              icon: Icon(Icons.clear_rounded),
+                              onPressed: () => ideaTitleTextField.clear(),
+                            )),
+                      )
+                    : Column(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            child: Text(
+                              ideaTitleTextField.text,
+                              style: TextStyle(
+                                fontSize: 18,
+                              ),
+                            ),
+                            decoration: BoxDecoration(
+                              color: Color.fromARGB(255, 209, 209, 209),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                        ],
+                      )
+                : TextFormField(
+                    autofocus: false,
+                    controller: ideaTitleTextField,
+                    maxLength: 50,
+                    decoration: InputDecoration(
+                        labelText: 'Idea title',
+                        suffixIcon: IconButton(
+                          icon: Icon(Icons.clear_rounded),
+                          onPressed: () => ideaTitleTextField.clear(),
+                        )),
+                  ),
             Text(
               'About',
               style: TextStyle(
@@ -88,45 +131,103 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
               ),
             ),
             SizedBox(height: 35),
-            InkWell(
-              child: Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    description.isEmpty
-                        ? Text(
-                            'Idea description',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey[600],
-                            ),
-                          )
-                        : Text(
-                            description,
-                            style: TextStyle(fontSize: 16),
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
+            widget.editing == true
+                ? email == widget.data!.docs[widget.index!]['user_email']
+                    ? InkWell(
+                        child: Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              description.isEmpty
+                                  ? Text(
+                                      'Idea description',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.grey[600],
+                                      ),
+                                    )
+                                  : Text(
+                                      description,
+                                      style: TextStyle(fontSize: 16),
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                              Divider(
+                                height: 45,
+                                thickness: 0.9,
+                                color: Colors.grey[500],
+                              ),
+                            ],
                           ),
-                    Divider(
-                      height: 45,
-                      thickness: 0.9,
-                      color: Colors.grey[500],
+                        ),
+                        onTap: () async {
+                          final descriptionVal =
+                              await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  DescriptionPage(description: description),
+                            ),
+                          );
+                          setState(() {
+                            description = descriptionVal;
+                          });
+                        },
+                      )
+                    : Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              description,
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ],
+                        ),
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 209, 209, 209),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: EdgeInsets.all(10),
+                      )
+                : InkWell(
+                    child: Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          description.isEmpty
+                              ? Text(
+                                  'Idea description',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.grey[600],
+                                  ),
+                                )
+                              : Text(
+                                  description,
+                                  style: TextStyle(fontSize: 16),
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                          Divider(
+                            height: 45,
+                            thickness: 0.9,
+                            color: Colors.grey[500],
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
-              ),
-              onTap: () async {
-                final descriptionVal = await Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        DescriptionPage(description: description),
+                    onTap: () async {
+                      final descriptionVal = await Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              DescriptionPage(description: description),
+                        ),
+                      );
+                      setState(() {
+                        description = descriptionVal;
+                      });
+                    },
                   ),
-                );
-                setState(() {
-                  this.description = descriptionVal;
-                });
-              },
-            ),
             SizedBox(height: 15),
             Text(
               'Tags',
@@ -156,42 +257,116 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
                       }
                     })),
                 icon: Icon(Icons.add)),
-            ElevatedButton(
-              onPressed: () {
-                ideas
-                    .add(
-                      {
-                        'title': ideaTitleTextField.text.trim(),
-                        'description': description.trim(),
-                        'tags': controller.listTags,
-                        'contacts': contacts,
-                        'date': DateFormat('dd.MM.yyyy').format(now),
-                        // Новое поле для добавления имейла
-                        'user_email': email,
-                      },
-                    )
-                    .then(
-                      (value) => print('Idea added!'),
-                    )
-                    .catchError((error) => 'Failded to add the idea: $error');
-                Navigator.of(context).pop(context);
-                showTopSnackBar(
-                  context,
-                  CustomSnackBar.success(
-                    message: "The idea has been successfully published!",
-                  ),
-                );
-              },
-              child: Text(
-                'Publish',
-                style: TextStyle(fontSize: 25),
-              ),
-              style: ElevatedButton.styleFrom(
-                minimumSize: Size(double.infinity, 0),
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                backgroundColor: Color.fromARGB(255, 102, 192, 105),
-              ),
-            ),
+            widget.editing == false
+                ? ElevatedButton(
+                    onPressed: () {
+                      ideas
+                          .add(
+                            {
+                              'title': ideaTitleTextField.text.trim(),
+                              'description': description.trim(),
+                              'tags': controller.listTags,
+                              'contacts': contacts,
+                              'date': DateFormat('dd.MM.yyyy').format(now),
+                              // Новое поле для добавления имейла
+                              'user_email': email,
+                            },
+                          )
+                          .then(
+                            (value) => print('Idea added!'),
+                          )
+                          .catchError(
+                              (error) => 'Failded to add the idea: $error');
+                      Navigator.of(context).pop(context);
+                      showTopSnackBar(
+                        context,
+                        CustomSnackBar.success(
+                          message: "The idea has been successfully published!",
+                        ),
+                      );
+                    },
+                    child: Text(
+                      'Publish',
+                      style: TextStyle(fontSize: 25),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size(double.infinity, 0),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      backgroundColor: Color.fromARGB(255, 102, 192, 105),
+                    ),
+                  )
+                : email == widget.data!.docs[widget.index!]['user_email']
+                    ? Column(
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              showTopSnackBar(
+                                context,
+                                CustomSnackBar.success(
+                                  message:
+                                      "The idea has been successfully updated!",
+                                ),
+                              );
+                              FirebaseFirestore.instance
+                                  .collection('ideas')
+                                  .doc(widget.data?.docs[widget.index!].id)
+                                  .update(
+                                {
+                                  'title': ideaTitleTextField.text.trim(),
+                                  'description': description.trim(),
+                                  'tags': controller.listTags,
+                                  'contacts': contacts,
+                                  'date': DateFormat('dd.MM.yyyy').format(now),
+                                },
+                              );
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              'Save',
+                              style: TextStyle(fontSize: 25),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              minimumSize: Size(double.infinity, 0),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
+                              backgroundColor:
+                                  Color.fromARGB(255, 102, 192, 105),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              showTopSnackBar(
+                                context,
+                                CustomSnackBar.info(
+                                  message:
+                                      "The idea has been successfully deleted!",
+                                ),
+                              );
+                              FirebaseFirestore.instance
+                                  .collection('ideas')
+                                  .doc(widget.data?.docs[widget.index!].id)
+                                  .delete();
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              'Delete',
+                              style: TextStyle(fontSize: 25),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              minimumSize: Size(double.infinity, 0),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
+                              backgroundColor:
+                                  Color.fromARGB(255, 192, 102, 102),
+                            ),
+                          ),
+                        ],
+                      )
+                    : SizedBox.shrink(),
           ],
           crossAxisAlignment: CrossAxisAlignment.start,
         ),
@@ -203,17 +378,7 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
   void LoadCurrentUser() async {
     final currentuser = await FirebaseAuth.instance.currentUser;
     setState(() {
-      if (currentuser != null)
-        FirebaseFirestore.instance
-            .collection('users')
-            .doc(currentuser.uid)
-            .get()
-            .then((value) {
-          email = value.data()!['email'];
-          print(email);
-        }).catchError((e) {
-          print(e);
-        });
+      email = currentuser!.email;
     });
   }
 

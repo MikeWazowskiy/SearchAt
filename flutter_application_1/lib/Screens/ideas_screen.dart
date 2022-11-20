@@ -25,7 +25,7 @@ class _IdeasScreenCreateState extends State<IdeasScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => CreateEditIdeaPage(),
+              builder: (context) => CreateEditIdeaPage(editing: false,),
             ),
           );
         },
@@ -39,13 +39,22 @@ class _IdeasScreenCreateState extends State<IdeasScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
-
           final data = snapshot.requireData;
 
           return ListView.builder(
             itemCount: data.size,
             itemBuilder: ((context, index) {
-              return IdeaCard(data: data, index: index);
+              return GestureDetector(
+                onTap: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CreateEditIdeaPage(data: data, index: index, editing: true,),
+                    ),
+                  );
+                },
+                child: IdeaCard(data: data, index: index),
+              );
             }),
           );
         }),
