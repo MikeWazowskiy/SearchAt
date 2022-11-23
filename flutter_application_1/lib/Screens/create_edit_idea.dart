@@ -44,6 +44,7 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
     super.initState();
     ideaTitleTextField.text = widget.data?.docs[widget.index!]['title'] ?? '';
     description = widget.data?.docs[widget.index!]['description'] ?? '';
+    LoadCurrentUser();
   }
 
   @override
