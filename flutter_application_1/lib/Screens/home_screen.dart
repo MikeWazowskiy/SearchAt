@@ -1,8 +1,4 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-
-import 'package:flutter_application_1/Screens/create_edit_idea.dart';
 
 import 'package:flutter_application_1/Screens/ideas_screen.dart';
 

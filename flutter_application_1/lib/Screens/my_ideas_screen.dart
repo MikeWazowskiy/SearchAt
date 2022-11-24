@@ -11,7 +11,6 @@ class MyIdeasScreen extends StatefulWidget {
 
 class _MyIdeasScreenCreateState extends State<MyIdeasScreen> {
   final currentUsser = FirebaseAuth.instance.currentUser;
-  String? email;
   _email() async {
     if (currentUsser != null)
       await FirebaseFirestore.instance
@@ -19,7 +18,6 @@ class _MyIdeasScreenCreateState extends State<MyIdeasScreen> {
           .doc(currentUsser!.email)
           .get()
           .then((value) {
-        email = value.data()!['email'];
       }).catchError((e) {
         print(e);
       });
@@ -29,6 +27,13 @@ class _MyIdeasScreenCreateState extends State<MyIdeasScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          'My Ideas',
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
         backgroundColor: Colors.grey[50],
         iconTheme: IconThemeData(
           color: Colors.black,
@@ -46,7 +51,7 @@ class _MyIdeasScreenCreateState extends State<MyIdeasScreen> {
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
-            .collectionGroup('ideas')
+            .collection('ideas')
             .where('user_email', isEqualTo: currentUsser!.email)
             .snapshots(),
         builder: ((context, snapshot) {
@@ -61,7 +66,21 @@ class _MyIdeasScreenCreateState extends State<MyIdeasScreen> {
           return ListView.builder(
             itemCount: data.size,
             itemBuilder: ((context, index) {
-              return IdeaCard(data: data, index: index);
+              return GestureDetector(
+                onTap: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CreateEditIdeaPage(
+                        data: data,
+                        index: index,
+                        editing: true,
+                      ),
+                    ),
+                  );
+                },
+                child: IdeaCard(data: data, index: index),
+              );
             }),
           );
         }),

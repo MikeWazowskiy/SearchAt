@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_application_1/Screens/ideas_screen.dart';
+import 'package:flutter_application_1/Screens/favorites_screen.dart';
 import 'package:flutter_application_1/Screens/login_screen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -175,6 +175,13 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
     return Scaffold(
       drawer: NavigationDrawWirdget(),
       appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          'Profile',
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
         iconTheme: IconThemeData(
           color: Color.fromARGB(255, 77, 77, 77),
         ),
@@ -558,7 +565,12 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
                 color: Color.fromARGB(255, 247, 96, 85),
               ),
               title: Text('Favourites'),
-              onTap: () {},
+              onTap: () {
+                setState(() {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => FavoritesScreen()));
+                });
+              },
             ),
             SizedBox(
               height: 10,

@@ -39,7 +39,6 @@ class _TagsFieldState extends State<TagsField> {
   @override
   void initState() {
     super.initState();
-    controller.listTags.clear();
   }
 
   @override

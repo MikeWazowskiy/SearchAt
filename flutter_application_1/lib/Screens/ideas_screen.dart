@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Screens/create_edit_idea.dart';
 import 'package:flutter_application_1/idea_card.dart';
@@ -9,8 +10,20 @@ class IdeasScreen extends StatefulWidget {
 }
 
 class _IdeasScreenCreateState extends State<IdeasScreen> {
-  final Stream<QuerySnapshot> ideas =
-      FirebaseFirestore.instance.collection('ideas').snapshots();
+  final currentUsser = FirebaseAuth.instance.currentUser;
+  String? email;
+  _email() async {
+    if (currentUsser != null)
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUsser!.email)
+          .get()
+          .then((value) {
+        email = value.data()!['email'];
+      }).catchError((e) {
+        print(e);
+      });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,13 +38,18 @@ class _IdeasScreenCreateState extends State<IdeasScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => CreateEditIdeaPage(editing: false,),
+              builder: (context) => CreateEditIdeaPage(
+                editing: false,
+              ),
             ),
           );
         },
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: ideas,
+        stream: FirebaseFirestore.instance
+            .collection('ideas')
+            .where('user_email', isNotEqualTo: currentUsser!.email)
+            .snapshots(),
         builder: ((context, snapshot) {
           if (snapshot.hasError) {
             return Center(child: Text('Something went wrong.'));
@@ -49,7 +67,11 @@ class _IdeasScreenCreateState extends State<IdeasScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => CreateEditIdeaPage(data: data, index: index, editing: true,),
+                      builder: (context) => CreateEditIdeaPage(
+                        data: data,
+                        index: index,
+                        editing: true,
+                      ),
                     ),
                   );
                 },

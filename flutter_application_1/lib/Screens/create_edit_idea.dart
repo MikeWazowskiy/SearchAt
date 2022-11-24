@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:get/get.dart';
+import 'package:flutter/services.dart';
 
 class CreateEditIdeaPage extends StatefulWidget {
   final QuerySnapshot? data;
@@ -31,6 +32,7 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
 
   var description = '';
   var contacts = [];
+  var tags = [];
   final now = new DateTime.now();
 
   var icons = [
@@ -44,6 +46,9 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
     super.initState();
     ideaTitleTextField.text = widget.data?.docs[widget.index!]['title'] ?? '';
     description = widget.data?.docs[widget.index!]['description'] ?? '';
+    tags = widget.data?.docs[widget.index!]['tags'] ?? [];
+    controller.listTags.value = tags.cast<String>();
+    contacts = widget.data?.docs[widget.index!]['contacts'] ?? [];
     LoadCurrentUser();
   }
 
@@ -72,40 +77,16 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
         padding: EdgeInsets.all(15),
         child: Column(
           children: [
-            Text(
-              'Idea',
-              style: TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 25,
-              ),
-            ),
-            SizedBox(height: 15),
             widget.editing == true
                 ? email == widget.data!.docs[widget.index!]['user_email']
-                    ? TextFormField(
-                        autofocus: false,
-                        controller: ideaTitleTextField,
-                        maxLength: 50,
-                        decoration: InputDecoration(
-                            labelText: 'Idea title',
-                            suffixIcon: IconButton(
-                              icon: Icon(Icons.clear_rounded),
-                              onPressed: () => ideaTitleTextField.clear(),
-                            )),
-                      )
+                    ? ideaTitle()
                     : Column(
                         children: [
-                          Container(
-                            padding: EdgeInsets.all(10),
-                            child: Text(
-                              ideaTitleTextField.text,
-                              style: TextStyle(
-                                fontSize: 18,
-                              ),
-                            ),
-                            decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 209, 209, 209),
-                              borderRadius: BorderRadius.circular(10),
+                          Text(
+                            ideaTitleTextField.text,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 25,
                             ),
                           ),
                           SizedBox(
@@ -113,122 +94,26 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
                           ),
                         ],
                       )
-                : TextFormField(
-                    autofocus: false,
-                    controller: ideaTitleTextField,
-                    maxLength: 50,
-                    decoration: InputDecoration(
-                        labelText: 'Idea title',
-                        suffixIcon: IconButton(
-                          icon: Icon(Icons.clear_rounded),
-                          onPressed: () => ideaTitleTextField.clear(),
-                        )),
-                  ),
-            Text(
-              'About',
-              style: TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 25,
-              ),
-            ),
-            SizedBox(height: 35),
+                : ideaTitle(),
             widget.editing == true
                 ? email == widget.data!.docs[widget.index!]['user_email']
-                    ? InkWell(
-                        child: Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              description.isEmpty
-                                  ? Text(
-                                      'Idea description',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.grey[600],
-                                      ),
-                                    )
-                                  : Text(
-                                      description,
-                                      style: TextStyle(fontSize: 16),
-                                      maxLines: 3,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                              Divider(
-                                height: 45,
-                                thickness: 0.9,
-                                color: Colors.grey[500],
-                              ),
-                            ],
-                          ),
-                        ),
-                        onTap: () async {
-                          final descriptionVal =
-                              await Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  DescriptionPage(description: description),
-                            ),
-                          );
-                          setState(() {
-                            description = descriptionVal;
-                          });
-                        },
-                      )
-                    : Container(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              description,
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ],
-                        ),
-                        decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 209, 209, 209),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        padding: EdgeInsets.all(10),
-                      )
-                : InkWell(
-                    child: Container(
-                      child: Column(
+                    ? aboutField()
+                    : Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          description.isEmpty
-                              ? Text(
-                                  'Idea description',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.grey[600],
-                                  ),
-                                )
-                              : Text(
-                                  description,
-                                  style: TextStyle(fontSize: 16),
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
                           Divider(
-                            height: 45,
-                            thickness: 0.9,
-                            color: Colors.grey[500],
+                            height: 10,
+                            thickness: 1.5,
+                            color: Colors.black,
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            description,
+                            style: TextStyle(fontSize: 16),
                           ),
                         ],
-                      ),
-                    ),
-                    onTap: () async {
-                      final descriptionVal = await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              DescriptionPage(description: description),
-                        ),
-                      );
-                      setState(() {
-                        description = descriptionVal;
-                      });
-                    },
-                  ),
+                      )
+                : aboutField(),
             SizedBox(height: 15),
             Text(
               'Tags',
@@ -237,8 +122,18 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
                 fontSize: 25,
               ),
             ),
-            SizedBox(height: 35),
-            TagsField(),
+            widget.editing == false
+                ? Column(children: [SizedBox(height: 35), TagsField()])
+                : email == widget.data!.docs[widget.index!]['user_email']
+                    ? TagsField()
+                    : Wrap(
+                        spacing: 8,
+                        children: tags
+                            .map((element) => Chip(
+                                  label: Text(element),
+                                ))
+                            .toList(),
+                      ),
             SizedBox(height: 10),
             Text(
               'Contacts',
@@ -251,40 +146,60 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
             Container(
               child: buildContacts(),
             ),
-            IconButton(
-                onPressed: (() => setState(() {
-                      if (contacts.length < 3) {
-                        contacts.add('');
-                      }
-                    })),
-                icon: Icon(Icons.add)),
+            widget.editing == false
+                ? IconButton(
+                    onPressed: (() => setState(() {
+                          if (contacts.length < 3) {
+                            contacts.add('');
+                          }
+                        })),
+                    icon: Icon(Icons.add))
+                : email == widget.data!.docs[widget.index!]['user_email']
+                    ? IconButton(
+                        onPressed: (() => setState(() {
+                              if (contacts.length < 3) {
+                                contacts.add('');
+                              }
+                            })),
+                        icon: Icon(Icons.add))
+                    : SizedBox.shrink(),
             widget.editing == false
                 ? ElevatedButton(
                     onPressed: () {
-                      ideas
-                          .add(
-                            {
-                              'title': ideaTitleTextField.text.trim(),
-                              'description': description.trim(),
-                              'tags': controller.listTags,
-                              'contacts': contacts,
-                              'date': DateFormat('dd.MM.yyyy').format(now),
-                              // Новое поле для добавления имейла
-                              'user_email': email,
-                            },
-                          )
-                          .then(
-                            (value) => print('Idea added!'),
-                          )
-                          .catchError(
-                              (error) => 'Failded to add the idea: $error');
-                      Navigator.of(context).pop(context);
-                      showTopSnackBar(
-                        context,
-                        CustomSnackBar.success(
-                          message: "The idea has been successfully published!",
-                        ),
-                      );
+                      ideaTitleTextField.text.trim().isNotEmpty &&
+                              description.trim().isNotEmpty &&
+                              controller.listTags.isNotEmpty &&
+                              contacts.isNotEmpty
+                          ? ideas.add(
+                              {
+                                'title': ideaTitleTextField.text.trim(),
+                                'description': description.trim(),
+                                'tags': controller.listTags,
+                                'contacts': contacts,
+                                'date': DateFormat('dd.MM.yyyy').format(now),
+                                // Новое поле для добавления имейла
+                                'user_email': email,
+                              },
+                            ).then(
+                              (value) {
+                                print('Idea added!');
+                                Navigator.of(context).pop(context);
+                                showTopSnackBar(
+                                  context,
+                                  CustomSnackBar.success(
+                                    message:
+                                        "The idea has been successfully published!",
+                                  ),
+                                );
+                              },
+                            ).catchError(
+                              (error) => 'Failded to add the idea: $error')
+                          : showTopSnackBar(
+                              context,
+                              CustomSnackBar.error(
+                                message: "You need to fill in all the fields!",
+                              ),
+                            );
                     },
                     child: Text(
                       'Publish',
@@ -302,26 +217,41 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
                         children: [
                           ElevatedButton(
                             onPressed: () {
-                              showTopSnackBar(
-                                context,
-                                CustomSnackBar.success(
-                                  message:
-                                      "The idea has been successfully updated!",
-                                ),
-                              );
-                              FirebaseFirestore.instance
-                                  .collection('ideas')
-                                  .doc(widget.data?.docs[widget.index!].id)
-                                  .update(
-                                {
-                                  'title': ideaTitleTextField.text.trim(),
-                                  'description': description.trim(),
-                                  'tags': controller.listTags,
-                                  'contacts': contacts,
-                                  'date': DateFormat('dd.MM.yyyy').format(now),
-                                },
-                              );
-                              Navigator.pop(context);
+                              ideaTitleTextField.text.trim().isNotEmpty &&
+                                      description.trim().isNotEmpty &&
+                                      controller.listTags.isNotEmpty &&
+                                      contacts.isNotEmpty
+                                  ? FirebaseFirestore.instance
+                                      .collection('ideas')
+                                      .doc(widget.data?.docs[widget.index!].id)
+                                      .update(
+                                      {
+                                        'title': ideaTitleTextField.text.trim(),
+                                        'description': description.trim(),
+                                        'tags': controller.listTags,
+                                        'contacts': contacts,
+                                        'date': DateFormat('dd.MM.yyyy')
+                                            .format(now),
+                                      },
+                                    ).then(
+                                      (value) {
+                                        showTopSnackBar(
+                                          context,
+                                          CustomSnackBar.success(
+                                            message:
+                                                "The idea has been successfully updated!",
+                                          ),
+                                        );
+                                        Navigator.pop(context);
+                                      },
+                                    )
+                                  : showTopSnackBar(
+                                      context,
+                                      CustomSnackBar.error(
+                                        message:
+                                            "You need to fill in all the fields!",
+                                      ),
+                                    );
                             },
                             child: Text(
                               'Save',
@@ -375,6 +305,106 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
     );
   }
 
+  Column ideaTitle() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Idea',
+          style: TextStyle(
+            fontWeight: FontWeight.w700,
+            fontSize: 25,
+          ),
+        ),
+        SizedBox(height: 15),
+        TextFormField(
+          autofocus: false,
+          controller: ideaTitleTextField,
+          maxLength: 50,
+          decoration: InputDecoration(
+            labelText: 'Idea title',
+            suffixIcon: IconButton(
+              icon: Icon(Icons.clear_rounded),
+              onPressed: () => ideaTitleTextField.clear(),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  InkWell aboutField() {
+    return InkWell(
+      child: Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'About',
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 25,
+              ),
+            ),
+            SizedBox(height: 35),
+            description.isEmpty
+                ? Text(
+                    'Idea description',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey[600],
+                    ),
+                  )
+                : Text(
+                    description,
+                    style: TextStyle(fontSize: 16),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+            Divider(
+              height: 45,
+              thickness: 0.9,
+              color: Colors.grey[500],
+            ),
+          ],
+        ),
+      ),
+      onTap: () async {
+        final descriptionVal = await Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => DescriptionPage(description: description),
+          ),
+        );
+        setState(() {
+          description = descriptionVal;
+        });
+      },
+    );
+  }
+
+  TextFormField contactField(index) {
+    return TextFormField(
+      initialValue: contacts[index],
+      decoration: InputDecoration(
+        suffixIcon: IconButton(
+          color: Colors.grey,
+          icon: Icon(Icons.delete),
+          onPressed: () => setState(() {
+            contacts.removeAt(index);
+          }),
+        ),
+        prefixIcon: IconButton(
+          icon: Icon(icons[0]),
+          color: Colors.grey,
+          onPressed: () => setState(() {}),
+        ),
+      ),
+      onChanged: (value) {
+        contacts[index] = value;
+      },
+    );
+  }
+
   // Эта функция в реальном времени сохраняет инфу о текущем юзере и берет его имейл
   void LoadCurrentUser() async {
     final currentuser = await FirebaseAuth.instance.currentUser;
@@ -392,26 +422,39 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
           return Card(
             key: Key(contact),
             elevation: 4,
-            child: TextFormField(
-              initialValue: contacts[index],
-              decoration: InputDecoration(
-                suffixIcon: IconButton(
-                  color: Colors.grey,
-                  icon: Icon(Icons.delete),
-                  onPressed: () => setState(() {
-                    contacts.removeAt(index);
-                  }),
-                ),
-                prefixIcon: IconButton(
-                  icon: Icon(icons[0]),
-                  color: Colors.grey,
-                  onPressed: () => setState(() {}),
-                ),
-              ),
-              onChanged: (value) {
-                contacts[index] = value;
-              },
-            ),
+            child: widget.editing == false
+                ? contactField(index)
+                : email == widget.data!.docs[widget.index!]['user_email']
+                    ? contactField(index)
+                    : Padding(
+                        padding: EdgeInsets.only(top: 2, bottom: 2, left: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              contacts[index],
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                Clipboard.setData(
+                                    ClipboardData(text: contacts[index]));
+                                showTopSnackBar(
+                                  context,
+                                  CustomSnackBar.info(
+                                    message:
+                                        "The contact has been successfully copied!",
+                                  ),
+                                );
+                              },
+                              icon: Icon(
+                                Icons.copy,
+                                size: 20,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
           );
         },
       );

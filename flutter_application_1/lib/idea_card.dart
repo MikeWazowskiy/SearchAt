@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class IdeaCard extends StatelessWidget {
   final data;
@@ -12,7 +14,12 @@ class IdeaCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentUsser = FirebaseAuth.instance.currentUser;
+    CollectionReference favorites =
+        FirebaseFirestore.instance.collection('favorites');
+
     List tags = data.docs[index]['tags'];
+
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
@@ -72,7 +79,12 @@ class IdeaCard extends StatelessWidget {
               ),
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                favorites.add({
+                  'user_email': currentUsser!.email,
+                  'idea_id': data.docs[index].id,
+                });
+              },
               splashColor: Colors.transparent,
               icon: Icon(
                 Icons.favorite_border,
