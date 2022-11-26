@@ -567,8 +567,10 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
               title: Text('Favourites'),
               onTap: () {
                 setState(() {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => FavoritesScreen()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => FavoritesScreen()));
                 });
               },
             ),
