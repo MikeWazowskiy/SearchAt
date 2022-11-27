@@ -1,13 +1,13 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_1/Screens/favorites_screen.dart';
 import 'package:flutter_application_1/Screens/login_screen.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ndialog/ndialog.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:flutter_application_1/Screens/my_ideas_screen.dart';
@@ -27,7 +27,41 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    LoadImage();
+  }
+
+  void takePhoto(ImageSource source) async {
+    try {
+      final image = await _picker.pickImage(
+          source: source, imageQuality: 100, maxHeight: 512, maxWidth: 512);
+      if (image != null) {
+        _imageFile = File(image.path);
+      }
+      if (_imageFile == null)
+        return;
+      else {
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('UsersImages')
+            .child(email! + '.jpeg');
+        await ref.putFile(_imageFile!);
+        _imageFile = null;
+        photoURLPath = await ref.getDownloadURL();
+        Navigator.pop(context);
+        showTopSnackBar(
+          context,
+          CustomSnackBar.success(
+            message: "Photo was published! Please restart page",
+          ),
+        );
+        final firebaseCurrentUser = FirebaseAuth.instance.currentUser;
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(firebaseCurrentUser!.uid)
+            .update({'photoUrl': photoURLPath});
+      }
+    } on PlatformException catch (e) {
+      Navigator.of(context).pop();
+    }
   }
 
   _aboutYourself() async {
@@ -217,42 +251,33 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                       child: Stack(
                         children: <Widget>[
                           Container(
-                            child: FutureBuilder(
-                              future: _pickImage(),
-                              builder: ((context, snapshot) {
-                                if (snapshot.connectionState !=
-                                    ConnectionState.done)
-                                  return Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                return photoURLPath != null
-                                    ? Align(
-                                        alignment: Alignment.topCenter,
-                                        child: CircleAvatar(
-                                          backgroundImage: MemoryImage(
-                                            base64Decode(photoURLPath!),
-                                          ),
-                                          radius: 90,
-                                        ),
-                                      )
-                                    : Align(
-                                        alignment: Alignment.topCenter,
-                                        child: CircleAvatar(
-                                          backgroundColor: Color.fromARGB(
-                                              255, 228, 228, 228),
-                                          child: Text(
-                                            'No User Photo',
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 20,
-                                            ),
-                                          ),
-                                          radius: 90,
-                                        ),
-                                      );
-                              }),
-                            ),
-                          ),
+                              child: FutureBuilder(
+                            future: _pickImage(),
+                            builder: ((context, snapshot) {
+                              if (snapshot.connectionState !=
+                                  ConnectionState.done)
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              return photoURLPath != null
+                                  ? Align(
+                                      alignment: Alignment.topCenter,
+                                      child: CircleAvatar(
+                                        backgroundImage:
+                                            NetworkImage(photoURLPath!),
+                                        radius: 90,
+                                      ),
+                                    )
+                                  : Align(
+                                      alignment: Alignment.topCenter,
+                                      child: CircleAvatar(
+                                        backgroundImage: NetworkImage(
+                                            'https://cdn-icons-png.flaticon.com/512/219/219983.png'),
+                                        radius: 90,
+                                      ),
+                                    );
+                            }),
+                          )),
                           Padding(
                             padding: EdgeInsets.only(top: 145, right: 115),
                             child: Align(
@@ -446,7 +471,9 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
   }
 
   void removePhotoFromProfile() async {
-    photoURLPath = null;
+    setState(() {
+      photoURLPath = null;
+    });
     final firebaseCurrentUser = await FirebaseAuth.instance.currentUser;
     FirebaseFirestore.instance
         .collection('users')
@@ -458,7 +485,6 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
         message: "Photo was successfully removed!",
       ),
     );
-    LoadImage();
   }
 
   void updateName(String value) async {
@@ -475,68 +501,6 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
         .collection('users')
         .doc(firebaseCurrentUser!.uid)
         .update({'about_yourself': value.trim()});
-  }
-
-  void takePhoto(ImageSource source) async {
-    try {
-      final XFile? image = await _picker.pickImage(source: source);
-      setState(() {
-        try {
-          _imageFile = File(image!.path);
-        } catch (e) {
-          print(e.toString());
-        }
-        if (_imageFile == null)
-          return;
-        else {
-          savePhoto(_imageFile?.path);
-          Navigator.pop(context);
-          showTopSnackBar(
-            context,
-            CustomSnackBar.success(
-              message: "Photo was published, restart Page :)",
-            ),
-          );
-          final firebaseCurrentUser = FirebaseAuth.instance.currentUser;
-          FirebaseFirestore.instance
-              .collection('users')
-              .doc(firebaseCurrentUser!.uid)
-              .update(
-                  {'photoUrl': base64Encode(_imageFile!.readAsBytesSync())});
-        }
-      });
-    } on PlatformException catch (e) {
-      Navigator.of(context).pop();
-    }
-  }
-
-  void savePhoto(path) async {
-    SharedPreferences saveimage = await SharedPreferences.getInstance();
-    if (path == null)
-      return;
-    else {
-      saveimage.setString("imagepath", path);
-    }
-  }
-
-  void LoadImage() async {
-    try {
-      final firebaseUser = await FirebaseAuth.instance.currentUser;
-      setState(() {
-        if (firebaseUser != null)
-          FirebaseFirestore.instance
-              .collection('users')
-              .doc(firebaseUser.uid)
-              .get()
-              .then((value) {
-            photoURLPath = value.data()!['photoUrl'];
-          }).catchError((e) {
-            print(e);
-          });
-      });
-    } on PlatformException catch (e) {
-      Navigator.of(context).pop();
-    }
   }
 }
 
@@ -607,10 +571,45 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
               ),
               title: Text('Sign Out'),
               onTap: () {
-                FirebaseAuth.instance.signOut();
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Login()));
+                NAlertDialog(
+                  dialogStyle: DialogStyle(titleDivider: true),
+                  title: Text('Sign Out'),
+                  content: Text(
+                    'Are you sure you want to sign out from your account?',
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: (() {
+                        Navigator.pop(context);
+                        setState(() {
+                          FirebaseAuth.instance.signOut();
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => Login()));
+                        });
+                      }),
+                      child: Text(
+                        'OK',
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: (() {
+                        Navigator.pop(context);
+                      }),
+                      child: Text(
+                        'Cancel',
+                      ),
+                    ),
+                  ],
+                ).show(context);
               },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.delete_rounded,
+                color: Color.fromARGB(255, 247, 96, 85),
+              ),
+              title: Text('Delete account'),
+              onTap: () {},
             ),
           ],
         ),
