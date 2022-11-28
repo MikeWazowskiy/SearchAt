@@ -683,6 +683,12 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
               context, MaterialPageRoute(builder: (context) => Login()));
         });
       });
+      //Удаление фотографии из хранилища
+      final ref = FirebaseStorage.instance
+          .ref()
+          .child('UsersImages')
+          .child(email! + '.jpeg');
+      await ref.delete();
       //Удаление коллекции users
       var collectionUsers = await FirebaseFirestore.instance
           .collection('users')
