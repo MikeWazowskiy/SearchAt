@@ -64,7 +64,7 @@ class _VerifyEmailCreateState extends State<VerifyEmailScreen> {
       );
       Utils.showSnackBar('A mail has been sent to your email', true);
     } catch (e) {
-      Utils.showSnackBar(e.toString(), false);
+      Utils.showSnackBar('A mail already has been sent, try later', false);
     }
   }
 
@@ -95,11 +95,11 @@ class _VerifyEmailCreateState extends State<VerifyEmailScreen> {
                 height: 50,
                 child: ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
-                    primary: Color.fromARGB(255, 61, 210, 255),
+                    primary: Colors.grey,
                     onSurface: Colors.white,
                     shadowColor: Colors.white,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
                   onPressed: canResendEmail ? sendVerificatedEmail : null,

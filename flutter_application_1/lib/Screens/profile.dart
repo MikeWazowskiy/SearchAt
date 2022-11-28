@@ -512,6 +512,8 @@ class NavigationDrawWirdget extends StatefulWidget {
 
 class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
   final paddint = EdgeInsets.symmetric(horizontal: 20);
+  String? password;
+  String? email;
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -609,11 +611,80 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
                 color: Color.fromARGB(255, 247, 96, 85),
               ),
               title: Text('Delete account'),
-              onTap: () {},
+              onTap: () {
+                NAlertDialog(
+                  dialogStyle: DialogStyle(titleDivider: true),
+                  title: Text('Delete'),
+                  content: Text(
+                    'Are you sure you want to delete your account?',
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: (() {
+                        Navigator.pop(context);
+                        setState(() {
+                          deleteAccountAndAllIdeas();
+                        });
+                      }),
+                      child: Text(
+                        'OK',
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: (() {
+                        Navigator.pop(context);
+                      }),
+                      child: Text(
+                        'Cancel',
+                      ),
+                    ),
+                  ],
+                ).show(context);
+              },
             ),
           ],
         ),
       ),
     );
+  }
+
+  void deleteAccountAndAllIdeas() async {
+    final firebaseCurrentUser = await FirebaseAuth.instance.currentUser;
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(firebaseCurrentUser!.uid)
+        .get()
+        .then((value) {
+      password = value.data()!['password'];
+    }).catchError((e) {
+      print(e);
+    });
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(firebaseCurrentUser.uid)
+        .get()
+        .then((value) {
+      email = value.data()!['email'];
+    }).catchError((e) {
+      print(e);
+    });
+    if (firebaseCurrentUser != null) {
+      //Удаление пользователя
+      AuthCredential credential = EmailAuthProvider.credential(
+          email: email.toString(), password: password.toString());
+      await firebaseCurrentUser
+          .reauthenticateWithCredential(credential)
+          .then((value) {
+        value.user!.delete().then((value) {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Login()));
+        });
+      });
+      //Удаление коллекции users
+      var collectionUsers = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(firebaseCurrentUser.uid);
+      collectionUsers.delete();
+    }
   }
 }

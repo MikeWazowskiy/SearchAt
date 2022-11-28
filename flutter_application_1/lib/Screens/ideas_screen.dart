@@ -11,6 +11,7 @@ class IdeasScreen extends StatefulWidget {
 
 class _IdeasScreenCreateState extends State<IdeasScreen> {
   final currentUsser = FirebaseAuth.instance.currentUser;
+  String tags = " ";
   String? email;
   _email() async {
     if (currentUsser != null)
@@ -28,6 +29,18 @@ class _IdeasScreenCreateState extends State<IdeasScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: TextField(
+          decoration: InputDecoration(
+              prefixIcon: Icon(Icons.search), hintText: 'Search...'),
+          onChanged: (value) {
+            setState(() {
+              tags = value;
+            });
+          },
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color.fromARGB(255, 247, 96, 85),
         child: Icon(
@@ -51,34 +64,68 @@ class _IdeasScreenCreateState extends State<IdeasScreen> {
             .where('user_email', isNotEqualTo: currentUsser!.email)
             .snapshots(),
         builder: ((context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(child: Text('Something went wrong.'));
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
-          final data = snapshot.requireData;
-
-          return ListView.builder(
-            itemCount: data.size,
-            itemBuilder: ((context, index) {
-              return GestureDetector(
-                onTap: () async {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CreateEditIdeaPage(
-                        data: data,
-                        index: index,
-                        editing: true,
-                      ),
-                    ),
-                  );
-                },
-                child: IdeaCard(data: data, index: index),
-              );
-            }),
-          );
+          return (snapshot.connectionState == ConnectionState.waiting)
+              ? Center(child: CircularProgressIndicator())
+              : ListView.builder(
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: ((context, index) {
+                    final data = snapshot.requireData;
+                    var dataMap = snapshot.data!.docs[index].data()
+                        as Map<String, dynamic>;
+                    if (tags.isEmpty) {
+                      return GestureDetector(
+                        onTap: () async {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CreateEditIdeaPage(
+                                data: data,
+                                index: index,
+                                editing: true,
+                              ),
+                            ),
+                          );
+                        },
+                        child: IdeaCard(data: data, index: index),
+                      );
+                    }
+                    if (dataMap['tags']
+                        .toString()
+                        .startsWith(tags.toLowerCase())) {
+                      return GestureDetector(
+                        onTap: () async {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CreateEditIdeaPage(
+                                data: data,
+                                index: index,
+                                editing: true,
+                              ),
+                            ),
+                          );
+                        },
+                        child: IdeaCard(data: data, index: index),
+                      );
+                    } else {
+                      return GestureDetector(
+                        onTap: () async {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CreateEditIdeaPage(
+                                data: data,
+                                index: index,
+                                editing: true,
+                              ),
+                            ),
+                          );
+                        },
+                        child: IdeaCard(data: data, index: index),
+                      );
+                    }
+                  }),
+                );
         }),
       ),
     );
