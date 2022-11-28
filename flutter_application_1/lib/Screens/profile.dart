@@ -46,6 +46,9 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
         await ref.putFile(_imageFile!);
         _imageFile = null;
         photoURLPath = await ref.getDownloadURL();
+        setState(() {
+          photoURLPath = photoURLPath;
+        });
         Navigator.pop(context);
         showTopSnackBar(
           context,
