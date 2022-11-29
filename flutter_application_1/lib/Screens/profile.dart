@@ -53,7 +53,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
         showTopSnackBar(
           context,
           CustomSnackBar.success(
-            message: "Photo was published! Please restart page",
+            message: "Photo was published!",
           ),
         );
         final firebaseCurrentUser = FirebaseAuth.instance.currentUser;
@@ -62,9 +62,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
             .doc(firebaseCurrentUser!.uid)
             .update({'photoUrl': photoURLPath});
       }
-    } on PlatformException catch (e) {
-      Navigator.of(context).pop();
-    }
+    } catch (e) {}
   }
 
   _aboutYourself() async {
@@ -684,11 +682,13 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
         });
       });
       //Удаление фотографии из хранилища
-      final ref = FirebaseStorage.instance
-          .ref()
-          .child('UsersImages')
-          .child(email! + '.jpeg');
-      await ref.delete();
+      try {
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('UsersImages')
+            .child(email! + '.jpeg');
+        await ref.delete();
+      } catch (e) {}
       //Удаление коллекции users
       var collectionUsers = await FirebaseFirestore.instance
           .collection('users')
