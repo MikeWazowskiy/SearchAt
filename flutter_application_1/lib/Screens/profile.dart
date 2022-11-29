@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_1/Screens/favorites_screen.dart';
 import 'package:flutter_application_1/Screens/login_screen.dart';
+import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
@@ -261,14 +262,36 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                                     child: CircularProgressIndicator(),
                                   );
                                 return photoURLPath != null
-                                    ? Align(
-                                        alignment: Alignment.topCenter,
-                                        child: CircleAvatar(
-                                          backgroundImage:
-                                              NetworkImage(photoURLPath!),
-                                          radius: 90,
-                                        ),
-                                      )
+                                    ? GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(context,
+                                              MaterialPageRoute(builder: (_) {
+                                            return FullScreenWidget(
+                                              child: Center(
+                                                child: Hero(
+                                                  tag: "smallImage",
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    child: Image.network(
+                                                      photoURLPath!,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          }));
+                                        },
+                                        child: Align(
+                                          alignment: Alignment.topCenter,
+                                          child: CircleAvatar(
+                                            backgroundImage:
+                                                NetworkImage(photoURLPath!),
+                                            radius: 90,
+                                          ),
+                                        ))
                                     : Align(
                                         alignment: Alignment.topCenter,
                                         child: CircleAvatar(
