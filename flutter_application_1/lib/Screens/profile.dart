@@ -252,33 +252,41 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                       child: Stack(
                         children: <Widget>[
                           Container(
-                              child: FutureBuilder(
-                            future: _pickImage(),
-                            builder: ((context, snapshot) {
-                              if (snapshot.connectionState !=
-                                  ConnectionState.done)
-                                return Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              return photoURLPath != null
-                                  ? Align(
-                                      alignment: Alignment.topCenter,
-                                      child: CircleAvatar(
-                                        backgroundImage:
-                                            NetworkImage(photoURLPath!),
-                                        radius: 90,
-                                      ),
-                                    )
-                                  : Align(
-                                      alignment: Alignment.topCenter,
-                                      child: CircleAvatar(
-                                        backgroundImage: NetworkImage(
-                                            'https://cdn-icons-png.flaticon.com/512/219/219983.png'),
-                                        radius: 90,
-                                      ),
-                                    );
-                            }),
-                          )),
+                            child: FutureBuilder(
+                              future: _pickImage(),
+                              builder: ((context, snapshot) {
+                                if (snapshot.connectionState !=
+                                    ConnectionState.done)
+                                  return Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                return photoURLPath != null
+                                    ? Align(
+                                        alignment: Alignment.topCenter,
+                                        child: CircleAvatar(
+                                          backgroundImage:
+                                              NetworkImage(photoURLPath!),
+                                          radius: 90,
+                                        ),
+                                      )
+                                    : Align(
+                                        alignment: Alignment.topCenter,
+                                        child: CircleAvatar(
+                                          backgroundColor: Color.fromARGB(
+                                              255, 204, 204, 204),
+                                          child: Text(
+                                            'No Photo',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                          radius: 90,
+                                        ),
+                                      );
+                              }),
+                            ),
+                          ),
                           Padding(
                             padding: EdgeInsets.only(top: 145, right: 115),
                             child: Align(
