@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
@@ -14,7 +13,7 @@ class Field extends StatefulWidget {
 class _FieldState extends State<Field> {
   final formKey2 = GlobalKey<FormState>();
 
-  late Widget _animatedWidget = login();
+  late var _animatedWidget = login();
 
   int state = 0;
   late bool _passwordVisible;
@@ -136,9 +135,10 @@ class _FieldState extends State<Field> {
                           : Icons.visibility_off,
                       color: Theme.of(context).primaryColorDark,
                     ),
-                    onPressed: () => setState(
-                      () => _passwordVisible = !_passwordVisible,
-                    ),
+                    onPressed: () => setState(() {
+                      _passwordVisible = !_passwordVisible;
+                      _animatedWidget = login();
+                    }),
                   ),
                 ),
               ),
@@ -301,7 +301,10 @@ class _FieldState extends State<Field> {
                       color: Theme.of(context).primaryColorDark,
                     ),
                     onPressed: () => setState(
-                      () => _passwordVisible = !_passwordVisible,
+                      () {
+                        _passwordVisible = !_passwordVisible;
+                        _animatedWidget = registration();
+                      },
                     ),
                   ),
                 ),
