@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_application_1/Screens/favorites_screen.dart';
 import 'package:flutter_application_1/Screens/login_screen.dart';
 import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
