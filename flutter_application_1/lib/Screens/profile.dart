@@ -23,33 +23,17 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
   String? email;
   String? photoURLPath;
   File? _imageFile;
-  String defoltImagePath = " ";
   TextEditingController myName = new TextEditingController();
   final _picker = ImagePicker();
   @override
   void initState() {
     super.initState();
-    //При запуске приложения функция сразу присвоит переменной дефолтный путь к фотографии из бд
-    setState(() {
-      defoltImage();
-    });
-  }
-
-  //Выбор обычной фотографии, если у юзера нет никакой в профиле
-  void defoltImage() async {
-    final ref = FirebaseStorage.instance
-        .ref()
-        .child('UsersImages')
-        .child('defoltimegeforeveryone.jpeg');
-    defoltImagePath = await ref.getDownloadURL();
-    setState(() {
-      defoltImagePath = defoltImagePath;
-    });
   }
 
   //Выбор фотографии из галереи/камеры и добавление в бд
   void takePhoto(ImageSource source) async {
     try {
+      Navigator.pop(context);
       final image = await _picker.pickImage(
           source: source, imageQuality: 100, maxHeight: 512, maxWidth: 512);
       if (image != null) {
@@ -68,7 +52,6 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
         setState(() {
           photoURLPath = photoURLPath;
         });
-        Navigator.pop(context);
         showTopSnackBar(
           context,
           CustomSnackBar.success(
@@ -102,16 +85,24 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
   //Вывод фотографии из бд
   _pickImage() async {
     final firebaseUser = await FirebaseAuth.instance.currentUser;
-    if (firebaseUser != null)
+    if (firebaseUser != null) {
       await FirebaseFirestore.instance
           .collection('users')
           .doc(firebaseUser.uid)
           .get()
-          .then((value) {
+          .then((value) async {
         photoURLPath = value.data()!['photoUrl'];
+        if (photoURLPath == null) {
+          final ref = FirebaseStorage.instance
+              .ref()
+              .child('UsersImages')
+              .child('defoltimegeforeveryone.jpeg');
+          photoURLPath = await ref.getDownloadURL();
+        }
       }).catchError((e) {
         print(e);
       });
+    }
   }
 
   //Вывод почты из бд
@@ -317,7 +308,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                                         child: CircleAvatar(
                                           backgroundColor: Colors.white,
                                           backgroundImage:
-                                              NetworkImage(defoltImagePath),
+                                              NetworkImage(photoURLPath!),
                                           radius: 90,
                                         ),
                                       );

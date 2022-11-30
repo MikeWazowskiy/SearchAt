@@ -12,6 +12,7 @@ class IdeasScreen extends StatefulWidget {
 class _IdeasScreenCreateState extends State<IdeasScreen> {
   final currentUsser = FirebaseAuth.instance.currentUser;
   String? email;
+
   _email() async {
     if (currentUsser != null)
       await FirebaseFirestore.instance
