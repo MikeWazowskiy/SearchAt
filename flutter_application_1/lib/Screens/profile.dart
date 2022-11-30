@@ -29,11 +29,13 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
+    //При запуске приложения функция сразу присвоит переменной дефолтный путь к фотографии из бд
     setState(() {
       defoltImage();
     });
   }
 
+  //Выбор обычной фотографии, если у юзера нет никакой в профиле
   void defoltImage() async {
     final ref = FirebaseStorage.instance
         .ref()
@@ -45,6 +47,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
     });
   }
 
+  //Выбор фотографии из галереи/камеры и добавление в бд
   void takePhoto(ImageSource source) async {
     try {
       final image = await _picker.pickImage(
@@ -81,6 +84,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
     } catch (e) {}
   }
 
+  //Вывод информации о себе из бд
   _aboutYourself() async {
     final firebaseUser = await FirebaseAuth.instance.currentUser;
     if (firebaseUser != null)
@@ -95,6 +99,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
       });
   }
 
+  //Вывод фотографии из бд
   _pickImage() async {
     final firebaseUser = await FirebaseAuth.instance.currentUser;
     if (firebaseUser != null)
@@ -109,6 +114,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
       });
   }
 
+  //Вывод почты из бд
   _email() async {
     final firebaseUser = await FirebaseAuth.instance.currentUser;
     if (firebaseUser != null)
@@ -123,6 +129,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
       });
   }
 
+  //Вывод имени пользователя из бд
   _name() async {
     final firebaseUser = await FirebaseAuth.instance.currentUser;
     if (firebaseUser != null)
@@ -509,6 +516,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
     );
   }
 
+  //Удаление фотографии пользователя
   void removePhotoFromProfile() async {
     setState(() {
       photoURLPath = null;
@@ -526,6 +534,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
     );
   }
 
+  //Обновление имени пользователя в реальном времени
   void updateName(String value) async {
     final firebaseCurrentUser = await FirebaseAuth.instance.currentUser;
     FirebaseFirestore.instance
@@ -534,6 +543,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
         .update({'name': value.trim()});
   }
 
+  //Обновление информации о себе в реальном времени
   void updateAboutYouselfAndName(String value) async {
     final firebaseCurrentUser = await FirebaseAuth.instance.currentUser;
     FirebaseFirestore.instance
@@ -543,6 +553,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
   }
 }
 
+// Выдвигающаяся панель слева
 class NavigationDrawWirdget extends StatefulWidget {
   @override
   _NavigationDrawWirdgetCreateState createState() =>
@@ -687,6 +698,7 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
     );
   }
 
+  //Функция удаляет пользователя из базы данных и всю информацию о нем
   void deleteAccountAndAllIdeas() async {
     final firebaseCurrentUser = await FirebaseAuth.instance.currentUser;
     await FirebaseFirestore.instance
