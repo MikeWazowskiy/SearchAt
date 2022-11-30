@@ -23,11 +23,26 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
   String? email;
   String? photoURLPath;
   File? _imageFile;
+  String defoltImagePath = " ";
   TextEditingController myName = new TextEditingController();
   final _picker = ImagePicker();
   @override
   void initState() {
     super.initState();
+    setState(() {
+      defoltImage();
+    });
+  }
+
+  void defoltImage() async {
+    final ref = FirebaseStorage.instance
+        .ref()
+        .child('UsersImages')
+        .child('defoltimegeforeveryone.jpeg');
+    defoltImagePath = await ref.getDownloadURL();
+    setState(() {
+      defoltImagePath = defoltImagePath;
+    });
   }
 
   void takePhoto(ImageSource source) async {
@@ -271,9 +286,6 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                                                 child: Hero(
                                                   tag: "smallImage",
                                                   child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
                                                     child: Image.network(
                                                       photoURLPath!,
                                                       fit: BoxFit.cover,
@@ -287,6 +299,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                                         child: Align(
                                           alignment: Alignment.topCenter,
                                           child: CircleAvatar(
+                                            backgroundColor: Colors.white,
                                             backgroundImage:
                                                 NetworkImage(photoURLPath!),
                                             radius: 90,
@@ -295,15 +308,9 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                                     : Align(
                                         alignment: Alignment.topCenter,
                                         child: CircleAvatar(
-                                          backgroundColor: Color.fromARGB(
-                                              255, 204, 204, 204),
-                                          child: Text(
-                                            'No Photo',
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 20,
-                                            ),
-                                          ),
+                                          backgroundColor: Colors.white,
+                                          backgroundImage:
+                                              NetworkImage(defoltImagePath),
                                           radius: 90,
                                         ),
                                       );
