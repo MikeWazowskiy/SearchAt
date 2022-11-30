@@ -54,11 +54,7 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = FirebaseAuth.instance.currentUser!;
-    CollectionReference ideas = FirebaseFirestore.instance
-        .collection('ideas')
-        .doc(currentUser.uid)
-        .collection(currentUser.email!);
+    CollectionReference ideas = FirebaseFirestore.instance.collection('ideas');
 
     return Scaffold(
       appBar: AppBar(

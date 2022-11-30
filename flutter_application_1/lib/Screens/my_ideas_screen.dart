@@ -52,8 +52,6 @@ class _MyIdeasScreenCreateState extends State<MyIdeasScreen> {
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('ideas')
-            .doc(currentUsser!.uid)
-            .collection(currentUsser!.email!)
             .where('user_email', isEqualTo: currentUsser!.email)
             .snapshots(),
         builder: ((context, snapshot) {
