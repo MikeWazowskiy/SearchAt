@@ -1,20 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Screens/create_edit_idea.dart';
-import 'package:flutter_application_1/idea_card.dart';
+import 'package:flutter_application_1/Ideas/Create%20Ideas/create_edit_idea.dart';
+import 'package:flutter_application_1/Ideas/Idea%20card/idea_card.dart';
 
-class MyIdeasScreen extends StatefulWidget {
+class FavoritesScreen extends StatefulWidget {
   @override
-  _MyIdeasScreenCreateState createState() => _MyIdeasScreenCreateState();
+  _FavoritesScreenCreateState createState() => _FavoritesScreenCreateState();
 }
 
-class _MyIdeasScreenCreateState extends State<MyIdeasScreen> {
+class _FavoritesScreenCreateState extends State<FavoritesScreen> {
   final currentUsser = FirebaseAuth.instance.currentUser;
   _email() async {
     if (currentUsser != null)
       await FirebaseFirestore.instance
-          .collection('users')
+          .collection('favorites')
           .doc(currentUsser!.email)
           .get()
           .then((value) {})
@@ -29,7 +29,7 @@ class _MyIdeasScreenCreateState extends State<MyIdeasScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'My Ideas',
+          'Favorites',
           style: TextStyle(
             color: Colors.black,
           ),
@@ -51,7 +51,7 @@ class _MyIdeasScreenCreateState extends State<MyIdeasScreen> {
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
-            .collection('ideas')
+            .collection('favorites')
             .where('user_email', isEqualTo: currentUsser!.email)
             .snapshots(),
         builder: ((context, snapshot) {
@@ -61,28 +61,8 @@ class _MyIdeasScreenCreateState extends State<MyIdeasScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
-
           final data = snapshot.requireData;
-          return ListView.builder(
-            itemCount: data.size,
-            itemBuilder: ((context, index) {
-              return GestureDetector(
-                onTap: () async {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CreateEditIdeaPage(
-                        data: data,
-                        index: index,
-                        editing: true,
-                      ),
-                    ),
-                  );
-                },
-                child: IdeaCard(data: data, index: index),
-              );
-            }),
-          );
+          return SizedBox();
         }),
       ),
     );

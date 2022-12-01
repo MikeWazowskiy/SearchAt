@@ -1,20 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Screens/create_edit_idea.dart';
-import 'package:flutter_application_1/idea_card.dart';
+import 'package:flutter_application_1/Ideas/Create%20Ideas/create_edit_idea.dart';
+import 'package:flutter_application_1/Ideas/Idea%20card/idea_card.dart';
 
-class FavoritesScreen extends StatefulWidget {
+class MyIdeasScreen extends StatefulWidget {
   @override
-  _FavoritesScreenCreateState createState() => _FavoritesScreenCreateState();
+  _MyIdeasScreenCreateState createState() => _MyIdeasScreenCreateState();
 }
 
-class _FavoritesScreenCreateState extends State<FavoritesScreen> {
+class _MyIdeasScreenCreateState extends State<MyIdeasScreen> {
   final currentUsser = FirebaseAuth.instance.currentUser;
   _email() async {
     if (currentUsser != null)
       await FirebaseFirestore.instance
-          .collection('favorites')
+          .collection('users')
           .doc(currentUsser!.email)
           .get()
           .then((value) {})
@@ -29,7 +29,7 @@ class _FavoritesScreenCreateState extends State<FavoritesScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'Favorites',
+          'My Ideas',
           style: TextStyle(
             color: Colors.black,
           ),
@@ -51,7 +51,7 @@ class _FavoritesScreenCreateState extends State<FavoritesScreen> {
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
-            .collection('favorites')
+            .collection('ideas')
             .where('user_email', isEqualTo: currentUsser!.email)
             .snapshots(),
         builder: ((context, snapshot) {
@@ -61,8 +61,28 @@ class _FavoritesScreenCreateState extends State<FavoritesScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
+
           final data = snapshot.requireData;
-          return SizedBox();
+          return ListView.builder(
+            itemCount: data.size,
+            itemBuilder: ((context, index) {
+              return GestureDetector(
+                onTap: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CreateEditIdeaPage(
+                        data: data,
+                        index: index,
+                        editing: true,
+                      ),
+                    ),
+                  );
+                },
+                child: IdeaCard(data: data, index: index),
+              );
+            }),
+          );
         }),
       ),
     );

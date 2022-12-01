@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Screens/create_edit_idea.dart';
+import 'package:flutter_application_1/Ideas/Create%20Ideas/create_edit_idea.dart';
 import 'package:ndialog/ndialog.dart';
 
 class DescriptionPage extends StatefulWidget {
@@ -15,7 +15,6 @@ class DescriptionPage extends StatefulWidget {
 }
 
 class _DescriptionPageState extends State<DescriptionPage> {
-
   final _descrtiptionController = TextEditingController();
   late Color clearBtnColor;
 

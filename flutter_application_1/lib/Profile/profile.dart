@@ -3,14 +3,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Screens/favorites_screen.dart';
-import 'package:flutter_application_1/Screens/login_screen.dart';
+import 'package:flutter_application_1/Favorites/favorites_screen.dart';
+import 'package:flutter_application_1/Log/Reg/Login/login_screen.dart';
 import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
-import 'package:flutter_application_1/Screens/my_ideas_screen.dart';
+import 'package:flutter_application_1/My%20ideas/my_ideas_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override

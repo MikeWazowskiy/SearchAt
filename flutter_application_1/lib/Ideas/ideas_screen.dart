@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Screens/create_edit_idea.dart';
-import 'package:flutter_application_1/idea_card.dart';
+import 'package:flutter_application_1/Ideas/Create%20Ideas/create_edit_idea.dart';
+import 'package:flutter_application_1/Ideas/Idea%20card/idea_card.dart';
 
 class IdeasScreen extends StatefulWidget {
   @override
@@ -99,7 +99,10 @@ class _IdeasScreenCreateState extends State<IdeasScreen> {
                             child: IdeaCard(data: data, index: index),
                           );
                         }
-                        if (tags.toString().toLowerCase().contains(tag.toLowerCase())) {
+                        if (tags
+                            .toString()
+                            .toLowerCase()
+                            .contains(tag.toLowerCase())) {
                           return GestureDetector(
                             onTap: () async {
                               Navigator.push(

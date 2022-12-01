@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
-import 'Users/users_service.dart';
-import 'Util/utils.dart';
-import 'main.dart';
+import '../../../../Users/users_service.dart';
+import '../../../../Util/utils.dart';
+import '../../../../Main/main.dart';
 
 class Field extends StatefulWidget {
   @override

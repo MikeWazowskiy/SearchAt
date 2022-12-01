@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Screens/ideas_screen.dart';
-import 'package:flutter_application_1/Screens/profile.dart';
+import 'package:flutter_application_1/Ideas/ideas_screen.dart';
+import 'package:flutter_application_1/Profile/profile.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
