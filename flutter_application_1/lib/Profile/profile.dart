@@ -32,109 +32,9 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
     super.initState();
   }
 
-  //Выбор фотографии из галереи/камеры и добавление в бд
-  void takePhoto(ImageSource source) async {
-    try {
-      Navigator.pop(context);
-      final image = await _picker.pickImage(
-          source: source, imageQuality: 100, maxHeight: 512, maxWidth: 512);
-      if (image != null) {
-        _imageFile = File(image.path);
-      }
-      if (_imageFile == null)
-        return;
-      else {
-        final ref = FirebaseStorage.instance
-            .ref()
-            .child('UsersImages')
-            .child(email! + '.jpeg');
-        await ref.putFile(_imageFile!);
-        _imageFile = null;
-        photoURLPath = await ref.getDownloadURL();
-        setState(() {
-          photoURLPath = photoURLPath;
-        });
-        showTopSnackBar(
-          context,
-          CustomSnackBar.success(
-            message: "Photo was published!",
-          ),
-        );
-        FirebaseFirestore.instance
-            .collection('users')
-            .doc(currentUser.uid)
-            .update({'photoUrl': photoURLPath});
-      }
-    } catch (e) {}
-  }
-
-  //Вывод информации о себе из бд
-  _aboutYourself() async {
-    if (currentUser != null)
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(currentUser.uid)
-          .get()
-          .then((value) {
-        aboutYourselfController.text = value.data()!['about_yourself'];
-      }).catchError((e) {
-        print(e);
-      });
-  }
-
-  //Вывод фотографии из бд
-  _pickImage() async {
-    if (currentUser != null) {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(currentUser.uid)
-          .get()
-          .then((value) async {
-        photoURLPath = value.data()!['photoUrl'];
-        if (photoURLPath == null) {
-          final ref = FirebaseStorage.instance
-              .ref()
-              .child('UsersImages')
-              .child('defoltimegeforeveryone.jpeg');
-          photoURLPath = await ref.getDownloadURL();
-        }
-      }).catchError((e) {
-        print(e);
-      });
-    }
-  }
-
-  //Вывод почты из бд
-  _email() async {
-    if (currentUser != null)
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(currentUser.uid)
-          .get()
-          .then((value) {
-        email = value.data()!['email'];
-      }).catchError((e) {
-        print(e);
-      });
-  }
-
-  //Вывод имени пользователя из бд
-  _name() async {
-    if (currentUser != null)
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(currentUser.uid)
-          .get()
-          .then((value) {
-        myName.text = value.data()!['name'];
-      }).catchError((e) {
-        print(e);
-      });
-  }
-
   @override
   Widget build(BuildContext context) {
-    bottomSheetMain(context);
+    BottomSheetMainClass().bottomSheetMain(context, photoURLPath);
     return Scaffold(
       drawer: NavigationDrawWirdget(),
       appBar: AppBar(
@@ -249,7 +149,9 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                                     showBottomSheet(
                                       context: context,
                                       builder: ((builder) =>
-                                          bottomSheetMain(context)),
+                                          BottomSheetMainClass()
+                                              .bottomSheetMain(
+                                                  context, photoURLPath)),
                                     );
                                   },
                                 ),
@@ -449,6 +351,105 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
         .collection('users')
         .doc(currentUser.uid)
         .update({'about_yourself': value.trim()});
+  }
+
+  void takePhoto(ImageSource source) async {
+    try {
+      Navigator.pop(context);
+      final image = await _picker.pickImage(
+          source: source, imageQuality: 100, maxHeight: 512, maxWidth: 512);
+      if (image != null) {
+        _imageFile = File(image.path);
+      }
+      if (_imageFile == null)
+        return;
+      else {
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('UsersImages')
+            .child(email! + '.jpeg');
+        await ref.putFile(_imageFile!);
+        _imageFile = null;
+        photoURLPath = await ref.getDownloadURL();
+        setState(() {
+          photoURLPath = photoURLPath;
+        });
+        showTopSnackBar(
+          context,
+          CustomSnackBar.success(
+            message: "Photo was published!",
+          ),
+        );
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(currentUser.uid)
+            .update({'photoUrl': photoURLPath});
+      }
+    } catch (e) {}
+  }
+
+  //Вывод информации о себе из бд
+  _aboutYourself() async {
+    if (currentUser != null)
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .get()
+          .then((value) {
+        aboutYourselfController.text = value.data()!['about_yourself'];
+      }).catchError((e) {
+        print(e);
+      });
+  }
+
+  //Вывод фотографии из бд
+  _pickImage() async {
+    if (currentUser != null) {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .get()
+          .then((value) async {
+        photoURLPath = value.data()!['photoUrl'];
+        if (photoURLPath == null) {
+          final ref = FirebaseStorage.instance
+              .ref()
+              .child('UsersImages')
+              .child('defoltimegeforeveryone.jpeg');
+          photoURLPath = await ref.getDownloadURL();
+        }
+      }).catchError((e) {
+        print(e);
+      });
+    }
+  }
+
+  //Вывод почты из бд
+  _email() async {
+    if (currentUser != null)
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .get()
+          .then((value) {
+        email = value.data()!['email'];
+      }).catchError((e) {
+        print(e);
+      });
+  }
+
+  //Вывод имени пользователя из бд
+  _name() async {
+    if (currentUser != null)
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .get()
+          .then((value) {
+        myName.text = value.data()!['name'];
+      }).catchError((e) {
+        print(e);
+      });
   }
 }
 
