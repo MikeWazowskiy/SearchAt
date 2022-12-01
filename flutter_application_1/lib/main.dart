@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import '../Log/Reg/Verify email/verify_email_screen.dart';
-import '../Util/utils.dart';
-import '../Log/Reg/Login/login_screen.dart';
+import 'Log/Reg/Verify email/verify_email_screen.dart';
+import 'Util/utils.dart';
+import 'Log/Reg/Login/login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
