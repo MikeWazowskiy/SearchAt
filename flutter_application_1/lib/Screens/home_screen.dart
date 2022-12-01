@@ -4,6 +4,8 @@ import 'package:flutter_application_1/Screens/ideas_screen.dart';
 
 import 'package:flutter_application_1/Screens/profile.dart';
 
+import '../Profile/profile_screen.dart';
+
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -15,7 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final screens = [
       IdeasScreen(),
-      ProfileScreen(),
+      ProfilePage(),
     ];
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(

@@ -10,7 +10,8 @@ class UserManagement {
       'email': user.email,
       'name': name,
       'uid': user.uid,
-      'photoUrl': user.photoURL,
+      'photoUrl':
+          'https://firebasestorage.googleapis.com/v0/b/signinsearchat.appspot.com/o/UsersImages%2Fdefoltimegeforeveryone.jpeg?alt=media&token=3781473e-efb3-4610-9e30-c3c72559f120',
       'about_yourself': '',
       'password': password,
     }).catchError((e) {
