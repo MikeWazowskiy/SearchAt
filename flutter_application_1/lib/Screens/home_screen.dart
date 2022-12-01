@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Profile/profile_page.dart';
-import 'package:flutter_application_1/Profile/profile_service.dart';
 import 'package:flutter_application_1/Screens/ideas_screen.dart';
 import 'package:flutter_application_1/Screens/profile.dart';
 
