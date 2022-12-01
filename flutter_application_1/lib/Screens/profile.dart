@@ -18,6 +18,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenCreateState extends State<ProfileScreen> {
+  final currentUser = FirebaseAuth.instance.currentUser!;
   TextEditingController aboutYourselfController = new TextEditingController();
   String? email;
   String? photoURLPath;
@@ -57,10 +58,9 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
             message: "Photo was published!",
           ),
         );
-        final firebaseCurrentUser = FirebaseAuth.instance.currentUser;
         FirebaseFirestore.instance
             .collection('users')
-            .doc(firebaseCurrentUser!.uid)
+            .doc(currentUser.uid)
             .update({'photoUrl': photoURLPath});
       }
     } catch (e) {}
@@ -68,11 +68,10 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
 
   //Вывод информации о себе из бд
   _aboutYourself() async {
-    final firebaseUser = await FirebaseAuth.instance.currentUser;
-    if (firebaseUser != null)
+    if (currentUser != null)
       await FirebaseFirestore.instance
           .collection('users')
-          .doc(firebaseUser.uid)
+          .doc(currentUser.uid)
           .get()
           .then((value) {
         aboutYourselfController.text = value.data()!['about_yourself'];
@@ -83,11 +82,10 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
 
   //Вывод фотографии из бд
   _pickImage() async {
-    final firebaseUser = await FirebaseAuth.instance.currentUser;
-    if (firebaseUser != null) {
+    if (currentUser != null) {
       await FirebaseFirestore.instance
           .collection('users')
-          .doc(firebaseUser.uid)
+          .doc(currentUser.uid)
           .get()
           .then((value) async {
         photoURLPath = value.data()!['photoUrl'];
@@ -106,11 +104,10 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
 
   //Вывод почты из бд
   _email() async {
-    final firebaseUser = await FirebaseAuth.instance.currentUser;
-    if (firebaseUser != null)
+    if (currentUser != null)
       await FirebaseFirestore.instance
           .collection('users')
-          .doc(firebaseUser.uid)
+          .doc(currentUser.uid)
           .get()
           .then((value) {
         email = value.data()!['email'];
@@ -121,11 +118,10 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
 
   //Вывод имени пользователя из бд
   _name() async {
-    final firebaseUser = await FirebaseAuth.instance.currentUser;
-    if (firebaseUser != null)
+    if (currentUser != null)
       await FirebaseFirestore.instance
           .collection('users')
-          .doc(firebaseUser.uid)
+          .doc(currentUser.uid)
           .get()
           .then((value) {
         myName.text = value.data()!['name'];
@@ -273,44 +269,39 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                                   return Center(
                                     child: CircularProgressIndicator(),
                                   );
-                                return photoURLPath != null
-                                    ? GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(context,
-                                              MaterialPageRoute(builder: (_) {
-                                            return FullScreenWidget(
-                                              child: Center(
-                                                child: Hero(
-                                                  tag: "smallImage",
-                                                  child: ClipRRect(
-                                                    child: Image.network(
-                                                      photoURLPath!,
-                                                      fit: BoxFit.cover,
-                                                    ),
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) {
+                                          return FullScreenWidget(
+                                            child: Center(
+                                              child: Hero(
+                                                tag: "smallImage",
+                                                child: ClipRRect(
+                                                  child: Image.network(
+                                                    photoURLPath!,
+                                                    fit: BoxFit.cover,
                                                   ),
                                                 ),
                                               ),
-                                            );
-                                          }));
+                                            ),
+                                          );
                                         },
-                                        child: Align(
-                                          alignment: Alignment.topCenter,
-                                          child: CircleAvatar(
-                                            backgroundColor: Colors.white,
-                                            backgroundImage:
-                                                NetworkImage(photoURLPath!),
-                                            radius: 90,
-                                          ),
-                                        ))
-                                    : Align(
-                                        alignment: Alignment.topCenter,
-                                        child: CircleAvatar(
-                                          backgroundColor: Colors.white,
-                                          backgroundImage:
-                                              NetworkImage(photoURLPath!),
-                                          radius: 90,
-                                        ),
-                                      );
+                                      ),
+                                    );
+                                  },
+                                  child: Align(
+                                    alignment: Alignment.topCenter,
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.white,
+                                      backgroundImage:
+                                          NetworkImage(photoURLPath!),
+                                      radius: 90,
+                                    ),
+                                  ),
+                                );
                               }),
                             ),
                           ),
@@ -509,12 +500,12 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
   //Удаление фотографии пользователя
   void removePhotoFromProfile() async {
     setState(() {
-      photoURLPath = null;
+      photoURLPath =
+          'https://firebasestorage.googleapis.com/v0/b/signinsearchat.appspot.com/o/UsersImages%2Fdefoltimegeforeveryone.jpeg?alt=media&token=3781473e-efb3-4610-9e30-c3c72559f120';
     });
-    final firebaseCurrentUser = await FirebaseAuth.instance.currentUser;
-    FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection('users')
-        .doc(firebaseCurrentUser!.uid)
+        .doc(currentUser.uid)
         .update({'photoUrl': photoURLPath});
     showTopSnackBar(
       context,
@@ -526,19 +517,17 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
 
   //Обновление имени пользователя в реальном времени
   void updateName(String value) async {
-    final firebaseCurrentUser = await FirebaseAuth.instance.currentUser;
-    FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection('users')
-        .doc(firebaseCurrentUser!.uid)
+        .doc(currentUser.uid)
         .update({'name': value.trim()});
   }
 
   //Обновление информации о себе в реальном времени
   void updateAboutYouselfAndName(String value) async {
-    final firebaseCurrentUser = await FirebaseAuth.instance.currentUser;
-    FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection('users')
-        .doc(firebaseCurrentUser!.uid)
+        .doc(currentUser.uid)
         .update({'about_yourself': value.trim()});
   }
 }
@@ -551,6 +540,7 @@ class NavigationDrawWirdget extends StatefulWidget {
 }
 
 class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
+  final firebaseCurrentUser = FirebaseAuth.instance.currentUser;
   final paddint = EdgeInsets.symmetric(horizontal: 20);
   String? password;
   String? email;
@@ -690,7 +680,6 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
 
   //Функция удаляет пользователя из базы данных и всю информацию о нем
   void deleteAccountAndAllIdeas() async {
-    final firebaseCurrentUser = await FirebaseAuth.instance.currentUser;
     await FirebaseFirestore.instance
         .collection('users')
         .doc(firebaseCurrentUser!.uid)
@@ -702,7 +691,7 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
     });
     await FirebaseFirestore.instance
         .collection('users')
-        .doc(firebaseCurrentUser.uid)
+        .doc(firebaseCurrentUser!.uid)
         .get()
         .then((value) {
       email = value.data()!['email'];
@@ -713,7 +702,7 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
       //Удаление пользователя
       AuthCredential credential = EmailAuthProvider.credential(
           email: email.toString(), password: password.toString());
-      await firebaseCurrentUser
+      await firebaseCurrentUser!
           .reauthenticateWithCredential(credential)
           .then((value) {
         value.user!.delete().then((value) {
@@ -732,7 +721,7 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
       //Удаление коллекции users
       var collectionUsers = await FirebaseFirestore.instance
           .collection('users')
-          .doc(firebaseCurrentUser.uid);
+          .doc(firebaseCurrentUser!.uid);
       collectionUsers.delete();
     }
   }

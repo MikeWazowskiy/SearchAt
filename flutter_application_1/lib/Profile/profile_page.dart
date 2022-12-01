@@ -16,7 +16,7 @@ class _ProfilePageState extends State<ProfilePage> {
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('users')
-            .where('email', isNotEqualTo: currentUsser!.email)
+            .where('email', isEqualTo: currentUsser!.email)
             .snapshots(),
         builder: ((context, snapshot) {
           return (snapshot.connectionState == ConnectionState.waiting)
