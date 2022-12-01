@@ -5,7 +5,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Favorites/favorites_screen.dart';
 import 'package:flutter_application_1/Log/Reg/Login/login_screen.dart';
+import 'package:flutter_application_1/Profile/Bottom%20Sheet/bottomsheet.dart';
 import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
+import 'package:flutter_application_1/Profile/Bottom Sheet/bottomsheet.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
@@ -132,90 +134,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Widget bottomSheet() {
-      return Container(
-        height: 100,
-        width: MediaQuery.of(context).size.width,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 20,
-        ),
-        child: Column(
-          children: [
-            Text(
-              'Choose Profile photo',
-              style: TextStyle(fontSize: 20.0),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.camera,
-                        color: Colors.black,
-                      ),
-                      SizedBox(width: 5),
-                      Text(
-                        "Camera",
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ],
-                  ),
-                  onPressed: () {
-                    takePhoto(ImageSource.camera);
-                  },
-                ),
-                SizedBox(width: 35),
-                TextButton(
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.image,
-                        color: Colors.black,
-                      ),
-                      SizedBox(width: 5),
-                      Text(
-                        "Gallery",
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ],
-                  ),
-                  onPressed: () {
-                    takePhoto(ImageSource.gallery);
-                  },
-                ),
-                SizedBox(width: 25),
-                TextButton(
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.remove_circle,
-                        color: Color.fromARGB(255, 255, 0, 0),
-                      ),
-                      SizedBox(width: 5),
-                      Text(
-                        "Remove",
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ],
-                  ),
-                  onPressed: () {
-                    removePhotoFromProfile();
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
-      );
-    }
-
+    bottomSheetMain(context);
     return Scaffold(
       drawer: NavigationDrawWirdget(),
       appBar: AppBar(
@@ -329,7 +248,8 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                                   onPressed: () {
                                     showBottomSheet(
                                       context: context,
-                                      builder: ((builder) => bottomSheet()),
+                                      builder: ((builder) =>
+                                          bottomSheetMain(context)),
                                     );
                                   },
                                 ),
