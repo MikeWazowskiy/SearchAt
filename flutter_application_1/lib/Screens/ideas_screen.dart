@@ -10,6 +10,7 @@ class IdeasScreen extends StatefulWidget {
 }
 
 class _IdeasScreenCreateState extends State<IdeasScreen> {
+  String tag = "";
   final currentUsser = FirebaseAuth.instance.currentUser;
   String? email;
 
@@ -30,12 +31,21 @@ class _IdeasScreenCreateState extends State<IdeasScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey[50],
+        toolbarHeight: 70,
+        elevation: 0,
         title: TextField(
           decoration: InputDecoration(
-              prefixIcon: Icon(Icons.search), hintText: 'Search...'),
+              filled: true,
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: BorderSide.none),
+              prefixIcon: Icon(Icons.search),
+              hintText: 'Search by tag...'),
           onChanged: (value) {
-            setState(() {});
+            setState(() {
+              tag = value;
+            });
           },
         ),
       ),
@@ -62,34 +72,53 @@ class _IdeasScreenCreateState extends State<IdeasScreen> {
             .where('user_email', isNotEqualTo: currentUsser!.email)
             .snapshots(),
         builder: ((context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(child: Text('Something went wrong.'));
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
-          final data = snapshot.requireData;
+          return (snapshot.connectionState == ConnectionState.waiting)
+              ? Center(child: CircularProgressIndicator())
+              : snapshot.hasError
+                  ? Center(child: Text('Something went wrong.'))
+                  : ListView.builder(
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (context, index) {
+                        final data = snapshot.requireData;
+                        final List tags = data.docs[index]['tags'];
 
-          return ListView.builder(
-            itemCount: data.size,
-            itemBuilder: ((context, index) {
-              return GestureDetector(
-                onTap: () async {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CreateEditIdeaPage(
-                        data: data,
-                        index: index,
-                        editing: true,
-                      ),
-                    ),
-                  );
-                },
-                child: IdeaCard(data: data, index: index),
-              );
-            }),
-          );
+                        if (tag.isEmpty) {
+                          return GestureDetector(
+                            onTap: () async {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CreateEditIdeaPage(
+                                    data: data,
+                                    index: index,
+                                    editing: true,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: IdeaCard(data: data, index: index),
+                          );
+                        }
+                        if (tags.toString().toLowerCase().contains(tag.toLowerCase())) {
+                          return GestureDetector(
+                            onTap: () async {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CreateEditIdeaPage(
+                                    data: data,
+                                    index: index,
+                                    editing: true,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: IdeaCard(data: data, index: index),
+                          );
+                        }
+                        return Container();
+                      },
+                    );
         }),
       ),
     );

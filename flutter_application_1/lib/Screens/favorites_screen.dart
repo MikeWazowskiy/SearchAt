@@ -10,6 +10,19 @@ class FavoritesScreen extends StatefulWidget {
 }
 
 class _FavoritesScreenCreateState extends State<FavoritesScreen> {
+  final currentUsser = FirebaseAuth.instance.currentUser;
+  _email() async {
+    if (currentUsser != null)
+      await FirebaseFirestore.instance
+          .collection('favorites')
+          .doc(currentUsser!.email)
+          .get()
+          .then((value) {})
+          .catchError((e) {
+        print(e);
+      });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,6 +48,22 @@ class _FavoritesScreenCreateState extends State<FavoritesScreen> {
             color: Colors.black,
           ),
         ),
+      ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('favorites')
+            .where('user_email', isEqualTo: currentUsser!.email)
+            .snapshots(),
+        builder: ((context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(child: Text(snapshot.error.toString()));
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          final data = snapshot.requireData;
+          return SizedBox();
+        }),
       ),
     );
   }
