@@ -3,16 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Favorites/favorites_screen.dart';
-import 'package:flutter_application_1/Log/Reg/Login/login_screen.dart';
-import 'package:flutter_application_1/Profile/Bottom%20Sheet/bottomsheet.dart';
+import 'package:flutter_application_1/Profile/NavigatorDraw/NavigatorDraw.dart';
 import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
-import 'package:flutter_application_1/Profile/Bottom Sheet/bottomsheet.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:ndialog/ndialog.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
-import 'package:flutter_application_1/My%20ideas/my_ideas_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -28,13 +23,91 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
   TextEditingController myName = new TextEditingController();
   final _picker = ImagePicker();
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    BottomSheetMainClass().bottomSheetMain(context, photoURLPath);
+    Widget bottomSheet() {
+      return Container(
+        height: 100,
+        width: MediaQuery.of(context).size.width,
+        margin: EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 20,
+        ),
+        child: Column(
+          children: [
+            Text(
+              'Choose Profile photo',
+              style: TextStyle(fontSize: 20.0),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.camera,
+                        color: Colors.black,
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        "Camera",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ],
+                  ),
+                  onPressed: () {
+                    takePhoto(ImageSource.camera);
+                  },
+                ),
+                SizedBox(width: 35),
+                TextButton(
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.image,
+                        color: Colors.black,
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        "Gallery",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ],
+                  ),
+                  onPressed: () {
+                    takePhoto(ImageSource.gallery);
+                  },
+                ),
+                SizedBox(width: 25),
+                TextButton(
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.remove_circle,
+                        color: Color.fromARGB(255, 255, 0, 0),
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        "Remove",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ],
+                  ),
+                  onPressed: () {
+                    removePhotoFromProfile();
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    }
+
     return Scaffold(
       drawer: NavigationDrawWirdget(),
       appBar: AppBar(
@@ -148,10 +221,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                                   onPressed: () {
                                     showBottomSheet(
                                       context: context,
-                                      builder: ((builder) =>
-                                          BottomSheetMainClass()
-                                              .bottomSheetMain(
-                                                  context, photoURLPath)),
+                                      builder: ((builder) => bottomSheet()),
                                     );
                                   },
                                 ),
@@ -450,200 +520,5 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
       }).catchError((e) {
         print(e);
       });
-  }
-}
-
-// Выдвигающаяся панель слева
-class NavigationDrawWirdget extends StatefulWidget {
-  @override
-  _NavigationDrawWirdgetCreateState createState() =>
-      _NavigationDrawWirdgetCreateState();
-}
-
-class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
-  final firebaseCurrentUser = FirebaseAuth.instance.currentUser;
-  final paddint = EdgeInsets.symmetric(horizontal: 20);
-  String? password;
-  String? email;
-  @override
-  Widget build(BuildContext context) {
-    return Drawer(
-      child: Material(
-        child: ListView(
-          padding: paddint,
-          children: <Widget>[
-            SizedBox(
-              height: 40,
-            ),
-            ListTile(
-              selectedColor: Colors.white,
-              leading: const Icon(
-                Icons.favorite_border,
-                color: Color.fromARGB(255, 247, 96, 85),
-              ),
-              title: Text('Favourites'),
-              onTap: () {
-                setState(() {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => FavoritesScreen()));
-                });
-              },
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            ListTile(
-              selectedColor: Colors.white,
-              leading: const Icon(
-                Icons.content_paste,
-                color: Color.fromARGB(255, 247, 96, 85),
-              ),
-              title: Text('My Ideas'),
-              onTap: () {
-                setState(() {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => MyIdeasScreen()));
-                });
-              },
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Divider(
-              color: Color.fromARGB(255, 77, 77, 77),
-            ),
-            SizedBox(
-              height: 3,
-            ),
-            ListTile(
-              leading: const Icon(
-                Icons.logout,
-                color: Color.fromARGB(255, 247, 96, 85),
-              ),
-              title: Text('Sign Out'),
-              onTap: () {
-                NAlertDialog(
-                  dialogStyle: DialogStyle(titleDivider: true),
-                  title: Text('Sign Out'),
-                  content: Text(
-                    'Are you sure you want to sign out from your account?',
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: (() {
-                        Navigator.pop(context);
-                        setState(() {
-                          FirebaseAuth.instance.signOut();
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => Login()));
-                        });
-                      }),
-                      child: Text(
-                        'OK',
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: (() {
-                        Navigator.pop(context);
-                      }),
-                      child: Text(
-                        'Cancel',
-                      ),
-                    ),
-                  ],
-                ).show(context);
-              },
-            ),
-            ListTile(
-              leading: const Icon(
-                Icons.delete_rounded,
-                color: Color.fromARGB(255, 247, 96, 85),
-              ),
-              title: Text('Delete account'),
-              onTap: () {
-                NAlertDialog(
-                  dialogStyle: DialogStyle(titleDivider: true),
-                  title: Text('Delete'),
-                  content: Text(
-                    'Are you sure you want to delete your account?',
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: (() {
-                        Navigator.pop(context);
-                        setState(() {
-                          deleteAccountAndAllIdeas();
-                        });
-                      }),
-                      child: Text(
-                        'OK',
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: (() {
-                        Navigator.pop(context);
-                      }),
-                      child: Text(
-                        'Cancel',
-                      ),
-                    ),
-                  ],
-                ).show(context);
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  //Функция удаляет пользователя из базы данных и всю информацию о нем
-  void deleteAccountAndAllIdeas() async {
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(firebaseCurrentUser!.uid)
-        .get()
-        .then((value) {
-      password = value.data()!['password'];
-    }).catchError((e) {
-      print(e);
-    });
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(firebaseCurrentUser!.uid)
-        .get()
-        .then((value) {
-      email = value.data()!['email'];
-    }).catchError((e) {
-      print(e);
-    });
-    if (firebaseCurrentUser != null) {
-      //Удаление пользователя
-      AuthCredential credential = EmailAuthProvider.credential(
-          email: email.toString(), password: password.toString());
-      await firebaseCurrentUser!
-          .reauthenticateWithCredential(credential)
-          .then((value) {
-        value.user!.delete().then((value) {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Login()));
-        });
-      });
-      //Удаление фотографии из хранилища
-      try {
-        final ref = FirebaseStorage.instance
-            .ref()
-            .child('UsersImages')
-            .child(email! + '.jpeg');
-        await ref.delete();
-      } catch (e) {}
-      //Удаление коллекции users
-      var collectionUsers = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(firebaseCurrentUser!.uid);
-      collectionUsers.delete();
-    }
   }
 }

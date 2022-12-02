@@ -50,6 +50,7 @@ dependencies:
   shared_preferences: ^2.0.15
   ndialog: ^4.2.0
   full_screen_image_null_safe: ^2.0.0
+  localization: ^2.1.0
   flutter_typeahead: any
   get: any
   
@@ -70,7 +71,7 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
+  generate: true
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
