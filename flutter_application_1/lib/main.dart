@@ -3,8 +3,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'Log/Reg/Verify email/verify_email_screen.dart';
-import 'Util/utils.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'Log/Reg/Login/login_screen.dart';
+import 'Util/utils.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,15 +16,17 @@ void main() async {
 final navigatorKey = GlobalKey<NavigatorState>();
 
 class MyApp extends StatelessWidget {
+  Locale? _locale;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      locale: _locale,
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
-      supportedLocales: const [Locale('en'), Locale('ru')],
+      supportedLocales: AppLocalizations.supportedLocales,
       scaffoldMessengerKey: Utils.messengerKey,
       navigatorKey: navigatorKey,
       home: MainPage(),
