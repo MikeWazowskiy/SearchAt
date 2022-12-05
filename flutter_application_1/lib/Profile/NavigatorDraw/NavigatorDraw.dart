@@ -10,8 +10,6 @@ import '../../Log/Reg/Login/login_screen.dart';
 import '../Reset password/resetpassword.dart';
 
 class NavigationDrawWirdget extends StatefulWidget {
-  const NavigationDrawWirdget(this.setLocale);
-  final void Function(Locale locale) setLocale;
   @override
   _NavigationDrawWirdgetCreateState createState() =>
       _NavigationDrawWirdgetCreateState();
@@ -65,52 +63,6 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
               },
             ),
             sizedBoxFun(10),
-            // Row(
-            //   children: [
-            //     SizedBox(
-            //       width: 16,
-            //     ),
-            //     Icon(
-            //       Icons.language,
-            //       color: Color.fromARGB(255, 247, 96, 85),
-            //     ),
-            //     SizedBox(
-            //       width: 30,
-            //     ),
-            //     DropdownButton(
-            //       style: TextStyle(fontSize: 14, color: Colors.black),
-            //       value: valueChoose,
-            //       onChanged: (newValue) {
-            //         setState(() {
-            //           valueChoose = newValue.toString();
-            //           if (valueChoose == "Русский") {
-            //             String language;
-            //             FirebaseFirestore.instance
-            //                 .collection('users')
-            //                 .doc(firebaseCurrentUser!.uid)
-            //                 .update({'language': 'ru'});
-            //             widget
-            //                 .setLocale(Locale.fromSubtags(languageCode: "ru"));
-            //           } else {
-            //             FirebaseFirestore.instance
-            //                 .collection('users')
-            //                 .doc(firebaseCurrentUser!.uid)
-            //                 .update({'language': 'en'});
-            //             widget
-            //                 .setLocale(Locale.fromSubtags(languageCode: "en"));
-            //           }
-            //         });
-            //       },
-            //       items: listItem.map((valueItem) {
-            //         return DropdownMenuItem(
-            //           value: valueItem,
-            //           child: Text(valueItem),
-            //         );
-            //       }).toList(),
-            //     ),
-            //   ],
-            // ),
-            // sizedBoxFun(10),
             ListTile(
               selectedColor: Colors.white,
               leading: const Icon(

@@ -11,8 +11,6 @@ import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen(this.setLocale);
-  final void Function(Locale locale) setLocale;
   @override
   _ProfileScreenCreateState createState() => _ProfileScreenCreateState();
 }
@@ -112,7 +110,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
     }
 
     return Scaffold(
-      drawer: NavigationDrawWirdget(widget.setLocale),
+      drawer: NavigationDrawWirdget(),
       appBar: AppBar(
         centerTitle: true,
         title: Text(

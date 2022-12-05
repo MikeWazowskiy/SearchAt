@@ -3,8 +3,6 @@ import 'package:flutter_application_1/Ideas/ideas_screen.dart';
 import 'package:flutter_application_1/Profile/profile.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen(this.setLocale);
-  final void Function(Locale locale) setLocale;
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -15,7 +13,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final screens = [
       IdeasScreen(),
-      ProfileScreen(widget.setLocale),
+      ProfileScreen(),
     ];
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(

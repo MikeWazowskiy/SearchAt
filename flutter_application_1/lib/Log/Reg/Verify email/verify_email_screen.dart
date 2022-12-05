@@ -8,8 +8,6 @@ import 'package:flutter_application_1/Log/Reg/Login/Main%20Field/field.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class VerifyEmailScreen extends StatefulWidget {
-  const VerifyEmailScreen(this.setLocale, {super.key});
-  final void Function(Locale locale) setLocale;
   @override
   _VerifyEmailCreateState createState() => _VerifyEmailCreateState();
 }
@@ -77,7 +75,7 @@ class _VerifyEmailCreateState extends State<VerifyEmailScreen> {
 
   @override
   Widget build(BuildContext context) => isEmaleVerified
-      ? HomeScreen(widget.setLocale)
+      ? HomeScreen()
       : Scaffold(
           body: Column(children: [
             Padding(
