@@ -1,3 +1,9 @@
 {
-    "language" : "English"
+    "language" : "English",
+    "profile": "Profile",
+    "aboutyourself": "About yourself",
+    "favourites": "Favourites",
+    "resetpassword": "Reset password",
+    "signout": "Sign out",
+    "deleteaccount": "Delete account"
 }

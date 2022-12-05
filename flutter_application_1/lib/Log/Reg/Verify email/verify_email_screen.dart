@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Home/home_screen.dart';
@@ -13,12 +14,13 @@ class VerifyEmailScreen extends StatefulWidget {
 class _VerifyEmailCreateState extends State<VerifyEmailScreen> {
   bool isEmaleVerified = false;
   bool canResendEmail = false;
+  final currentUser = FirebaseAuth.instance.currentUser;
+  Locale? localeLanguage;
   Timer? timer;
   @override
   void initState() {
     super.initState();
     isEmaleVerified = FirebaseAuth.instance.currentUser!.emailVerified;
-
     if (!isEmaleVerified) {
       sendVerificatedEmail();
       timer = Timer.periodic(

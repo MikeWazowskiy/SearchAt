@@ -1,7 +1,5 @@
-import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 class UserManagement {
   storeNewUser(user, context, password, name) async {
@@ -14,6 +12,7 @@ class UserManagement {
           'https://firebasestorage.googleapis.com/v0/b/signinsearchat.appspot.com/o/UsersImages%2Fdefoltimegeforeveryone.jpeg?alt=media&token=3781473e-efb3-4610-9e30-c3c72559f120',
       'about_yourself': '',
       'password': password,
+      'language': 'en',
     }).catchError((e) {
       print(e);
     });

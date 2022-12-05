@@ -8,6 +8,7 @@ import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -113,8 +114,8 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'Profile',
-          style: TextStyle(
+          AppLocalizations.of(context)!.profile,
+          style: const TextStyle(
             color: Colors.black,
           ),
         ),
@@ -317,7 +318,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                     child: Padding(
                       padding: EdgeInsets.only(left: 20, top: 20, bottom: 15),
                       child: Text(
-                        'About yourself:',
+                        AppLocalizations.of(context)!.aboutyourself,
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w500,

@@ -1,3 +1,9 @@
 {
-    "language" : "Russian"
+    "language" : "Russian",
+    "profile": "Профиль",
+    "aboutyourself": "О себе",
+    "favourites": "Любимые идеи",
+    "resetpassword": "Сменить пароль",
+    "signout": "Выйти",
+    "deleteaccount": "Удалить аккаунт"
 }

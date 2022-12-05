@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Profile/Favorites/favorites_screen.dart';
 import 'package:flutter_application_1/Profile/My%20ideas/my_ideas_screen.dart';
 import 'package:ndialog/ndialog.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../Log/Reg/Login/login_screen.dart';
 import '../Reset password/resetpassword.dart';
 
@@ -16,6 +16,7 @@ class NavigationDrawWirdget extends StatefulWidget {
 }
 
 class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
+  final bool checkLanguage = true;
   sizedBoxFun(double size) {
     SizedBox sizedBox = new SizedBox(
       height: size,
@@ -27,6 +28,28 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
   final paddint = EdgeInsets.symmetric(horizontal: 20);
   String? password;
   String? email;
+  String? valueChoose;
+  List listItem = [
+    "Русский",
+    "English",
+  ];
+  void initState() {
+    super.initState();
+    setState(() {
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(firebaseCurrentUser!.uid)
+          .get()
+          .then((value) {
+        if (value.data()!['language'] == "ru") {
+          valueChoose = 'Русский';
+        } else {
+          valueChoose = 'English';
+        }
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -41,7 +64,7 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
                 Icons.favorite_border,
                 color: Color.fromARGB(255, 247, 96, 85),
               ),
-              title: Text('Favourites'),
+              title: Text(AppLocalizations.of(context)!.favourites),
               onTap: () {
                 setState(() {
                   Navigator.push(
@@ -67,17 +90,61 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
               },
             ),
             sizedBoxFun(10),
+            Row(
+              children: [
+                SizedBox(
+                  width: 16,
+                ),
+                Icon(
+                  Icons.language,
+                  color: Color.fromARGB(255, 247, 96, 85),
+                ),
+                SizedBox(
+                  width: 30,
+                ),
+                DropdownButton(
+                  style: TextStyle(fontSize: 14, color: Colors.black),
+                  value: valueChoose,
+                  onChanged: (newValue) {
+                    setState(() {
+                      valueChoose = newValue.toString();
+                      if (valueChoose == "Русский") {
+                        String language;
+                        FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(firebaseCurrentUser!.uid)
+                            .update({'language': 'ru'});
+                      } else {
+                        FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(firebaseCurrentUser!.uid)
+                            .update({'language': 'en'});
+                      }
+                    });
+                  },
+                  items: listItem.map((valueItem) {
+                    return DropdownMenuItem(
+                      value: valueItem,
+                      child: Text(valueItem),
+                    );
+                  }).toList(),
+                ),
+              ],
+            ),
+            sizedBoxFun(10),
             ListTile(
               selectedColor: Colors.white,
               leading: const Icon(
                 Icons.key,
                 color: Color.fromARGB(255, 247, 96, 85),
               ),
-              title: Text('Reset password'),
+              title: Text(
+                AppLocalizations.of(context)!.profile,
+              ),
               onTap: () {
                 NAlertDialog(
                   dialogStyle: DialogStyle(titleDivider: true),
-                  title: Text('Reset password'),
+                  title: Text(AppLocalizations.of(context)!.resetpassword),
                   content: Text(
                     'Are you sure you want to reset your password?',
                   ),
@@ -109,7 +176,7 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
                 ).show(context);
               },
             ),
-            sizedBoxFun(15),
+            sizedBoxFun(20),
             Divider(
               color: Color.fromARGB(255, 77, 77, 77),
             ),
@@ -123,7 +190,7 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
               onTap: () {
                 NAlertDialog(
                   dialogStyle: DialogStyle(titleDivider: true),
-                  title: Text('Sign Out'),
+                  title: Text(AppLocalizations.of(context)!.signout),
                   content: Text(
                     'Are you sure you want to sign out from your account?',
                   ),
@@ -158,7 +225,7 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
                 Icons.delete_rounded,
                 color: Color.fromARGB(255, 247, 96, 85),
               ),
-              title: Text('Delete account'),
+              title: Text(AppLocalizations.of(context)!.deleteaccount),
               onTap: () {
                 NAlertDialog(
                   dialogStyle: DialogStyle(titleDivider: true),
