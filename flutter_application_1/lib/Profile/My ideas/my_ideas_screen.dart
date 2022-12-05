@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Ideas/Create%20Ideas/create_edit_idea.dart';
 import 'package:flutter_application_1/Ideas/Idea%20card/idea_card.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MyIdeasScreen extends StatefulWidget {
   @override
@@ -29,7 +31,7 @@ class _MyIdeasScreenCreateState extends State<MyIdeasScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'My Ideas',
+          (AppLocalizations.of(context)!.myideas),
           style: TextStyle(
             color: Colors.black,
           ),

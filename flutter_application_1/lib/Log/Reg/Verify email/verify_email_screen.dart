@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Home/home_screen.dart';
 import 'package:flutter_application_1/Util/utils.dart';
 import 'package:flutter_application_1/Log/Reg/Login/Main%20Field/field.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class VerifyEmailScreen extends StatefulWidget {
+  const VerifyEmailScreen(this.setLocale, {super.key});
+  final void Function(Locale locale) setLocale;
   @override
   _VerifyEmailCreateState createState() => _VerifyEmailCreateState();
 }
@@ -64,15 +67,17 @@ class _VerifyEmailCreateState extends State<VerifyEmailScreen> {
       setState(
         () => canResendEmail = true,
       );
-      Utils.showSnackBar('A mail has been sent to your email', true);
+      Utils.showSnackBar(
+          AppLocalizations.of(context)!.emailhasbeensentmessage, true);
     } catch (e) {
-      Utils.showSnackBar('A mail already has been sent, try later', false);
+      Utils.showSnackBar(
+          AppLocalizations.of(context)!.emailalreadysentmessage, false);
     }
   }
 
   @override
   Widget build(BuildContext context) => isEmaleVerified
-      ? HomeScreen()
+      ? HomeScreen(widget.setLocale)
       : Scaffold(
           body: Column(children: [
             Padding(
@@ -80,7 +85,7 @@ class _VerifyEmailCreateState extends State<VerifyEmailScreen> {
             ),
             Center(
               child: Text(
-                'A verification email\nhas been sent to your email.',
+                AppLocalizations.of(context)!.verificationemailhasbeensent,
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w400,
@@ -110,7 +115,7 @@ class _VerifyEmailCreateState extends State<VerifyEmailScreen> {
                     size: 32,
                   ),
                   label: Text(
-                    "Resent Email",
+                    AppLocalizations.of(context)!.resentemail,
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 24,
@@ -122,7 +127,7 @@ class _VerifyEmailCreateState extends State<VerifyEmailScreen> {
             Container(
               child: TextButton(
                 child: Text(
-                  'Cancel',
+                  AppLocalizations.of(context)!.cancel,
                   style: TextStyle(
                       fontSize: 24,
                       color: Colors.black,
@@ -140,7 +145,7 @@ class _VerifyEmailCreateState extends State<VerifyEmailScreen> {
           ]),
           appBar: AppBar(
             backgroundColor: Color.fromARGB(255, 61, 210, 255),
-            title: Text('Verify Email'),
+            title: Text(AppLocalizations.of(context)!.verifyemail),
           ),
         );
 }

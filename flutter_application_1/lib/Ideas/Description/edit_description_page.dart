@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Ideas/Create%20Ideas/create_edit_idea.dart';
 import 'package:ndialog/ndialog.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DescriptionPage extends StatefulWidget {
   final String description;
@@ -33,7 +34,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
         elevation: 0.5,
         centerTitle: true,
         title: Text(
-          'Description',
+          AppLocalizations.of(context)!.about,
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
         ),
         backgroundColor: Colors.grey[50],
@@ -53,7 +54,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
             child: Center(
               child: InkWell(
                 child: Text(
-                  'Clear',
+                  AppLocalizations.of(context)!.clear,
                   style: TextStyle(
                     fontSize: 20,
                     color: clearBtnColor,
@@ -63,9 +64,9 @@ class _DescriptionPageState extends State<DescriptionPage> {
                   if (_descrtiptionController.text.isNotEmpty) {
                     NAlertDialog(
                       dialogStyle: DialogStyle(titleDivider: true),
-                      title: Text('Clear all'),
+                      title: Text(AppLocalizations.of(context)!.clearall),
                       content: Text(
-                        'Are you sure you want to delete everything you wrote?',
+                        AppLocalizations.of(context)!.canceldescriptionmessage,
                       ),
                       actions: [
                         TextButton(
@@ -77,7 +78,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
                             Navigator.pop(context);
                           }),
                           child: Text(
-                            'OK',
+                            AppLocalizations.of(context)!.ok,
                           ),
                         ),
                         TextButton(
@@ -85,7 +86,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
                             Navigator.pop(context);
                           }),
                           child: Text(
-                            'Cancel',
+                            AppLocalizations.of(context)!.cancel,
                           ),
                         ),
                       ],
@@ -106,8 +107,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
               maxLines: 20,
               autofocus: true,
               decoration: InputDecoration.collapsed(
-                hintText:
-                    'Describe your idea in more detail. Tell us what you use for development, and what skills are missing. It is important for other users to know what your idea is in order to understand whether it suits them. But do not forget that it is not necessary to tell something very secret.',
+                hintText: AppLocalizations.of(context)!.moreaboutideahinttext,
               ),
               onChanged: (value) {
                 _descrtiptionController.text.isNotEmpty
@@ -120,7 +120,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
                 Navigator.of(context).pop(_descrtiptionController.text);
               },
               child: Text(
-                'Save',
+                AppLocalizations.of(context)!.save,
                 style: TextStyle(fontSize: 24),
               ),
               style: ElevatedButton.styleFrom(

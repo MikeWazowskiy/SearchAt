@@ -11,6 +11,8 @@ import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProfileScreen extends StatefulWidget {
+  const ProfileScreen(this.setLocale);
+  final void Function(Locale locale) setLocale;
   @override
   _ProfileScreenCreateState createState() => _ProfileScreenCreateState();
 }
@@ -36,7 +38,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
         child: Column(
           children: [
             Text(
-              'Choose Profile photo',
+              (AppLocalizations.of(context)!.chooseprofilephoto),
               style: TextStyle(fontSize: 20.0),
             ),
             SizedBox(
@@ -54,7 +56,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                       ),
                       SizedBox(width: 5),
                       Text(
-                        "Camera",
+                        (AppLocalizations.of(context)!.camera),
                         style: TextStyle(color: Colors.black),
                       ),
                     ],
@@ -73,7 +75,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                       ),
                       SizedBox(width: 5),
                       Text(
-                        "Gallery",
+                        (AppLocalizations.of(context)!.gallery),
                         style: TextStyle(color: Colors.black),
                       ),
                     ],
@@ -92,7 +94,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                       ),
                       SizedBox(width: 5),
                       Text(
-                        "Remove",
+                        (AppLocalizations.of(context)!.removephoto),
                         style: TextStyle(color: Colors.black),
                       ),
                     ],
@@ -110,7 +112,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
     }
 
     return Scaffold(
-      drawer: NavigationDrawWirdget(),
+      drawer: NavigationDrawWirdget(widget.setLocale),
       appBar: AppBar(
         centerTitle: true,
         title: Text(
@@ -357,7 +359,8 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.all(6),
                               hintText: aboutYourselfController.text == ""
-                                  ? 'You have nothing about youself :('
+                                  ? AppLocalizations.of(context)!
+                                      .youhavenothingaboutyourselfmessage
                                   : null,
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
@@ -403,7 +406,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
     showTopSnackBar(
       context,
       CustomSnackBar.success(
-        message: "Photo was successfully removed!",
+        message: AppLocalizations.of(context)!.photowasdeleted,
       ),
     );
   }
@@ -448,7 +451,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
         showTopSnackBar(
           context,
           CustomSnackBar.success(
-            message: "Photo was published!",
+            message: AppLocalizations.of(context)!.photowaspublushed,
           ),
         );
         FirebaseFirestore.instance

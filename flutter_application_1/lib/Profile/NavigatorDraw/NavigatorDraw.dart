@@ -10,6 +10,8 @@ import '../../Log/Reg/Login/login_screen.dart';
 import '../Reset password/resetpassword.dart';
 
 class NavigationDrawWirdget extends StatefulWidget {
+  const NavigationDrawWirdget(this.setLocale);
+  final void Function(Locale locale) setLocale;
   @override
   _NavigationDrawWirdgetCreateState createState() =>
       _NavigationDrawWirdgetCreateState();
@@ -36,17 +38,7 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
   void initState() {
     super.initState();
     setState(() {
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(firebaseCurrentUser!.uid)
-          .get()
-          .then((value) {
-        if (value.data()!['language'] == "ru") {
-          valueChoose = 'Русский';
-        } else {
-          valueChoose = 'English';
-        }
-      });
+      valueChoose = "English";
     });
   }
 
@@ -81,7 +73,7 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
                 Icons.content_paste,
                 color: Color.fromARGB(255, 247, 96, 85),
               ),
-              title: Text('My Ideas'),
+              title: Text(AppLocalizations.of(context)!.myideas),
               onTap: () {
                 setState(() {
                   Navigator.push(context,
@@ -114,11 +106,15 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
                             .collection('users')
                             .doc(firebaseCurrentUser!.uid)
                             .update({'language': 'ru'});
+                        widget
+                            .setLocale(Locale.fromSubtags(languageCode: "ru"));
                       } else {
                         FirebaseFirestore.instance
                             .collection('users')
                             .doc(firebaseCurrentUser!.uid)
                             .update({'language': 'en'});
+                        widget
+                            .setLocale(Locale.fromSubtags(languageCode: "en"));
                       }
                     });
                   },
@@ -139,14 +135,14 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
                 color: Color.fromARGB(255, 247, 96, 85),
               ),
               title: Text(
-                AppLocalizations.of(context)!.profile,
+                AppLocalizations.of(context)!.resetpassword,
               ),
               onTap: () {
                 NAlertDialog(
                   dialogStyle: DialogStyle(titleDivider: true),
                   title: Text(AppLocalizations.of(context)!.resetpassword),
                   content: Text(
-                    'Are you sure you want to reset your password?',
+                    (AppLocalizations.of(context)!.passworddialogmessage),
                   ),
                   actions: [
                     TextButton(
@@ -161,7 +157,7 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
                         });
                       }),
                       child: Text(
-                        'OK',
+                        (AppLocalizations.of(context)!.ok),
                       ),
                     ),
                     TextButton(
@@ -169,7 +165,7 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
                         Navigator.pop(context);
                       }),
                       child: Text(
-                        'Cancel',
+                        (AppLocalizations.of(context)!.cancel),
                       ),
                     ),
                   ],
@@ -186,13 +182,13 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
                 Icons.logout,
                 color: Color.fromARGB(255, 247, 96, 85),
               ),
-              title: Text('Sign Out'),
+              title: Text(AppLocalizations.of(context)!.signout),
               onTap: () {
                 NAlertDialog(
                   dialogStyle: DialogStyle(titleDivider: true),
                   title: Text(AppLocalizations.of(context)!.signout),
                   content: Text(
-                    'Are you sure you want to sign out from your account?',
+                    (AppLocalizations.of(context)!.accountsignoutmessage),
                   ),
                   actions: [
                     TextButton(
@@ -205,7 +201,7 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
                         });
                       }),
                       child: Text(
-                        'OK',
+                        (AppLocalizations.of(context)!.ok),
                       ),
                     ),
                     TextButton(
@@ -213,7 +209,7 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
                         Navigator.pop(context);
                       }),
                       child: Text(
-                        'Cancel',
+                        (AppLocalizations.of(context)!.cancel),
                       ),
                     ),
                   ],
@@ -229,9 +225,9 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
               onTap: () {
                 NAlertDialog(
                   dialogStyle: DialogStyle(titleDivider: true),
-                  title: Text('Delete'),
+                  title: Text(AppLocalizations.of(context)!.deleteaccount),
                   content: Text(
-                    'Are you sure you want to delete your account?',
+                    (AppLocalizations.of(context)!.deleteaccountmessage),
                   ),
                   actions: [
                     TextButton(
@@ -242,7 +238,7 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
                         });
                       }),
                       child: Text(
-                        'OK',
+                        (AppLocalizations.of(context)!.ok),
                       ),
                     ),
                     TextButton(
@@ -250,7 +246,7 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
                         Navigator.pop(context);
                       }),
                       child: Text(
-                        'Cancel',
+                        (AppLocalizations.of(context)!.cancel),
                       ),
                     ),
                   ],

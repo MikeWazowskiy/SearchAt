@@ -8,6 +8,7 @@ import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:get/get.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CreateEditIdeaPage extends StatefulWidget {
   final QuerySnapshot? data;
@@ -116,7 +117,7 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
                 : aboutField(),
             SizedBox(height: 15),
             Text(
-              'Tags',
+              AppLocalizations.of(context)!.tags,
               style: TextStyle(
                 fontWeight: FontWeight.w700,
                 fontSize: 25,
@@ -136,7 +137,7 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
                       ),
             SizedBox(height: 10),
             Text(
-              'Contacts',
+              AppLocalizations.of(context)!.contacts,
               style: TextStyle(
                 fontWeight: FontWeight.w700,
                 fontSize: 25,
@@ -187,22 +188,23 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
                                 showTopSnackBar(
                                   context,
                                   CustomSnackBar.success(
-                                    message:
-                                        "The idea has been successfully published!",
+                                    message: AppLocalizations.of(context)!
+                                        .ideaspublishmessage,
                                   ),
                                 );
                               },
-                            ).catchError(
-                              (error) => 'Failded to add the idea: $error')
+                            ).catchError((error) =>
+                              AppLocalizations.of(context)!.ideafailedmessage)
                           : showTopSnackBar(
                               context,
                               CustomSnackBar.error(
-                                message: "You need to fill in all the fields!",
+                                message: AppLocalizations.of(context)!
+                                    .warningoffield,
                               ),
                             );
                     },
                     child: Text(
-                      'Publish',
+                      AppLocalizations.of(context)!.publish,
                       style: TextStyle(fontSize: 25),
                     ),
                     style: ElevatedButton.styleFrom(
@@ -239,7 +241,8 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
                                           context,
                                           CustomSnackBar.success(
                                             message:
-                                                "The idea has been successfully updated!",
+                                                AppLocalizations.of(context)!
+                                                    .warningoffield,
                                           ),
                                         );
                                         Navigator.pop(context);
@@ -248,13 +251,13 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
                                   : showTopSnackBar(
                                       context,
                                       CustomSnackBar.error(
-                                        message:
-                                            "You need to fill in all the fields!",
+                                        message: AppLocalizations.of(context)!
+                                            .ideaupdatemessage,
                                       ),
                                     );
                             },
                             child: Text(
-                              'Save',
+                              AppLocalizations.of(context)!.save,
                               style: TextStyle(fontSize: 25),
                             ),
                             style: ElevatedButton.styleFrom(
@@ -273,8 +276,8 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
                               showTopSnackBar(
                                 context,
                                 CustomSnackBar.info(
-                                  message:
-                                      "The idea has been successfully deleted!",
+                                  message: AppLocalizations.of(context)!
+                                      .ideawasdeletedmessage,
                                 ),
                               );
                               FirebaseFirestore.instance
@@ -284,7 +287,7 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
                               Navigator.pop(context);
                             },
                             child: Text(
-                              'Delete',
+                              AppLocalizations.of(context)!.delete,
                               style: TextStyle(fontSize: 25),
                             ),
                             style: ElevatedButton.styleFrom(
@@ -310,7 +313,7 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Idea',
+          AppLocalizations.of(context)!.ideatitle,
           style: TextStyle(
             fontWeight: FontWeight.w700,
             fontSize: 25,
@@ -322,7 +325,7 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
           controller: ideaTitleTextField,
           maxLength: 50,
           decoration: InputDecoration(
-            labelText: 'Idea title',
+            labelText: AppLocalizations.of(context)!.ideahinttext,
             suffixIcon: IconButton(
               icon: Icon(Icons.clear_rounded),
               onPressed: () => ideaTitleTextField.clear(),
@@ -340,7 +343,7 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'About',
+              AppLocalizations.of(context)!.about,
               style: TextStyle(
                 fontWeight: FontWeight.w700,
                 fontSize: 25,
@@ -349,7 +352,7 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
             SizedBox(height: 35),
             description.isEmpty
                 ? Text(
-                    'Idea description',
+                    AppLocalizations.of(context)!.aboutideahinttext,
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.grey[600],
@@ -442,8 +445,8 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
                                 showTopSnackBar(
                                   context,
                                   CustomSnackBar.info(
-                                    message:
-                                        "The contact has been successfully copied!",
+                                    message: AppLocalizations.of(context)!
+                                        .contactwascopied,
                                   ),
                                 );
                               },

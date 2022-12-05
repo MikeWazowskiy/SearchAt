@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Ideas/Create%20Ideas/create_edit_idea.dart';
 import 'package:flutter_application_1/Ideas/Idea%20card/idea_card.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class IdeasScreen extends StatefulWidget {
   @override
@@ -41,7 +42,7 @@ class _IdeasScreenCreateState extends State<IdeasScreen> {
                   borderRadius: BorderRadius.circular(15),
                   borderSide: BorderSide.none),
               prefixIcon: Icon(Icons.search),
-              hintText: 'Search by tag...'),
+              hintText: AppLocalizations.of(context)!.searchbytag),
           onChanged: (value) {
             setState(() {
               tag = value;

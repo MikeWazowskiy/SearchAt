@@ -4,6 +4,7 @@ import 'package:email_validator/email_validator.dart';
 import '../../../../Users/users_service.dart';
 import '../../../../Util/utils.dart';
 import '../../../../main.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Field extends StatefulWidget {
   @override
@@ -44,7 +45,7 @@ class _FieldState extends State<Field> {
               children: [
                 InkWell(
                   child: Text(
-                    'Login',
+                    (AppLocalizations.of(context)!.loginscreen),
                     style: TextStyle(fontSize: 25),
                   ),
                   onTap: () => setState(
@@ -53,7 +54,7 @@ class _FieldState extends State<Field> {
                 ),
                 InkWell(
                   child: Text(
-                    'Sign Up',
+                    (AppLocalizations.of(context)!.signupscreen),
                     style: TextStyle(fontSize: 25),
                   ),
                   onTap: () => setState(() {
@@ -75,7 +76,7 @@ class _FieldState extends State<Field> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Email',
+                  (AppLocalizations.of(context)!.email),
                   style: TextStyle(
                     fontSize: 18,
                   ),
@@ -88,11 +89,11 @@ class _FieldState extends State<Field> {
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (email) =>
                     email != null && !EmailValidator.validate(email)
-                        ? 'Enter a valid email'
+                        ? AppLocalizations.of(context)!.emailvalidator
                         : null,
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
-                  hintText: 'Enter your email address',
+                  hintText: AppLocalizations.of(context)!.emailhinttext,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
                   ),
@@ -105,7 +106,7 @@ class _FieldState extends State<Field> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Password',
+                  (AppLocalizations.of(context)!.password),
                   style: TextStyle(
                     fontSize: 18,
                   ),
@@ -117,14 +118,14 @@ class _FieldState extends State<Field> {
               child: TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (value) => value != null && value.length < 6
-                    ? 'Enter min. 6 characters'
+                    ? AppLocalizations.of(context)!.passwordvalidator
                     : null,
                 controller: passwordController,
                 obscureText: !_passwordVisible,
                 enableSuggestions: false,
                 autocorrect: false,
                 decoration: InputDecoration(
-                  hintText: 'Enter your password',
+                  hintText: AppLocalizations.of(context)!.passwordhinttext,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
                   ),
@@ -149,7 +150,7 @@ class _FieldState extends State<Field> {
                 alignment: Alignment.centerRight,
                 child: InkWell(
                   child: Text(
-                    'Forgot your password?',
+                    (AppLocalizations.of(context)!.forgotpassword),
                     style: TextStyle(
                       color: Colors.blue,
                     ),
@@ -164,8 +165,8 @@ class _FieldState extends State<Field> {
               padding: EdgeInsets.only(top: 30),
               child: ElevatedButton(
                 onPressed: () => signIn(),
-                child: const Text(
-                  'Submit',
+                child: Text(
+                  AppLocalizations.of(context)!.submitforlogin,
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.w300,
@@ -212,7 +213,7 @@ class _FieldState extends State<Field> {
                     () => _animatedWidget = login(),
                   ),
                   child: Text(
-                    'Login',
+                    (AppLocalizations.of(context)!.loginscreen),
                     style: TextStyle(fontSize: 25),
                   ),
                 ),
@@ -221,7 +222,7 @@ class _FieldState extends State<Field> {
                     () => _animatedWidget = registration(),
                   ),
                   child: Text(
-                    'Sign Up',
+                    (AppLocalizations.of(context)!.signupscreen),
                     style: TextStyle(fontSize: 25),
                   ),
                 ),
@@ -240,7 +241,7 @@ class _FieldState extends State<Field> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Email',
+                  (AppLocalizations.of(context)!.email),
                   style: TextStyle(
                     fontSize: 18,
                   ),
@@ -252,7 +253,7 @@ class _FieldState extends State<Field> {
               child: TextFormField(
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
-                  hintText: 'Enter your email address',
+                  hintText: AppLocalizations.of(context)!.emailhinttext,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
                   ),
@@ -261,7 +262,7 @@ class _FieldState extends State<Field> {
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (email) =>
                     email != null && !EmailValidator.validate(email)
-                        ? 'Enter a valid email'
+                        ? AppLocalizations.of(context)!.emailvalidator
                         : null,
               ),
             ),
@@ -270,7 +271,7 @@ class _FieldState extends State<Field> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Password',
+                  (AppLocalizations.of(context)!.password),
                   style: TextStyle(
                     fontSize: 18,
                   ),
@@ -282,14 +283,14 @@ class _FieldState extends State<Field> {
               child: TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (value) => value != null && value.length < 6
-                    ? 'Enter min. 6 characters'
+                    ? AppLocalizations.of(context)!.passwordvalidator
                     : null,
                 controller: passwordController,
                 obscureText: !_passwordVisible,
                 enableSuggestions: false,
                 autocorrect: false,
                 decoration: InputDecoration(
-                  hintText: 'Enter your password',
+                  hintText: AppLocalizations.of(context)!.passwordhinttext,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
                   ),
@@ -315,7 +316,7 @@ class _FieldState extends State<Field> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Confirm password',
+                  AppLocalizations.of(context)!.confirmpassword,
                   style: TextStyle(
                     fontSize: 18,
                   ),
@@ -327,14 +328,14 @@ class _FieldState extends State<Field> {
               child: TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (value) => value != null && value.length < 6
-                    ? 'Enter min. 6 characters'
+                    ? AppLocalizations.of(context)!.passwordvalidator
                     : null,
                 controller: passwordControllerConfirm,
                 obscureText: !_passwordVisible,
                 enableSuggestions: false,
                 autocorrect: false,
                 decoration: InputDecoration(
-                  hintText: 'Enter your password again',
+                  hintText: AppLocalizations.of(context)!.passwordhinttext,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
                   ),
@@ -347,8 +348,8 @@ class _FieldState extends State<Field> {
                 onPressed: (() {
                   signUp();
                 }),
-                child: const Text(
-                  'Submit',
+                child: Text(
+                  AppLocalizations.of(context)!.submitforsignin,
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.w300,
@@ -399,7 +400,7 @@ class _FieldState extends State<Field> {
                   () => _animatedWidget = login(),
                 ),
                 child: Text(
-                  'Login',
+                  (AppLocalizations.of(context)!.loginscreen),
                   style: TextStyle(fontSize: 25),
                 ),
               ),
@@ -408,7 +409,7 @@ class _FieldState extends State<Field> {
                   () => _animatedWidget = registration(),
                 ),
                 child: Text(
-                  'Sign Up',
+                  (AppLocalizations.of(context)!.signupscreen),
                   style: TextStyle(fontSize: 25),
                 ),
               ),
@@ -427,7 +428,7 @@ class _FieldState extends State<Field> {
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                'Email',
+                (AppLocalizations.of(context)!.email),
                 style: TextStyle(
                   fontSize: 18,
                 ),
@@ -439,7 +440,7 @@ class _FieldState extends State<Field> {
             child: TextFormField(
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
-                hintText: 'Enter your email address',
+                hintText: AppLocalizations.of(context)!.emailhinttext,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30.0),
                 ),
@@ -448,7 +449,7 @@ class _FieldState extends State<Field> {
               autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: (email) =>
                   email != null && !EmailValidator.validate(email)
-                      ? 'Enter a valid email'
+                      ? AppLocalizations.of(context)!.emailvalidator
                       : null,
             ),
           ),
@@ -458,8 +459,8 @@ class _FieldState extends State<Field> {
               onPressed: () {
                 resetPassword();
               },
-              child: const Text(
-                'Submit',
+              child: Text(
+                AppLocalizations.of(context)!.submitforresetpassword,
                 style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.w300,
@@ -552,7 +553,8 @@ class _FieldState extends State<Field> {
     try {
       await FirebaseAuth.instance
           .sendPasswordResetEmail(email: emailController.text.trim());
-      Utils.showSnackBar('Password Reset Email Sent', true);
+      Utils.showSnackBar(
+          AppLocalizations.of(context)!.passwordresentemailsendmessage, true);
       Navigator.of(context).popUntil((route) => route.isFirst);
     } on FirebaseAuthException catch (e) {
       print(e);

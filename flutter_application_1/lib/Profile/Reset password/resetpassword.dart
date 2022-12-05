@@ -5,6 +5,7 @@ import 'package:flutter_application_1/Profile/profile.dart';
 import 'package:flutter_application_1/Util/utils.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ResetPasswordFromProfile extends StatefulWidget {
   @override
@@ -50,7 +51,7 @@ class ResetPasswordFromProfileState extends State<ResetPasswordFromProfile> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'Reset password',
+          AppLocalizations.of(context)!.resetpassword,
           style: TextStyle(
             color: Colors.black,
           ),
@@ -72,7 +73,7 @@ class ResetPasswordFromProfileState extends State<ResetPasswordFromProfile> {
       ),
       body: Center(
         child: Container(
-          height: 365,
+          height: 335,
           width: 380,
           decoration: BoxDecoration(
             color: Colors.white,
@@ -88,9 +89,9 @@ class ResetPasswordFromProfileState extends State<ResetPasswordFromProfile> {
           ),
           child: Column(
             children: [
-              sizedBoxFun(40),
+              sizedBoxFun(30),
               Text(
-                'Type new password',
+                AppLocalizations.of(context)!.typenewpassword,
                 style: TextStyle(
                   fontSize: 20,
                   color: Colors.black,
@@ -103,14 +104,14 @@ class ResetPasswordFromProfileState extends State<ResetPasswordFromProfile> {
                 child: TextFormField(
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (value) => value != null && value.length < 6
-                      ? 'Enter min. 6 characters'
+                      ? AppLocalizations.of(context)!.passwordvalidator
                       : null,
                   controller: passwordController,
                   obscureText: !_passwordVisible,
                   enableSuggestions: false,
                   autocorrect: false,
                   decoration: InputDecoration(
-                    hintText: 'Enter your password',
+                    hintText: AppLocalizations.of(context)!.passwordhinttext,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15.0),
                     ),
@@ -134,14 +135,14 @@ class ResetPasswordFromProfileState extends State<ResetPasswordFromProfile> {
                 child: TextFormField(
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (value) => value != null && value.length < 6
-                      ? 'Enter min. 6 characters'
+                      ? AppLocalizations.of(context)!.passwordvalidator
                       : null,
                   controller: passwordConfirmController,
                   obscureText: !_passwordVisible,
                   enableSuggestions: false,
                   autocorrect: false,
                   decoration: InputDecoration(
-                    hintText: 'Confirm your password',
+                    hintText: AppLocalizations.of(context)!.confirmpassword,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15.0),
                     ),
@@ -152,8 +153,8 @@ class ResetPasswordFromProfileState extends State<ResetPasswordFromProfile> {
                 onPressed: (() {
                   checkPasswords();
                 }),
-                child: const Text(
-                  'Submit',
+                child: Text(
+                  AppLocalizations.of(context)!.submitforresetpassword,
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.w300,
@@ -182,22 +183,26 @@ class ResetPasswordFromProfileState extends State<ResetPasswordFromProfile> {
           showTopSnackBar(
             context,
             CustomSnackBar.success(
-              message: "Password was changed",
+              message: AppLocalizations.of(context)!.passwordwaschangemessage,
             ),
           );
           setState(() {
             Navigator.pop(context);
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => ProfileScreen()));
+            //Navigator.push(context,
+            //MaterialPageRoute(builder: (context) => ProfileScreen()));
           });
         } else {
-          Utils.showSnackBar('enter a longer password', false);
+          Utils.showSnackBar(
+              AppLocalizations.of(context)!.enteralongerpasswordmessage, false);
         }
       } else {
-        Utils.showSnackBar('you cannot enter the old password', false);
+        Utils.showSnackBar(
+            AppLocalizations.of(context)!.ucannotenterapastpasswordmessage,
+            false);
       }
     } else {
-      Utils.showSnackBar('enter the same password', false);
+      Utils.showSnackBar(
+          AppLocalizations.of(context)!.enterthesamepasswordmessage, false);
     }
   }
 }

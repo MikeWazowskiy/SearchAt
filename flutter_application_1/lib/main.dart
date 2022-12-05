@@ -21,20 +21,29 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  Locale? _locale;
+  void setLocale(Locale locale) {
+    setState(() {
+      _locale = locale;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      locale: Locale.fromSubtags(languageCode: "en"),
+      locale: _locale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       scaffoldMessengerKey: Utils.messengerKey,
       navigatorKey: navigatorKey,
-      home: MainPage(),
+      home: MainPage(setLocale),
     );
   }
 }
 
 class MainPage extends StatelessWidget {
+  MainPage(this.setLocale);
+  final void Function(Locale local) setLocale;
   @override
   Widget build(BuildContext context) => Scaffold(
         body: StreamBuilder<User?>(
@@ -51,7 +60,7 @@ class MainPage extends StatelessWidget {
                 child: Text('Something went wrong!'),
               );
             } else if (snapshot.hasData) {
-              return VerifyEmailScreen();
+              return VerifyEmailScreen(setLocale);
             } else {
               return Login();
             }

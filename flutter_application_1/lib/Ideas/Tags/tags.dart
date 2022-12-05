@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 var suggestTag = [
   "Unity",
@@ -57,7 +58,7 @@ class _TagsFieldState extends State<TagsField> {
             },
             autofocus: false,
             decoration: InputDecoration(
-              hintText: 'Tag',
+              hintText: AppLocalizations.of(context)!.tags,
             ),
           ),
           suggestionsCallback: (String pattern) {
@@ -81,7 +82,7 @@ class _TagsFieldState extends State<TagsField> {
         SizedBox(height: 10),
         Obx(() => controller.listTags.isEmpty
             ? Center(
-                child: Text('No Tag selected'),
+                child: Text(AppLocalizations.of(context)!.hinttags),
               )
             : Wrap(
                 children: controller.listTags
