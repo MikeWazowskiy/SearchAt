@@ -53,23 +53,6 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
             ListTile(
               selectedColor: Colors.white,
               leading: const Icon(
-                Icons.favorite_border,
-                color: Color.fromARGB(255, 247, 96, 85),
-              ),
-              title: Text(AppLocalizations.of(context)!.favourites),
-              onTap: () {
-                setState(() {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => FavoritesScreen()));
-                });
-              },
-            ),
-            sizedBoxFun(10),
-            ListTile(
-              selectedColor: Colors.white,
-              leading: const Icon(
                 Icons.content_paste,
                 color: Color.fromARGB(255, 247, 96, 85),
               ),
@@ -172,7 +155,7 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
                 ).show(context);
               },
             ),
-            sizedBoxFun(20),
+            sizedBoxFun(15),
             Divider(
               color: Color.fromARGB(255, 77, 77, 77),
             ),

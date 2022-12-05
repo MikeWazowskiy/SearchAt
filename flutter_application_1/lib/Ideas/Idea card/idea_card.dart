@@ -78,20 +78,20 @@ class IdeaCard extends StatelessWidget {
                 ],
               ),
             ),
-            IconButton(
-              onPressed: () {
-                favorites.add({
-                  'user_email': currentUsser!.email,
-                  'idea_id': data.docs[index].id,
-                });
-              },
-              splashColor: Colors.transparent,
-              icon: Icon(
-                Icons.favorite_border,
-                size: 30,
-                color: Colors.grey,
-              ),
-            ),
+            // IconButton(
+            //   onPressed: () {
+            //     favorites.add({
+            //       'user_email': currentUsser!.email,
+            //       'idea_id': data.docs[index].id,
+            //     });
+            //   },
+            //   splashColor: Colors.transparent,
+            //   icon: Icon(
+            //     Icons.favorite_border,
+            //     size: 30,
+            //     color: Colors.grey,
+            //   ),
+            // ),
           ],
         ),
       ),

@@ -180,6 +180,7 @@ class ResetPasswordFromProfileState extends State<ResetPasswordFromProfile> {
               .collection('users')
               .doc(currentUser!.uid)
               .update({'password': passwordController.text.trim()});
+          currentUser!.updatePassword(passwordController.text);
           showTopSnackBar(
             context,
             CustomSnackBar.success(
@@ -188,8 +189,6 @@ class ResetPasswordFromProfileState extends State<ResetPasswordFromProfile> {
           );
           setState(() {
             Navigator.pop(context);
-            //Navigator.push(context,
-            //MaterialPageRoute(builder: (context) => ProfileScreen()));
           });
         } else {
           Utils.showSnackBar(
