@@ -51,6 +51,7 @@ dependencies:
   ndialog: ^4.2.0
   full_screen_image_null_safe: ^2.0.0
   localization: ^2.1.0
+  firebase_database: ^10.0.6
   flutter_localizations: 
     sdk: flutter
   flutter_typeahead: any

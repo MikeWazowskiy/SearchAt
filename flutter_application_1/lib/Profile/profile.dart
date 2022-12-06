@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Profile/NavigatorDraw/NavigatorDraw.dart';
@@ -436,6 +438,10 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
       if (_imageFile == null)
         return;
       else {
+        FirebaseDatabase database;
+        database = FirebaseDatabase.instance;
+        database.setPersistenceEnabled(true);
+        database.setPersistenceCacheSizeBytes(10000000);
         final ref = FirebaseStorage.instance
             .ref()
             .child('UsersImages')
