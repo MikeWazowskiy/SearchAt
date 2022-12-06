@@ -219,13 +219,6 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
       }).catchError((e) {
         print(e);
       });
-      FirebaseFirestore.instance.collection('ideas').get().then(
-        (value) {
-          value.docs.forEach((result) {
-            print(result.data()[email!]);
-          });
-        },
-      );
       if (firebaseCurrentUser != null) {
         //Удаление пользователя
         AuthCredential credential = EmailAuthProvider.credential(
