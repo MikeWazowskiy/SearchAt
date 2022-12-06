@@ -29,6 +29,7 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
   String? password;
   String? email;
   String? valueChoose;
+  String? lastPassword;
   List listItem = [
     "Русский",
     "English",
@@ -201,44 +202,60 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
         .doc(firebaseCurrentUser!.uid)
         .get()
         .then((value) {
-      password = value.data()!['password'];
+      lastPassword = value.data()!['password'];
     }).catchError((e) {
       print(e);
     });
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(firebaseCurrentUser!.uid)
-        .get()
-        .then((value) {
-      email = value.data()!['email'];
-    }).catchError((e) {
-      print(e);
-    });
-    if (firebaseCurrentUser != null) {
-      //Удаление пользователя
-      AuthCredential credential = EmailAuthProvider.credential(
-          email: email.toString(), password: password.toString());
-      await firebaseCurrentUser!
-          .reauthenticateWithCredential(credential)
-          .then((value) {
-        value.user!.delete().then((value) {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Login()));
-        });
-      });
-      //Удаление фотографии из хранилища
-      try {
-        final ref = FirebaseStorage.instance
-            .ref()
-            .child('UsersImages')
-            .child(email! + '.jpeg');
-        await ref.delete();
-      } catch (e) {}
-      //Удаление коллекции users
-      var collectionUsers = await FirebaseFirestore.instance
+    email = firebaseCurrentUser!.email;
+    final cred = EmailAuthProvider.credential(
+        email: email.toString(), password: lastPassword.toString());
+    firebaseCurrentUser!.reauthenticateWithCredential(cred).then((value) async {
+      await FirebaseFirestore.instance
           .collection('users')
-          .doc(firebaseCurrentUser!.uid);
-      collectionUsers.delete();
-    }
+          .doc(firebaseCurrentUser!.uid)
+          .get()
+          .then((value) {
+        password = value.data()!['password'];
+      }).catchError((e) {
+        print(e);
+      });
+      FirebaseFirestore.instance.collection('ideas').get().then(
+        (value) {
+          value.docs.forEach((result) {
+            print(result.data()[email!]);
+          });
+        },
+      );
+      if (firebaseCurrentUser != null) {
+        //Удаление пользователя
+        AuthCredential credential = EmailAuthProvider.credential(
+            email: email.toString(), password: password.toString());
+        await firebaseCurrentUser!
+            .reauthenticateWithCredential(credential)
+            .then((value) {
+          value.user!.delete().then((value) {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Login()));
+          });
+        });
+        //Удаление фотографии из хранилища
+        try {
+          final ref = FirebaseStorage.instance
+              .ref()
+              .child('UsersImages')
+              .child(email! + '.jpeg');
+          await ref.delete();
+        } catch (e) {}
+        //Удаление коллекции users
+        var collectionUsers = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(firebaseCurrentUser!.uid);
+        collectionUsers.delete();
+      }
+    }).catchError((err) {
+      print(err.toString());
+    });
+    {}
+    ;
   }
 }

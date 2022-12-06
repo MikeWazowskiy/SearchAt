@@ -31,17 +31,6 @@ class ResetPasswordFromProfileState extends State<ResetPasswordFromProfile> {
     _passwordVisible = false;
     setState(() {
       email = currentUser!.email.toString();
-      if (currentUser != null) {
-        FirebaseFirestore.instance
-            .collection('users')
-            .doc(currentUser!.uid)
-            .get()
-            .then((value) async {
-          lastPassword = await value.data()!['password'];
-        }).catchError((e) {
-          print(e);
-        });
-      }
     });
   }
 
@@ -179,16 +168,38 @@ class ResetPasswordFromProfileState extends State<ResetPasswordFromProfile> {
           await FirebaseFirestore.instance
               .collection('users')
               .doc(currentUser!.uid)
-              .update({'password': passwordController.text.trim()});
-          showTopSnackBar(
-            context,
-            CustomSnackBar.success(
-              message: AppLocalizations.of(context)!.passwordwaschangemessage,
-            ),
-          );
-          setState(() {
-            Navigator.pop(context);
+              .get()
+              .then((value) {
+            lastPassword = value.data()!['password'];
+          }).catchError((e) {
+            print(e);
           });
+          print(lastPassword);
+          final user = await FirebaseAuth.instance.currentUser;
+          if (user != null) {
+            await FirebaseFirestore.instance
+                .collection('users')
+                .doc(currentUser!.uid)
+                .update({'password': passwordController.text.trim()});
+            final cred = EmailAuthProvider.credential(
+                email: email.toString(), password: lastPassword.toString());
+            user.reauthenticateWithCredential(cred).then((value) async {
+              await user.updatePassword(passwordController.text.toString());
+              await user.updateEmail(email.toString());
+              print("Password was changed");
+            }).catchError((err) {
+              print(err.toString());
+            });
+            showTopSnackBar(
+              context,
+              CustomSnackBar.success(
+                message: AppLocalizations.of(context)!.passwordwaschangemessage,
+              ),
+            );
+            setState(() {
+              Navigator.pop(context);
+            });
+          }
         } else {
           Utils.showSnackBar(
               AppLocalizations.of(context)!.enteralongerpasswordmessage, false);
