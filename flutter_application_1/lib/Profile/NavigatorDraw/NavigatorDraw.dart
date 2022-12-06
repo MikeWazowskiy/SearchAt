@@ -210,6 +210,15 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
     final cred = EmailAuthProvider.credential(
         email: email.toString(), password: lastPassword.toString());
     firebaseCurrentUser!.reauthenticateWithCredential(cred).then((value) async {
+      final ideasRef = FirebaseFirestore.instance.collection('ideas');
+      ideasRef
+          .where("user_email", isEqualTo: email)
+          .get()
+          .then((querySnapshot) {
+        for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
+          documentSnapshot.reference.delete();
+        }
+      });
       await FirebaseFirestore.instance
           .collection('users')
           .doc(firebaseCurrentUser!.uid)
