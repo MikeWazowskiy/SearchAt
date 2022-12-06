@@ -180,7 +180,6 @@ class ResetPasswordFromProfileState extends State<ResetPasswordFromProfile> {
               .collection('users')
               .doc(currentUser!.uid)
               .update({'password': passwordController.text.trim()});
-          currentUser!.updatePassword(passwordController.text);
           showTopSnackBar(
             context,
             CustomSnackBar.success(
