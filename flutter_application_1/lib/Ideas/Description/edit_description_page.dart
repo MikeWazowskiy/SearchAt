@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Ideas/Create%20Ideas/create_edit_idea.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
