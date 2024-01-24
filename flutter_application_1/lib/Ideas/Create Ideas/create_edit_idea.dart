@@ -39,7 +39,7 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
   var icons = [
     Icons.email,
     Icons.telegram,
-    Icons.whatsapp,
+    //Icons.whatsapp,
     Icons.facebook,
     Icons.smartphone
   ];
@@ -194,7 +194,7 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
                                 );
                               },
                             ).catchError((error) =>
-                              AppLocalizations.of(context)!.ideafailedmessage)
+                              null)
                           : showTopSnackBar(
                               context,
                               CustomSnackBar.error(
@@ -205,7 +205,7 @@ class _CreateEditIdeaPageState extends State<CreateEditIdeaPage> {
                     },
                     child: Text(
                       AppLocalizations.of(context)!.publish,
-                      style: TextStyle(fontSize: 25),
+                      style: TextStyle(fontSize: 27, color: Colors.white),
                     ),
                     style: ElevatedButton.styleFrom(
                       minimumSize: Size(double.infinity, 0),

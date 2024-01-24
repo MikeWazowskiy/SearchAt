@@ -6,6 +6,7 @@ import 'package:flutter_application_1/Home/home_screen.dart';
 import 'package:flutter_application_1/Util/utils.dart';
 import 'package:flutter_application_1/Log/Reg/Login/Main%20Field/field.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_1/Users/users_service.dart';
 
 class VerifyEmailScreen extends StatefulWidget {
   @override
@@ -22,12 +23,15 @@ class _VerifyEmailCreateState extends State<VerifyEmailScreen> {
   void initState() {
     super.initState();
     isEmaleVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+
     if (!isEmaleVerified) {
       sendVerificatedEmail();
       timer = Timer.periodic(
         Duration(seconds: 1),
         (_) => checkEmailVerified(),
       );
+    } else {
+      loadUserProfileData();
     }
   }
 
@@ -37,12 +41,34 @@ class _VerifyEmailCreateState extends State<VerifyEmailScreen> {
     super.dispose();
   }
 
+  void loadUserProfileData() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser!;
+      await user.reload();
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get()
+          .then((value) {
+        UserData.photoURLPath = value.data()!['photoUrl'];
+        UserData.aboutYourself = value.data()!['about_yourself'];
+        UserData.name = value.data()!['name'];
+        UserData.email = value.data()!['email'];
+      }).catchError((e) {
+        print(e);
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   Future checkEmailVerified() async {
     try {
       await FirebaseAuth.instance.currentUser!.reload();
     } catch (e) {
       Utils.showSnackBar(e.toString(), false);
     }
+
     setState(() {
       try {
         isEmaleVerified = FirebaseAuth.instance.currentUser!.emailVerified;
@@ -51,6 +77,7 @@ class _VerifyEmailCreateState extends State<VerifyEmailScreen> {
             context, MaterialPageRoute(builder: (context) => Field()));
       }
     });
+
     if (isEmaleVerified) timer?.cancel();
   }
 

@@ -12,8 +12,19 @@ class UserManagement {
           'https://firebasestorage.googleapis.com/v0/b/signinsearchat.appspot.com/o/UsersImages%2Fdefoltimegeforeveryone.jpeg?alt=media&token=3781473e-efb3-4610-9e30-c3c72559f120',
       'about_yourself': '',
       'password': password,
+      'emailVerified': false,
     }).catchError((e) {
       print(e);
     });
   }
 }
+
+
+class UserData {
+  static String? photoURLPath;
+  static String? aboutYourself;
+  static String? name;
+  static String? email;
+}
+
+

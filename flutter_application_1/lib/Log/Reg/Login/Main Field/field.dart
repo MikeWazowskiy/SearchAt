@@ -11,11 +11,16 @@ class Field extends StatefulWidget {
   _FieldState createState() => _FieldState();
 }
 
-class _FieldState extends State<Field> {
+class _FieldState extends State<Field> with TickerProviderStateMixin {
   final formKey2 = GlobalKey<FormState>();
 
   late var _animatedWidget = login();
-
+  late AnimationController _loginAnimationController;
+  late AnimationController _registrAnimationController;
+  late AnimationController _forgotAnimationController;
+  late Animation<double> _loginAnimation;
+  late Animation<double> _registrAnimation;
+  late Animation<double> _forgotAnimation;
   int state = 0;
   late bool _passwordVisible;
 
@@ -25,7 +30,55 @@ class _FieldState extends State<Field> {
 
   @override
   void initState() {
+    super.initState();
     _passwordVisible = false;
+    _loginAnimationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 110),
+    );
+
+    _loginAnimation =
+        Tween<double>(begin: 1, end: 0.92).animate(_loginAnimationController);
+
+    _loginAnimationController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        Future.delayed(Duration(milliseconds: 50), () {
+          _loginAnimationController.reverse();
+        });
+      }
+    });
+
+    _registrAnimationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 110),
+    );
+
+    _registrAnimation =
+        Tween<double>(begin: 1, end: 0.92).animate(_registrAnimationController);
+
+    _registrAnimationController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        Future.delayed(Duration(milliseconds: 50), () {
+          _registrAnimationController.reverse();
+        });
+      }
+    });
+
+    _forgotAnimationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 110),
+    );
+
+    _forgotAnimation =
+        Tween<double>(begin: 1, end: 0.92).animate(_forgotAnimationController);
+
+    _forgotAnimationController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        Future.delayed(Duration(milliseconds: 50), () {
+          _forgotAnimationController.reverse();
+        });
+      }
+    });
   }
 
   @override
@@ -44,23 +97,35 @@ class _FieldState extends State<Field> {
             Row(
               children: [
                 InkWell(
-                  child: Text(
-                    (AppLocalizations.of(context)!.loginscreen),
-                    style: TextStyle(fontSize: 25),
-                  ),
-                  onTap: () => setState(
-                    () => _animatedWidget = login(),
+                  onTap: () {
+                    setState(() {
+                      _animatedWidget = login();
+                      _loginAnimationController.forward(from: 0);
+                    });
+                  },
+                  child: ScaleTransition(
+                    scale: _loginAnimation,
+                    child: Text(
+                      (AppLocalizations.of(context)!.loginscreen),
+                      style: TextStyle(fontSize: 25),
+                    ),
                   ),
                 ),
                 InkWell(
-                  child: Text(
-                    (AppLocalizations.of(context)!.signupscreen),
-                    style: TextStyle(fontSize: 25),
+                  onTap: () {
+                    setState(() {
+                      _animatedWidget = registration();
+                      _registrAnimationController.forward(from: 0);
+                    });
+                  },
+                  child: ScaleTransition(
+                    scale: _registrAnimation,
+                    child: Text(
+                      (AppLocalizations.of(context)!.signupscreen),
+                      style: TextStyle(fontSize: 25),
+                    ),
                   ),
-                  onTap: () => setState(() {
-                    _animatedWidget = registration();
-                  }),
-                )
+                ),
               ],
               mainAxisAlignment: MainAxisAlignment.spaceAround,
             ),
@@ -72,7 +137,7 @@ class _FieldState extends State<Field> {
               thickness: 1,
             ),
             Container(
-              padding: EdgeInsets.only(left: 10, top: 20),
+              padding: EdgeInsets.only(left: 10, top: 5),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -87,15 +152,19 @@ class _FieldState extends State<Field> {
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               child: TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (email) =>
-                    email != null && !EmailValidator.validate(email)
-                        ? AppLocalizations.of(context)!.emailvalidator
-                        : null,
+                validator: (email) {
+                  if (email == null || email.isEmpty) {
+                    return null;
+                  }
+                  return EmailValidator.validate(email)
+                      ? null
+                      : AppLocalizations.of(context)!.emailvalidator;
+                },
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   hintText: AppLocalizations.of(context)!.emailhinttext,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
+                    borderRadius: BorderRadius.circular(20.0),
                   ),
                 ),
                 controller: emailController,
@@ -117,9 +186,14 @@ class _FieldState extends State<Field> {
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               child: TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (value) => value != null && value.length < 6
-                    ? AppLocalizations.of(context)!.passwordvalidator
-                    : null,
+                validator: (password) {
+                  if (password == null || password.isEmpty) {
+                    return null;
+                  }
+                  return password.length < 6
+                      ? AppLocalizations.of(context)!.passwordvalidator
+                      : null;
+                },
                 controller: passwordController,
                 obscureText: !_passwordVisible,
                 enableSuggestions: false,
@@ -127,7 +201,7 @@ class _FieldState extends State<Field> {
                 decoration: InputDecoration(
                   hintText: AppLocalizations.of(context)!.passwordhinttext,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
+                    borderRadius: BorderRadius.circular(20.0),
                   ),
                   suffixIcon: IconButton(
                     icon: Icon(
@@ -149,32 +223,45 @@ class _FieldState extends State<Field> {
               child: Align(
                 alignment: Alignment.centerRight,
                 child: InkWell(
-                  child: Text(
-                    (AppLocalizations.of(context)!.forgotpassword),
-                    style: TextStyle(
-                      color: Colors.blue,
-                    ),
-                  ),
                   onTap: () => setState(() {
                     _animatedWidget = forgorPassword();
+                    _forgotAnimationController.forward(from: 0);
                   }),
+                  child: ScaleTransition(
+                    scale: _forgotAnimation,
+                    child: Text(
+                      AppLocalizations.of(context)!.forgotpassword,
+                      style: TextStyle(
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 30),
-              child: ElevatedButton(
-                onPressed: () => signIn(),
-                child: Text(
-                  AppLocalizations.of(context)!.submitforlogin,
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.w300,
+              padding: EdgeInsets.only(top: 15, bottom: 5),
+              child: Container(
+                width: double.infinity,
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                child: ElevatedButton(
+                  onPressed: () => signIn(),
+                  child: Text(
+                    AppLocalizations.of(context)!.submitforlogin,
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  backgroundColor: Colors.green,
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    backgroundColor: Colors.green,
+                    minimumSize: Size(double.infinity, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -209,21 +296,33 @@ class _FieldState extends State<Field> {
             Row(
               children: [
                 InkWell(
-                  onTap: () => setState(
-                    () => _animatedWidget = login(),
-                  ),
-                  child: Text(
-                    (AppLocalizations.of(context)!.loginscreen),
-                    style: TextStyle(fontSize: 25),
+                  onTap: () {
+                    setState(() {
+                      _animatedWidget = login();
+                      _loginAnimationController.forward(from: 0);
+                    });
+                  },
+                  child: ScaleTransition(
+                    scale: _loginAnimation,
+                    child: Text(
+                      (AppLocalizations.of(context)!.loginscreen),
+                      style: TextStyle(fontSize: 25),
+                    ),
                   ),
                 ),
                 InkWell(
-                  onTap: () => setState(
-                    () => _animatedWidget = registration(),
-                  ),
-                  child: Text(
-                    (AppLocalizations.of(context)!.signupscreen),
-                    style: TextStyle(fontSize: 25),
+                  onTap: () {
+                    setState(() {
+                      _animatedWidget = registration();
+                      _registrAnimationController.forward(from: 0);
+                    });
+                  },
+                  child: ScaleTransition(
+                    scale: _registrAnimation,
+                    child: Text(
+                      (AppLocalizations.of(context)!.signupscreen),
+                      style: TextStyle(fontSize: 25),
+                    ),
                   ),
                 ),
               ],
@@ -237,7 +336,7 @@ class _FieldState extends State<Field> {
               thickness: 1,
             ),
             Padding(
-              padding: EdgeInsets.only(left: 10, top: 20),
+              padding: EdgeInsets.only(left: 10, top: 5),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -255,15 +354,19 @@ class _FieldState extends State<Field> {
                 decoration: InputDecoration(
                   hintText: AppLocalizations.of(context)!.emailhinttext,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
+                    borderRadius: BorderRadius.circular(20.0),
                   ),
                 ),
                 controller: emailController,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (email) =>
-                    email != null && !EmailValidator.validate(email)
-                        ? AppLocalizations.of(context)!.emailvalidator
-                        : null,
+                validator: (email) {
+                  if (email == null || email.isEmpty) {
+                    return null;
+                  }
+                  return EmailValidator.validate(email)
+                      ? null
+                      : AppLocalizations.of(context)!.emailvalidator;
+                },
               ),
             ),
             Padding(
@@ -282,9 +385,14 @@ class _FieldState extends State<Field> {
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               child: TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (value) => value != null && value.length < 6
-                    ? AppLocalizations.of(context)!.passwordvalidator
-                    : null,
+                validator: (password) {
+                  if (password == null || password.isEmpty) {
+                    return null;
+                  }
+                  return password.length < 6
+                      ? AppLocalizations.of(context)!.passwordvalidator
+                      : null;
+                },
                 controller: passwordController,
                 obscureText: !_passwordVisible,
                 enableSuggestions: false,
@@ -292,7 +400,7 @@ class _FieldState extends State<Field> {
                 decoration: InputDecoration(
                   hintText: AppLocalizations.of(context)!.passwordhinttext,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
+                    borderRadius: BorderRadius.circular(20.0),
                   ),
                   suffixIcon: IconButton(
                     icon: Icon(
@@ -327,9 +435,14 @@ class _FieldState extends State<Field> {
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               child: TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (value) => value != null && value.length < 6
-                    ? AppLocalizations.of(context)!.passwordvalidator
-                    : null,
+                validator: (password) {
+                  if (password == null || password.isEmpty) {
+                    return null;
+                  }
+                  return password.length < 6
+                      ? AppLocalizations.of(context)!.passwordvalidator
+                      : null;
+                },
                 controller: passwordControllerConfirm,
                 obscureText: !_passwordVisible,
                 enableSuggestions: false,
@@ -337,27 +450,35 @@ class _FieldState extends State<Field> {
                 decoration: InputDecoration(
                   hintText: AppLocalizations.of(context)!.passwordhinttext,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
+                    borderRadius: BorderRadius.circular(20.0),
                   ),
                 ),
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 20),
-              child: ElevatedButton(
-                onPressed: (() {
-                  signUp();
-                }),
-                child: Text(
-                  AppLocalizations.of(context)!.submitforsignin,
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.w300,
+              padding: EdgeInsets.only(top: 15, bottom: 5),
+              child: Container(
+                width: double.infinity,
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                child: ElevatedButton(
+                  onPressed: (() {
+                    signUp();
+                  }),
+                  child: Text(
+                    AppLocalizations.of(context)!.submitforsignin,
+                    style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white),
                   ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  backgroundColor: Colors.green,
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    backgroundColor: Colors.green,
+                    minimumSize: Size(double.infinity, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -385,6 +506,8 @@ class _FieldState extends State<Field> {
   Widget forgorPassword() {
     @override
     void dispose() {
+      _loginAnimationController.dispose();
+      _registrAnimationController.dispose();
       emailController.dispose();
       super.dispose();
     }
@@ -396,21 +519,33 @@ class _FieldState extends State<Field> {
           Row(
             children: [
               InkWell(
-                onTap: () => setState(
-                  () => _animatedWidget = login(),
-                ),
-                child: Text(
-                  (AppLocalizations.of(context)!.loginscreen),
-                  style: TextStyle(fontSize: 25),
+                onTap: () {
+                  setState(() {
+                    _animatedWidget = login();
+                    _loginAnimationController.forward(from: 0);
+                  });
+                },
+                child: ScaleTransition(
+                  scale: _loginAnimation,
+                  child: Text(
+                    (AppLocalizations.of(context)!.loginscreen),
+                    style: TextStyle(fontSize: 25),
+                  ),
                 ),
               ),
               InkWell(
-                onTap: () => setState(
-                  () => _animatedWidget = registration(),
-                ),
-                child: Text(
-                  (AppLocalizations.of(context)!.signupscreen),
-                  style: TextStyle(fontSize: 25),
+                onTap: () {
+                  setState(() {
+                    _animatedWidget = registration();
+                    _registrAnimationController.forward(from: 0);
+                  });
+                },
+                child: ScaleTransition(
+                  scale: _registrAnimation,
+                  child: Text(
+                    (AppLocalizations.of(context)!.signupscreen),
+                    style: TextStyle(fontSize: 25),
+                  ),
                 ),
               ),
             ],
@@ -424,7 +559,7 @@ class _FieldState extends State<Field> {
             thickness: 1,
           ),
           Padding(
-            padding: EdgeInsets.only(left: 10, top: 20),
+            padding: EdgeInsets.only(left: 10, top: 5),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -442,33 +577,46 @@ class _FieldState extends State<Field> {
               decoration: InputDecoration(
                 hintText: AppLocalizations.of(context)!.emailhinttext,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30.0),
+                  borderRadius: BorderRadius.circular(20.0),
                 ),
               ),
               controller: emailController,
               autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: (email) =>
-                  email != null && !EmailValidator.validate(email)
-                      ? AppLocalizations.of(context)!.emailvalidator
-                      : null,
+              validator: (email) {
+                if (email == null || email.isEmpty) {
+                  // Если поле пустое, не показывать ошибку валидации
+                  return null;
+                }
+                return EmailValidator.validate(email)
+                    ? null
+                    : AppLocalizations.of(context)!.emailvalidator;
+              },
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 20),
-            child: ElevatedButton(
-              onPressed: () {
-                resetPassword();
-              },
-              child: Text(
-                AppLocalizations.of(context)!.submitforresetpassword,
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.w300,
+            padding: EdgeInsets.only(top: 15, bottom: 5),
+            child: Container(
+              width: double.infinity,
+              margin: EdgeInsets.symmetric(horizontal: 10),
+              child: ElevatedButton(
+                onPressed: () {
+                  resetPassword();
+                },
+                child: Text(
+                  AppLocalizations.of(context)!.submitforresetpassword,
+                  style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.white),
                 ),
-              ),
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                backgroundColor: Colors.green,
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  backgroundColor: Colors.green,
+                  minimumSize: Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                ),
               ),
             ),
           ),

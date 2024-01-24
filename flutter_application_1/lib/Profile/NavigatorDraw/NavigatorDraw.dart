@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Profile/Favorites/favorites_screen.dart';
 import 'package:flutter_application_1/Profile/My%20ideas/my_ideas_screen.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -16,103 +15,104 @@ class NavigationDrawWirdget extends StatefulWidget {
 }
 
 class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
-  final bool checkLanguage = true;
-  sizedBoxFun(double size) {
-    SizedBox sizedBox = new SizedBox(
-      height: size,
-    );
-    return sizedBox;
-  }
-
   final firebaseCurrentUser = FirebaseAuth.instance.currentUser;
-  final paddint = EdgeInsets.symmetric(horizontal: 20);
+  final paddint = EdgeInsets.symmetric(horizontal: 10);
   String? password;
   String? email;
   String? valueChoose;
   String? lastPassword;
-  List listItem = [
-    "Русский",
-    "English",
-  ];
-  void initState() {
-    super.initState();
-    setState(() {
-      valueChoose = "English";
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      clipBehavior: Clip.none,
       child: Material(
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(30.0),
+        ),
         child: ListView(
           padding: paddint,
           children: <Widget>[
-            sizedBoxFun(40),
-            ListTile(
-              selectedColor: Colors.white,
-              leading: const Icon(
-                Icons.content_paste,
-                color: Color.fromARGB(255, 247, 96, 85),
+            Padding(
+              padding: EdgeInsets.only(top: 35),
+              child: ListTile(
+                selectedColor: Colors.white,
+                leading: const Icon(
+                  Icons.content_paste,
+                  color: Color.fromARGB(255, 247, 96, 85),
+                ),
+                title: Text(AppLocalizations.of(context)!.myideas),
+                onTap: () {
+                  setState(() {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MyIdeasScreen()));
+                  });
+                },
               ),
-              title: Text(AppLocalizations.of(context)!.myideas),
-              onTap: () {
-                setState(() {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => MyIdeasScreen()));
-                });
-              },
             ),
-            sizedBoxFun(10),
-            ListTile(
-              selectedColor: Colors.white,
-              leading: const Icon(
-                Icons.key,
-                color: Color.fromARGB(255, 247, 96, 85),
-              ),
-              title: Text(
-                AppLocalizations.of(context)!.resetpassword,
-              ),
-              onTap: () {
-                NAlertDialog(
-                  dialogStyle: DialogStyle(titleDivider: true),
-                  title: Text(AppLocalizations.of(context)!.resetpassword),
-                  content: Text(
-                    (AppLocalizations.of(context)!.passworddialogmessage),
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: (() {
-                        Navigator.pop(context);
-                        setState(() {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      ResetPasswordFromProfile()));
-                        });
-                      }),
-                      child: Text(
-                        (AppLocalizations.of(context)!.ok),
-                      ),
+            Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: ListTile(
+                selectedColor: Colors.white,
+                leading: const Icon(
+                  Icons.key,
+                  color: Color.fromARGB(255, 247, 96, 85),
+                ),
+                title: Text(
+                  AppLocalizations.of(context)!.resetpassword,
+                ),
+                onTap: () {
+                  NAlertDialog(
+                    dialogStyle: DialogStyle(
+                        titleDivider: true, backgroundColor: Colors.white),
+                    title: Text(AppLocalizations.of(context)!.resetpassword),
+                    content: Text(
+                      (AppLocalizations.of(context)!.passworddialogmessage),
                     ),
-                    TextButton(
-                      onPressed: (() {
-                        Navigator.pop(context);
-                      }),
-                      child: Text(
-                        (AppLocalizations.of(context)!.cancel),
+                    actions: [
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          primary: Colors.black,
+                        ),
+                        onPressed: (() {
+                          Navigator.pop(context);
+                          setState(() {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        ResetPasswordFromProfile()));
+                          });
+                        }),
+                        child: Text(
+                          (AppLocalizations.of(context)!.ok),
+                        ),
                       ),
-                    ),
-                  ],
-                ).show(context);
-              },
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          primary: Colors.black,
+                        ),
+                        onPressed: (() {
+                          Navigator.pop(context);
+                        }),
+                        child: Text(
+                          (AppLocalizations.of(context)!.cancel),
+                        ),
+                      ),
+                    ],
+                  ).show(context);
+                },
+              ),
             ),
-            sizedBoxFun(20),
-            Divider(
-              color: Color.fromARGB(255, 77, 77, 77),
+            Padding(
+              padding: EdgeInsets.only(top: 20, bottom: 5, right: 17, left: 17),
+              child: Divider(
+                thickness: 1.1,
+                color: Color.fromARGB(255, 77, 77, 77),
+              ),
             ),
-            sizedBoxFun(5),
             ListTile(
               leading: const Icon(
                 Icons.logout,
@@ -121,13 +121,17 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
               title: Text(AppLocalizations.of(context)!.signout),
               onTap: () {
                 NAlertDialog(
-                  dialogStyle: DialogStyle(titleDivider: true),
+                  dialogStyle: DialogStyle(
+                      titleDivider: true, backgroundColor: Colors.white),
                   title: Text(AppLocalizations.of(context)!.signout),
                   content: Text(
                     (AppLocalizations.of(context)!.accountsignoutmessage),
                   ),
                   actions: [
                     TextButton(
+                      style: TextButton.styleFrom(
+                        primary: Colors.black,
+                      ),
                       onPressed: (() {
                         Navigator.pop(context);
                         setState(() {
@@ -141,6 +145,9 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
                       ),
                     ),
                     TextButton(
+                      style: TextButton.styleFrom(
+                        primary: Colors.black,
+                      ),
                       onPressed: (() {
                         Navigator.pop(context);
                       }),
@@ -160,13 +167,17 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
               title: Text(AppLocalizations.of(context)!.deleteaccount),
               onTap: () {
                 NAlertDialog(
-                  dialogStyle: DialogStyle(titleDivider: true),
+                  dialogStyle: DialogStyle(
+                      titleDivider: true, backgroundColor: Colors.white),
                   title: Text(AppLocalizations.of(context)!.deleteaccount),
                   content: Text(
                     (AppLocalizations.of(context)!.deleteaccountmessage),
                   ),
                   actions: [
                     TextButton(
+                      style: TextButton.styleFrom(
+                        primary: Colors.black,
+                      ),
                       onPressed: (() {
                         Navigator.pop(context);
                         setState(() {
@@ -178,6 +189,9 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
                       ),
                     ),
                     TextButton(
+                      style: TextButton.styleFrom(
+                        primary: Colors.black,
+                      ),
                       onPressed: (() {
                         Navigator.pop(context);
                       }),

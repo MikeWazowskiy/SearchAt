@@ -1,5 +1,6 @@
 {
     "profile": "Profile",
+    "ideas": "Ideas",
     "aboutyourself": "About yourself",
     "favourites": "Favourites",
     "myideas": "My ideas",
@@ -64,5 +65,7 @@
     "emailalreadysentmessage": "A mail already has been sent, try later",
     "verificationemailhasbeensent": "A verification email\nhas been sent to your email.",
     "resentemail": "Resent Email",
-    "verifyemail": "Verify Email"
+    "verifyemail": "Verify Email",
+    "by": "By",
+    "date": "Date"
 }

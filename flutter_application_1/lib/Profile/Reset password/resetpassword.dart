@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Profile/profile.dart';
 import 'package:flutter_application_1/Util/utils.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
@@ -28,6 +27,7 @@ class ResetPasswordFromProfileState extends State<ResetPasswordFromProfile> {
   }
 
   void initState() {
+    super.initState();
     _passwordVisible = false;
     setState(() {
       email = currentUser!.email.toString();

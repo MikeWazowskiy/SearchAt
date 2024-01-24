@@ -5,7 +5,6 @@ import 'Log/Reg/Verify email/verify_email_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'Log/Reg/Login/login_screen.dart';
 import 'Util/utils.dart';
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -23,6 +22,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       scaffoldMessengerKey: Utils.messengerKey,
@@ -38,8 +38,6 @@ class MainPage extends StatelessWidget {
         body: StreamBuilder<User?>(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: ((context, snapshot) {
-            final currentUser = FirebaseAuth.instance.currentUser;
-            Locale? localeLanguage;
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
                 child: CircularProgressIndicator(),

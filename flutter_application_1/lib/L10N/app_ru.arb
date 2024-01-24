@@ -1,5 +1,6 @@
 {
     "profile": "Профиль",
+    "ideas": "Идеи",
     "aboutyourself": "О себе",
     "favourites": "Любимые идеи",
     "myideas": "Мои идеи",
@@ -64,5 +65,7 @@
     "emailalreadysentmessage": "Письмо уже было отправлено вам на почту, попробуйте позже",
     "verificationemailhasbeensent": "Письмо с подтверждением\nотправлено вам на почту",
     "resentemail": "Отправить",
-    "verifyemail": "Подтвердить"
+    "verifyemail": "Подтвердить",
+    "by": "От",
+    "date": "Дата"
 }

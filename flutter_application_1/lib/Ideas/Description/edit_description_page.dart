@@ -20,6 +20,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
 
   @override
   void initState() {
+    super.initState();
     _descrtiptionController.text = widget.description;
     _descrtiptionController.text.isNotEmpty
         ? setState(() => clearBtnColor = Colors.blue)
@@ -120,7 +121,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
               },
               child: Text(
                 AppLocalizations.of(context)!.save,
-                style: TextStyle(fontSize: 24),
+                style: TextStyle(fontSize: 24, color: Colors.white),
               ),
               style: ElevatedButton.styleFrom(
                 minimumSize: Size.fromHeight(50),
