@@ -64,8 +64,18 @@
     "emailhasbeensentmessage": "A mail has been sent to your email",
     "emailalreadysentmessage": "A mail already has been sent, try later",
     "verificationemailhasbeensent": "A verification email\nhas been sent to your email.",
+    "userNotFoundMessage": "User with this email does not exists!",
     "resentemail": "Resent Email",
     "verifyemail": "Verify Email",
     "by": "By",
-    "date": "Date"
+    "date": "Date",
+    "editMessage" : "Edit message",
+    "typenewmessage" : "Type a new message...",
+    "nomessages" : "No messages.",
+    "edit" : "Edit",
+    "chats" : "Chats",
+    "nochats" : "No chats",
+    "deletechat" : "Delete Chat",
+    "confirmdeletechat" : "Are you sure you want to delete this chat?",
+    "replytomessage" : "Replying to:"
 }

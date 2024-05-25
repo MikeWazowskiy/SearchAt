@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
@@ -5,6 +6,8 @@ import '../../../../Users/users_service.dart';
 import '../../../../Util/utils.dart';
 import '../../../../main.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
 
 class Field extends StatefulWidget {
   @override
@@ -633,32 +636,84 @@ class _FieldState extends State<Field> with TickerProviderStateMixin {
             color: Colors.grey.withOpacity(0.5),
             spreadRadius: 5,
             blurRadius: 7,
-            offset: Offset(0, 3), // changes position of shadow
+            offset: Offset(0, 3),
           ),
         ],
       ),
     );
   }
 
-  Future signIn() async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
+  Future<void> signIn() async {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (context) => Center(
+      child: CircularProgressIndicator(),
+    ),
+  );
+
+  try {
+    String email = emailController.text.trim();
+    String inputPassword = passwordController.text.trim();
+    String hashedInputPassword = hashPassword(inputPassword);
+
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: emailController.text, password: passwordController.text);
+        email: email,
+        password: hashedInputPassword,
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'wrong-password') {
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email,
+          password: inputPassword,
+        );
+
+        await updatePasswordIfNeeded(inputPassword);
+      } else {
+        print(e);
+        Utils.showSnackBar(e.message, false);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => Field()));
+      }
+    }
+  } on FirebaseAuthException catch (e) {
+    print(e);
+    Utils.showSnackBar(e.message, false);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Field()));
+  } finally {
+    navigatorKey.currentState!.popUntil((route) => route.isFirst);
+  }
+}
+
+String hashPassword(String password) {
+  var bytes = utf8.encode(password); // Конвертируем строку в байты
+  var digest = sha256.convert(bytes); // Применяем алгоритм SHA-256
+  return digest.toString(); // Возвращаем хеш пароля в виде строки
+}
+
+bool isHashed(String password) {
+  // Проверяем, является ли строка хэшированным значением
+  // SHA-256 хэш обычно имеет длину 64 символа
+  final regex = RegExp(r'^[a-fA-F0-9]{64}$');
+  return regex.hasMatch(password);
+}
+
+Future<void> updatePasswordIfNeeded(String newPassword) async {
+  User? user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    String hashedPassword =
+        isHashed(newPassword) ? newPassword : hashPassword(newPassword);
+
+    try {
+      await user.updatePassword(hashedPassword);
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+        'password': hashedPassword,
+      });
     } on FirebaseAuthException catch (e) {
       print(e);
-      Utils.showSnackBar(e.message, false);
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Field()));
     }
-    navigatorKey.currentState!.popUntil((route) => route.isFirst);
-    return;
   }
+}
 
   Future signUp() async {
     final isValid = formKey2.currentState!.validate();
@@ -671,21 +726,37 @@ class _FieldState extends State<Field> with TickerProviderStateMixin {
         child: CircularProgressIndicator(),
       ),
     );
+
     try {
-      await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      )
-          .then((value) {
+      String email = emailController.text.trim();
+      String password = passwordController.text.trim();
+      List<String> signInMethods =
+          await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+
+      if (signInMethods.isEmpty) {
+        // Аккаунт с данным email не существует, можно создать новый
+        String hashedPassword = hashPassword(password);
+
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: email,
+          password: hashedPassword,
+        );
+
+        // Сохраняем информацию о новом пользователе
         UserManagement().storeNewUser(
-            value.user, context, passwordController.text, emailController.text);
-      }).catchError((e) {
-        Utils.showSnackBar(e.toString(), false);
-      });
+          FirebaseAuth.instance.currentUser,
+          context,
+          hashedPassword,
+          email,
+        );
+      } else {
+        Utils.showSnackBar('Аккаунт с данным email уже существует', false);
+      }
     } on FirebaseAuthException catch (e) {
       print(e);
+      Utils.showSnackBar(e.message.toString(), false);
     }
+
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 

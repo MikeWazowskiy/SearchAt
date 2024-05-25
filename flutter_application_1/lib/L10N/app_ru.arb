@@ -63,9 +63,19 @@
     "passwordresentemailsendmessage": "Письмо отправлено на почту",
     "emailhasbeensentmessage": "Письмо отправлено вам на почту",
     "emailalreadysentmessage": "Письмо уже было отправлено вам на почту, попробуйте позже",
+    "userNotFoundMessage": "Такого пользователя не существует!",
     "verificationemailhasbeensent": "Письмо с подтверждением\nотправлено вам на почту",
     "resentemail": "Отправить",
     "verifyemail": "Подтвердить",
     "by": "От",
-    "date": "Дата"
+    "date": "Дата",
+    "editMessage" : "Редактировать сообщение",
+    "typenewmessage" : "Введите новое сообщение...",
+    "nomessages" : "Нет сообщений.",
+    "edit" : "Редактировать",
+    "chats" : "Чаты",
+    "nochats" : "Нет чатов",
+    "deletechat" : "Удалить чат",
+    "confirmdeletechat" : "Вы уверены что хотите удалить чат?",
+    "replytomessage" : "Ответить на:"
 }

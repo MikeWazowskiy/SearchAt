@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Chat/ChatScreen.dart';
+import 'package:flutter_application_1/Users/users_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class IdeaCard extends StatelessWidget {
@@ -11,12 +13,26 @@ class IdeaCard extends StatelessWidget {
     required this.index,
   }) : super(key: key);
 
+  Future<void> navigateToChat(BuildContext context, String email) async {
+    UserManagement userManagement = UserManagement();
+    String? userName = await userManagement.getUserNameByEmail(email);
+    if (userName != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ChatScreen(
+            receiverId: email,
+            receiverName: userName,
+          ),
+        ),
+      );
+    } else {
+      print("User name not found for email: $email");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    //final currentUsser = FirebaseAuth.instance.currentUser;
-    /*CollectionReference favorites =
-        FirebaseFirestore.instance.collection('favorites');*/
-
     List tags = data.docs[index]['tags'];
 
     return Card(
@@ -49,7 +65,7 @@ class IdeaCard extends StatelessWidget {
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 20,
-                        color: Colors.black, // Черный цвет текста
+                        color: Colors.black,
                       ),
                     ),
                     SizedBox(
@@ -58,7 +74,7 @@ class IdeaCard extends StatelessWidget {
                     Text(
                       '${AppLocalizations.of(context)!.by}: ${data.docs[index]['user_email']}',
                       style: TextStyle(
-                        color: Colors.grey, // Серый цвет текста
+                        color: Colors.grey,
                       ),
                     ),
                     SizedBox(
@@ -68,7 +84,7 @@ class IdeaCard extends StatelessWidget {
                       '${data.docs[index]['description']}',
                       style: TextStyle(
                         fontSize: 16,
-                        color: Colors.black87, // Черный цвет текста
+                        color: Colors.black87,
                       ),
                     ),
                     SizedBox(
@@ -84,12 +100,10 @@ class IdeaCard extends StatelessWidget {
                                     color: Colors.white,
                                   ),
                                 ),
-                                backgroundColor: Color.fromARGB(
-                                    255, 247, 96, 85), // Цвет фона чипа
+                                backgroundColor: Color.fromARGB(255, 247, 96, 85),
                                 shape: RoundedRectangleBorder(
                                   side: BorderSide(
-                                    color: Colors
-                                        .transparent, // Устанавливаем прозрачный цвет границы
+                                    color: Colors.transparent,
                                   ),
                                   borderRadius: BorderRadius.circular(10),
                                 ),
@@ -102,29 +116,18 @@ class IdeaCard extends StatelessWidget {
                     Text(
                       '${AppLocalizations.of(context)!.date}: ${data.docs[index]['date']}',
                       style: TextStyle(
-                        color: Colors.grey, // Серый цвет текста
+                        color: Colors.grey,
                       ),
                     ),
-                    SizedBox(
-                      height: 20,
+                    IconButton(
+                      icon: Icon(Icons.chat),
+                      onPressed: () {
+                        navigateToChat(context, data.docs[index]['user_email']);
+                      },
                     ),
                   ],
                 ),
               ),
-              // IconButton(
-              //   onPressed: () {
-              //     favorites.add({
-              //       'user_email': currentUsser!.email,
-              //       'idea_id': data.docs[index].id,
-              //     });
-              //   },
-              //   splashColor: Colors.transparent,
-              //   icon: Icon(
-              //     Icons.favorite_border,
-              //     size: 30,
-              //     color: Colors.grey,
-              //   ),
-              // ),
             ],
           ),
         ),

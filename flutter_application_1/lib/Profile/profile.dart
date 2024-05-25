@@ -467,7 +467,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                 ),
               ),
       ),
-    );
+    ); 
   }
 
   //Удаление фотографии пользователя

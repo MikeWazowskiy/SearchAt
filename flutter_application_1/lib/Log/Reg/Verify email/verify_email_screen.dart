@@ -61,25 +61,41 @@ class _VerifyEmailCreateState extends State<VerifyEmailScreen> {
       print(e.toString());
     }
   }
-
-  Future checkEmailVerified() async {
+Future EmailVerified() async
+  {
     try {
-      await FirebaseAuth.instance.currentUser!.reload();
+      final user = FirebaseAuth.instance.currentUser!;
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .update({'emailVerified': FieldValue.delete()});
     } catch (e) {
-      Utils.showSnackBar(e.toString(), false);
+      print('Error updating Firestore document: $e');
     }
-
-    setState(() {
-      try {
-        isEmaleVerified = FirebaseAuth.instance.currentUser!.emailVerified;
-      } catch (e) {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Field()));
-      }
-    });
-
-    if (isEmaleVerified) timer?.cancel();
   }
+Future checkEmailVerified() async {
+  try {
+    await FirebaseAuth.instance.currentUser!.reload();
+  } catch (e) {
+    Utils.showSnackBar(e.toString(), false);
+  }
+
+  setState(() {
+    try {
+      isEmaleVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+    } catch (e) {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => Field()));
+    }
+  });
+
+  if (isEmaleVerified) {
+    EmailVerified();
+    timer?.cancel();
+    loadUserProfileData();
+  }
+}
+
 
   Future sendVerificatedEmail() async {
     try {

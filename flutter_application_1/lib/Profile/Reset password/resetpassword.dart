@@ -5,6 +5,8 @@ import 'package:flutter_application_1/Util/utils.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
 
 class ResetPasswordFromProfile extends StatefulWidget {
   @override
@@ -177,14 +179,16 @@ class ResetPasswordFromProfileState extends State<ResetPasswordFromProfile> {
           print(lastPassword);
           final user = await FirebaseAuth.instance.currentUser;
           if (user != null) {
+            String hashedPassword = hashPassword(passwordController.text.trim());
             await FirebaseFirestore.instance
                 .collection('users')
-                .doc(currentUser!.uid)
-                .update({'password': passwordController.text.trim()});
+                .doc(currentUser!.email)
+                .update({'password': hashedPassword});
+
             final cred = EmailAuthProvider.credential(
                 email: email.toString(), password: lastPassword.toString());
             user.reauthenticateWithCredential(cred).then((value) async {
-              await user.updatePassword(passwordController.text.toString());
+              await user.updatePassword(hashedPassword);
               await user.updateEmail(email.toString());
               print("Password was changed");
             }).catchError((err) {
@@ -214,4 +218,9 @@ class ResetPasswordFromProfileState extends State<ResetPasswordFromProfile> {
           AppLocalizations.of(context)!.enterthesamepasswordmessage, false);
     }
   }
+    String hashPassword(String password) {
+    var bytes = utf8.encode(password); // Конвертируем строку в байты
+    var digest = sha256.convert(bytes); // Применяем алгоритм SHA-256
+    return digest.toString(); // Возвращаем хеш пароля в виде строки
+    }
 }

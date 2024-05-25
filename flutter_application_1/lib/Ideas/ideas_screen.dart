@@ -74,8 +74,10 @@ class _IdeasScreenCreateState extends State<IdeasScreen> {
                         ? Center(child: CircularProgressIndicator())
                         : snapshot.hasError
                             ? Center(child: Text('Something went wrong.'))
-                            : ListView.builder(
+                            : ListView.separated(
                                 itemCount: snapshot.data!.docs.length,
+                                separatorBuilder: (context, index) => SizedBox(
+                                    height: 10), // Отступ между карточками
                                 itemBuilder: (context, index) {
                                   final data = snapshot.requireData;
                                   final List tags = data.docs[index]['tags'];

@@ -17,8 +17,25 @@ class UserManagement {
       print(e);
     });
   }
-}
 
+  Future<String?> getUserNameByEmail(String email) async {
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: email)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        return querySnapshot.docs.first['name'];
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+}
 
 class UserData {
   static String? photoURLPath;
@@ -26,5 +43,3 @@ class UserData {
   static String? name;
   static String? email;
 }
-
-
