@@ -92,10 +92,8 @@ Future checkEmailVerified() async {
   if (isEmaleVerified) {
     EmailVerified();
     timer?.cancel();
-    loadUserProfileData();
   }
 }
-
 
   Future sendVerificatedEmail() async {
     try {

@@ -1,23 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_application_1/Chat/ChatsScreen.dart';
 import 'package:flutter_application_1/Ideas/ideas_screen.dart';
 import 'package:flutter_application_1/Profile/profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   int _currentIndex = 0;
   int _unreadMessagesCount = 0;
   final User? currentUser = FirebaseAuth.instance.currentUser;
-
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   @override
   void initState() {
     super.initState();
     _getUnreadMessagesCount();
+    WidgetsBinding.instance.addObserver(this);
+    setStatus("online");
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    final now = DateTime.now();
+    setStatus(now.toString());
+    super.dispose();
+  }
+
+  void setStatus(String status) async {
+    if (_auth.currentUser != null) {
+      await _firestore.collection('users').doc(_auth.currentUser!.uid).update({
+        "status": status,
+      });
+    } else {
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      setStatus("online");
+    } else {
+      final now = DateTime.now();
+      setStatus(now.toString());
+    }
   }
 
   void _getUnreadMessagesCount() {

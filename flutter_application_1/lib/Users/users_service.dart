@@ -13,9 +13,53 @@ class UserManagement {
       'about_yourself': '',
       'password': password,
       'emailVerified': false,
+      'status': 'online',
+      'currentChatId': ''
     }).catchError((e) {
       print(e);
     });
+  }
+
+  updateUserCurrentChat(String email, String chatId) async {
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: email)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        String userId = querySnapshot.docs.first.id;
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .update({
+          'currentChatId': chatId,
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  clearUserCurrentChat(String email) async {
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: email)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        String userId = querySnapshot.docs.first.id;
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .update({
+          'currentChatId': '',
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<String?> getUserNameByEmail(String email) async {

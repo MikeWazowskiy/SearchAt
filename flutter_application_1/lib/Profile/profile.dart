@@ -246,7 +246,7 @@ class _ProfileScreenCreateState extends State<ProfileScreen> {
                                               child: CircleAvatar(
                                                 backgroundColor: Colors.white,
                                                 backgroundImage: NetworkImage(
-                                                    UserData.photoURLPath!),
+                                                    UserData.photoURLPath == null ? 'https://firebasestorage.googleapis.com/v0/b/signinsearchat.appspot.com/o/UsersImages%2Fdefoltimegeforeveryone.jpeg?alt=media&token=3781473e-efb3-4610-9e30-c3c72559f120' : UserData.photoURLPath!),
                                                 radius: 90,
                                               ),
                                             ),

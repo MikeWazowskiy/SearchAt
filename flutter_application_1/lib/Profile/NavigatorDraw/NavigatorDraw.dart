@@ -16,11 +16,17 @@ class NavigationDrawWirdget extends StatefulWidget {
 
 class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
   final firebaseCurrentUser = FirebaseAuth.instance.currentUser;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final paddint = EdgeInsets.symmetric(horizontal: 10);
   String? password;
   String? email;
   String? valueChoose;
   String? lastPassword;
+  void setStatus(String status) async {
+    await _firestore.collection('users').doc(firebaseCurrentUser!.uid).update({
+      "status": status,
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -135,6 +141,8 @@ class _NavigationDrawWirdgetCreateState extends State<NavigationDrawWirdget> {
                       onPressed: (() {
                         Navigator.pop(context);
                         setState(() {
+                           final now = DateTime.now();
+                          setStatus(now.toString());
                           FirebaseAuth.instance.signOut();
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) => Login()));
